@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Resumen por puesto — Propuestas de rediseño</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --o-50:#FFF8EE; --o-100:#FFEFD5; --o-200:#FFD79A; --o-300:#FFB85F;
+    --o-400:#FFA21F; --o-500:#FF8E00; --o-600:#F07A00; --o-700:#C85F00;
+    --surface:#FFFFFF; --surface-2:#FAF7F3; --surface-3:#F1ECE6;
+    --line:rgba(26,17,8,0.08); --line-2:rgba(26,17,8,0.14);
+    --ink:#1A1108; --ink-1:#3A2A1F; --ink-2:#5A4A3A; --ink-3:#9A8C7E; --ink-4:#C3B8AC;
+    --green:#1F7A40; --green-bg:rgba(31,168,74,.14); --green-line:rgba(31,168,74,.28);
+    --red:#A8190E;   --red-bg:rgba(225,25,25,.10); --red-line:rgba(225,25,25,.24);
+    --blue:#1E4FA0;  --blue-bg:rgba(59,125,221,.10); --blue-line:rgba(59,125,221,.22);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;
+    background:#EEE9E2; color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    padding:36px 28px 60px;
+  }
+  .mi{font-family:'Material Icons Round';font-weight:normal;font-style:normal;line-height:1;display:inline-block;vertical-align:middle;text-transform:none;letter-spacing:0;font-feature-settings:'liga';-webkit-font-smoothing:antialiased}
+
+  .page-head{max-width:1320px;margin:0 auto 28px}
+  .page-head h1{font-size:22px;font-weight:800;letter-spacing:-.01em;margin:0 0 6px;color:var(--ink)}
+  .page-head p{margin:0;color:var(--ink-2);font-size:13.5px;max-width:780px;line-height:1.5}
+
+  .grid{
+    max-width:1320px;margin:0 auto;
+    display:grid;grid-template-columns:1fr 1fr;
+    gap:22px;
+  }
+  .grid > .full{grid-column:1 / -1}
+  .col{
+    background:#FFFCF8;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px 18px 20px;
+    box-shadow:0 1px 0 rgba(255,255,255,.6) inset, 0 1px 2px rgba(26,17,8,.04);
+  }
+  .col-h{
+    display:flex;align-items:center;gap:10px;
+    margin-bottom:14px;padding-bottom:12px;
+    border-bottom:1px dashed var(--line-2);
+  }
+  .col-h .badge{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:24px;height:24px;border-radius:6px;
+    background:var(--o-100);color:var(--o-700);
+    font-size:11px;font-weight:800;letter-spacing:.04em;
+  }
+  .col-h h2{font-size:14px;font-weight:700;letter-spacing:-.01em;margin:0;color:var(--ink)}
+  .col-h .meta{margin-left:auto;font-size:11px;color:var(--ink-3);font-weight:600}
+  .col-note{
+    margin-top:14px;padding:10px 12px;
+    background:var(--surface-2);border:1px solid var(--line);border-radius:8px;
+    font-size:11.5px;color:var(--ink-2);line-height:1.5;
+  }
+  .col-note b{color:var(--ink)}
+
+  /* ============================================== */
+  /* CURRENT (Opción 0)                              */
+  /* ============================================== */
+  .cur-sub{
+    display:flex;align-items:center;gap:6px;
+    font-size:11px;font-weight:700;color:var(--ink-3);
+    text-transform:uppercase;letter-spacing:.06em;
+    margin:14px 0 8px;
+  }
+  .cur-sub .mi{font-size:14px}
+  .cur-sub .count{margin-left:auto;font-size:10.5px;font-weight:700;color:var(--ink-3);text-transform:none}
+  .cur-sub[data-k="asig"] .mi{color:var(--green)}
+  .cur-sub[data-k="vac"] .mi{color:var(--red)}
+  .cur-row{
+    display:grid;grid-template-columns:1.1fr 1.3fr 1.3fr 1.3fr;
+    background:#fff;border:1px solid var(--line);border-radius:10px;
+    overflow:hidden;margin-bottom:8px;
+  }
+  .cur-cell{padding:12px 14px;border-right:1px solid var(--line);min-width:0}
+  .cur-cell:last-child{border-right:0}
+  .cur-cell .lbl{font-size:9px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;display:block;line-height:1.25}
+  .cur-cell .lbl .mi{font-size:11px;vertical-align:-1px;margin-right:4px;opacity:.7}
+  .cur-cell .val{font-size:15px;font-weight:600;color:var(--ink-1);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cur-cell .val .sub{display:block;font-size:12px;font-weight:600;color:var(--o-700);margin-top:2px}
+  .cur-cell .val.fijo{color:var(--green)}
+  .cur-cell .val.temp{color:#B5572F}
+
+  /* ============================================== */
+  /* OPTION A — dense single-line rows               */
+  /* ============================================== */
+  .a-sub{
+    display:flex;align-items:center;gap:6px;
+    font-size:11px;font-weight:700;color:var(--ink-3);
+    text-transform:uppercase;letter-spacing:.06em;
+    margin:14px 0 8px;
+  }
+  .a-sub[data-k="asig"] .mi{color:var(--green);font-size:14px}
+  .a-sub[data-k="vac"] .mi{color:var(--red);font-size:14px}
+  .a-sub .count{margin-left:auto;font-size:10.5px;color:var(--ink-3);text-transform:none;font-weight:700}
+  .a-card{
+    background:#fff;border:1px solid var(--line);border-radius:8px;
+    display:flex;align-items:center;gap:0;
+    margin-bottom:6px;
+    overflow:hidden;
+  }
+  .a-puesto{
+    flex:0 0 130px;
+    padding:10px 12px;
+    font-size:13px;font-weight:700;color:var(--ink-1);
+    background:linear-gradient(180deg,#FFFDFA, #FAF6EF);
+    border-right:1px solid var(--line);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .a-cells{
+    flex:1;display:flex;align-items:center;gap:0;
+  }
+  .a-cell{
+    padding:0 12px;
+    display:flex;align-items:center;gap:6px;
+    font-size:12px;color:var(--ink-2);font-weight:500;
+    border-right:1px solid var(--line);
+    height:42px;flex:1;min-width:0;
+  }
+  .a-cell:last-child{border-right:0}
+  .a-cell .mi{font-size:14px;color:var(--ink-3);flex:0 0 auto}
+  .a-cell b{color:var(--ink-1);font-weight:700;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .a-cell .h{color:var(--o-700);font-weight:700;font-size:11px;margin-left:2px}
+  .a-cell.fijo b{color:var(--green)}
+  .a-cell.temp b{color:#B5572F}
+
+  /* ============================================== */
+  /* OPTION B — merged table with status column      */
+  /* ============================================== */
+  .b-h{
+    display:flex;align-items:center;gap:6px;
+    font-size:11px;font-weight:700;color:var(--ink-3);
+    text-transform:uppercase;letter-spacing:.06em;
+    margin:14px 0 8px;
+  }
+  .b-h .mi{font-size:14px;color:var(--o-600)}
+  .b-h .count{margin-left:auto;display:flex;align-items:center;gap:8px;text-transform:none;font-weight:700;font-size:10.5px}
+  .b-h .count .g{color:var(--green);display:inline-flex;align-items:center;gap:3px}
+  .b-h .count .r{color:var(--red);display:inline-flex;align-items:center;gap:3px}
+  .b-h .count .mi{font-size:13px}
+  .b-tbl{
+    background:#fff;border:1px solid var(--line);border-radius:10px;
+    overflow:hidden;
+  }
+  .b-tbl-head{
+    display:grid;grid-template-columns:1.2fr 1.4fr 1fr 1fr 1.3fr;
+    background:var(--surface-2);
+    padding:8px 14px;
+    font-size:9.5px;font-weight:700;color:var(--ink-3);
+    text-transform:uppercase;letter-spacing:.06em;
+    border-bottom:1px solid var(--line);
+    gap:10px;
+  }
+  .b-row{
+    display:grid;grid-template-columns:1.2fr 1.4fr 1fr 1fr 1.3fr;
+    align-items:center;
+    padding:11px 14px;gap:10px;
+    font-size:12.5px;color:var(--ink-1);
+    border-bottom:1px solid var(--line);
+  }
+  .b-row:last-child{border-bottom:0}
+  .b-row .puesto{font-weight:700;font-size:13px}
+  .b-row .puesto .pi{display:block;font-size:10px;color:var(--ink-3);font-weight:600;margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+  .b-row .status{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .b-row .pill{
+    display:inline-flex;align-items:center;gap:3px;
+    padding:2px 7px;border-radius:99px;
+    font-size:10.5px;font-weight:700;letter-spacing:.02em;
+    border:1px solid transparent;white-space:nowrap;
+  }
+  .b-row .pill.asig{background:var(--green-bg);color:var(--green);border-color:var(--green-line)}
+  .b-row .pill.vac {background:var(--red-bg);color:var(--red);border-color:var(--red-line)}
+  .b-row .pill .mi{font-size:11px}
+  .b-row .mod{font-weight:600}
+  .b-row .mod .h{color:var(--o-700);font-weight:700;font-size:11px;margin-left:3px}
+  .b-row .con{font-weight:700;font-size:12px}
+  .b-row .con.fijo{color:var(--green)}
+  .b-row .con.temp{color:#B5572F}
+  .b-row .sch{color:var(--ink-2);font-weight:500}
+
+  /* ============================================== */
+  /* OPTION C — accordion grouped by puesto          */
+  /* ============================================== */
+  .c-card{
+    background:#fff;border:1px solid var(--line);border-radius:10px;
+    margin-bottom:8px;overflow:hidden;
+  }
+  .c-head{
+    display:grid;grid-template-columns:auto 1fr auto;
+    align-items:center;gap:10px;
+    padding:11px 14px;
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#FFFCF6,#FAF6EF);
+  }
+  .c-ic{
+    width:30px;height:30px;border-radius:8px;
+    background:#fff;border:1px solid var(--line);
+    display:inline-flex;align-items:center;justify-content:center;
+    color:var(--o-600);
+  }
+  .c-ic .mi{font-size:18px}
+  .c-name{font-size:13.5px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+  .c-name .sub{display:block;font-size:11px;color:var(--ink-3);font-weight:500;margin-top:1px;letter-spacing:0}
+  .c-status{display:inline-flex;align-items:center;gap:5px}
+  .c-status .pill{
+    display:inline-flex;align-items:center;gap:3px;
+    padding:3px 8px;border-radius:99px;
+    font-size:10.5px;font-weight:700;letter-spacing:.02em;
+    border:1px solid transparent;
+  }
+  .c-status .pill.asig{background:var(--green-bg);color:var(--green);border-color:var(--green-line)}
+  .c-status .pill.vac {background:var(--red-bg);color:var(--red);border-color:var(--red-line)}
+  .c-status .pill .mi{font-size:11px}
+  .c-body{
+    display:flex;align-items:stretch;
+  }
+  .c-spec{
+    flex:1;padding:9px 14px;
+    display:flex;flex-direction:column;gap:2px;
+    border-right:1px solid var(--line);min-width:0;
+  }
+  .c-spec:last-child{border-right:0}
+  .c-spec .l{
+    font-size:9px;font-weight:700;color:var(--ink-3);
+    text-transform:uppercase;letter-spacing:.06em;
+    display:flex;align-items:center;gap:4px;
+  }
+  .c-spec .l .mi{font-size:11px;opacity:.7}
+  .c-spec .v{font-size:13px;font-weight:700;color:var(--ink-1);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .c-spec .v.fijo{color:var(--green)}
+  .c-spec .v.temp{color:#B5572F}
+  .c-spec .v small{color:var(--o-700);font-weight:700;font-size:11px;margin-left:3px}
+
+  /* ============================================== */
+  /* OPTION D — chip-style minimal                   */
+  /* ============================================== */
+  .d-sub{
+    display:flex;align-items:center;gap:6px;
+    font-size:11px;font-weight:700;color:var(--ink-3);
+    text-transform:uppercase;letter-spacing:.06em;
+    margin:14px 0 8px;
+  }
+  .d-sub .mi{font-size:14px}
+  .d-sub[data-k="asig"] .mi{color:var(--green)}
+  .d-sub[data-k="vac"] .mi{color:var(--red)}
+  .d-sub .count{margin-left:auto;font-size:10.5px;text-transform:none;color:var(--ink-3);font-weight:700}
+  .d-row{
+    display:flex;align-items:center;gap:0;
+    padding:9px 12px;
+    background:#fff;border:1px solid var(--line);border-radius:8px;
+    margin-bottom:6px;
+    flex-wrap:wrap;
+  }
+  .d-row .nm{
+    font-weight:700;font-size:13px;color:var(--ink);
+    margin-right:auto;padding-right:10px;
+    flex:0 0 110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .d-chips{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .d-chip{
+    display:inline-flex;align-items:center;gap:4px;
+    padding:3px 9px;border-radius:6px;
+    font-size:11.5px;font-weight:600;
+    background:var(--surface-2);color:var(--ink-1);
+    border:1px solid var(--line);
+    white-space:nowrap;
+  }
+  .d-chip .mi{font-size:13px;color:var(--ink-3)}
+  .d-chip.fijo{background:rgba(31,168,74,.08);color:var(--green);border-color:rgba(31,168,74,.22)}
+  .d-chip.fijo .mi{color:var(--green)}
+  .d-chip.temp{background:rgba(181,87,47,.08);color:#B5572F;border-color:rgba(181,87,47,.22)}
+  .d-chip.temp .mi{color:#B5572F}
+  .d-chip .h{color:var(--o-700);font-weight:700}
+
+  .legend{
+    display:flex;gap:14px;align-items:center;
+    font-size:11px;color:var(--ink-3);
+    margin-top:10px;
+  }
+  .legend .dot{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <h1>Resumen por puesto — propuestas de rediseño</h1>
+  <p>Mismo dataset (Mantenimiento + Houseman, dos asignados y un sin asignar) representado de cuatro formas distintas. El objetivo es bajar la altura vertical sin perder legibilidad.</p>
+</div>
+
+<div class="grid">
+
+  <!-- ============================================== -->
+  <!-- ACTUAL                                          -->
+  <!-- ============================================== -->
+  <section class="col">
+    <div class="col-h">
+      <span class="badge">0</span>
+      <h2>Actual</h2>
+      <span class="meta">~280 px de alto</span>
+    </div>
+
+    <div class="cur-sub" data-k="asig"><span class="mi">check_circle</span>Vacantes asignadas<span class="count">3 asignados</span></div>
+    <div class="cur-row">
+      <div class="cur-cell"><span class="lbl"><span class="mi">work_outline</span>Puesto/s requeridos</span><div class="val">Mantenim…</div></div>
+      <div class="cur-cell"><span class="lbl"><span class="mi">schedule</span>Modalidad</span><div class="val">Tiempo completo<span class="sub">8h/día</span></div></div>
+      <div class="cur-cell"><span class="lbl"><span class="mi">description</span>Tipo de contrato</span><div class="val fijo">Fijo</div></div>
+      <div class="cur-cell"><span class="lbl"><span class="mi">calendar_month</span>Schedule</span><div class="val">Lun, Mar, Mié, …</div></div>
+    </div>
+    <div class="cur-row">
+      <div class="cur-cell"><span class="lbl"><span class="mi">work_outline</span>Puesto/s requeridos</span><div class="val">Houseman</div></div>
+      <div class="cur-cell"><span class="lbl"><span class="mi">schedule</span>Modalidad</span><div class="val">Medio tiempo<span class="sub">4h/día</span></div></div>
+      <div class="cur-cell"><span class="lbl"><span class="mi">description</span>Tipo de contrato</span><div class="val temp">Temporal</div></div>
+      <div class="cur-cell"><span class="lbl"><span class="mi">calendar_month</span>Schedule</span><div class="val">Lun, Mié, Vie</div></div>
+    </div>
+
+    <div class="cur-sub" data-k="vac"><span class="mi">person_off</span>Vacantes sin asignar<span class="count">2 vacantes</span></div>
+    <div class="cur-row">
+      <div class="cur-cell"><span class="lbl"><span class="mi">work_outline</span>Puesto/s requeridos</span><div class="val">Mantenim…</div></div>
+      <div class="cur-cell"><span class="lbl"><span class="mi">schedule</span>Modalidad</span><div class="val">Tiempo completo<span class="sub">8h/día</span></div></div>
+      <div class="cur-cell"><span class="lbl"><span class="mi">description</span>Tipo de contrato</span><div class="val fijo">Fijo</div></div>
+      <div class="cur-cell"><span class="lbl"><span class="mi">calendar_month</span>Schedule</span><div class="val">Lun, Mar, Mié, …</div></div>
+    </div>
+    <div class="cur-row">
+      <div class="cur-cell"><span class="lbl"><span class="mi">work_outline</span>Puesto/s requeridos</span><div class="val">Houseman</div></div>
+      <div class="cur-cell"><span class="lbl"><span class="mi">schedule</span>Modalidad</span><div class="val">Medio tiempo<span class="sub">4h/día</span></div></div>
+      <div class="cur-cell"><span class="lbl"><span class="mi">description</span>Tipo de contrato</span><div class="val temp">Temporal</div></div>
+      <div class="cur-cell"><span class="lbl"><span class="mi">calendar_month</span>Schedule</span><div class="val">Lun, Mié, Vie</div></div>
+    </div>
+  </section>
+
+  <!-- ============================================== -->
+  <!-- OPCIÓN A — dense single-line rows               -->
+  <!-- ============================================== -->
+  <section class="col">
+    <div class="col-h">
+      <span class="badge" style="background:rgba(59,125,221,.14);color:var(--blue)">A</span>
+      <h2>Filas de una línea</h2>
+      <span class="meta">~150 px · –46%</span>
+    </div>
+
+    <div class="a-sub" data-k="asig"><span class="mi">check_circle</span>Vacantes asignadas<span class="count">3 asignados</span></div>
+    <div class="a-card">
+      <div class="a-puesto">Mantenimiento</div>
+      <div class="a-cells">
+        <div class="a-cell"><span class="mi">schedule</span><b>Tiempo completo</b><span class="h">· 8h</span></div>
+        <div class="a-cell fijo"><span class="mi">description</span><b>Fijo</b></div>
+        <div class="a-cell"><span class="mi">calendar_month</span><b>L · M · Mi · J · V</b></div>
+      </div>
+    </div>
+    <div class="a-card">
+      <div class="a-puesto">Houseman</div>
+      <div class="a-cells">
+        <div class="a-cell"><span class="mi">schedule</span><b>Medio tiempo</b><span class="h">· 4h</span></div>
+        <div class="a-cell temp"><span class="mi">description</span><b>Temporal</b></div>
+        <div class="a-cell"><span class="mi">calendar_month</span><b>L · Mi · V</b></div>
+      </div>
+    </div>
+
+    <div class="a-sub" data-k="vac"><span class="mi">person_off</span>Vacantes sin asignar<span class="count">2 vacantes</span></div>
+    <div class="a-card">
+      <div class="a-puesto">Mantenimiento</div>
+      <div class="a-cells">
+        <div class="a-cell"><span class="mi">schedule</span><b>Tiempo completo</b><span class="h">· 8h</span></div>
+        <div class="a-cell fijo"><span class="mi">description</span><b>Fijo</b></div>
+        <div class="a-cell"><span class="mi">calendar_month</span><b>L · M · Mi · J · V</b></div>
+      </div>
+    </div>
+    <div class="a-card">
+      <div class="a-puesto">Houseman</div>
+      <div class="a-cells">
+        <div class="a-cell"><span class="mi">schedule</span><b>Medio tiempo</b><span class="h">· 4h</span></div>
+        <div class="a-cell temp"><span class="mi">description</span><b>Temporal</b></div>
+        <div class="a-cell"><span class="mi">calendar_month</span><b>L · Mi · V</b></div>
+      </div>
+    </div>
+
+    <div class="col-note">
+      <b>Cómo lo bajamos:</b> una sola fila por puesto, sin labels uppercase encima de cada celda (van como iconos inline). Mantiene la separación en dos bloques (asignadas/sin asignar) y la información completa. Bordes verticales finos para mantener el aire de "tabla".
+    </div>
+  </section>
+
+  <!-- ============================================== -->
+  <!-- OPCIÓN B — merged table with status column      -->
+  <!-- ============================================== -->
+  <section class="col">
+    <div class="col-h">
+      <span class="badge" style="background:rgba(31,168,74,.14);color:var(--green)">B</span>
+      <h2>Tabla unificada con status</h2>
+      <span class="meta">~120 px · –57%</span>
+    </div>
+
+    <div class="b-h">
+      <span class="mi">flag</span>Puestos requeridos
+      <span class="count">
+        <span class="g"><span class="mi">check_circle</span>3</span>
+        <span class="r"><span class="mi">person_off</span>2</span>
+      </span>
+    </div>
+
+    <div class="b-tbl">
+      <div class="b-tbl-head">
+        <div>Puesto</div>
+        <div>Status</div>
+        <div>Modalidad</div>
+        <div>Contrato</div>
+        <div>Schedule</div>
+      </div>
+      <div class="b-row">
+        <div class="puesto">Mantenimiento</div>
+        <div class="status">
+          <span class="pill asig"><span class="mi">check_circle</span>2</span>
+          <span class="pill vac"><span class="mi">person_off</span>1</span>
+        </div>
+        <div class="mod">Tiempo completo<span class="h">· 8h</span></div>
+        <div class="con fijo">Fijo</div>
+        <div class="sch">L · M · Mi · J · V</div>
+      </div>
+      <div class="b-row">
+        <div class="puesto">Houseman</div>
+        <div class="status">
+          <span class="pill asig"><span class="mi">check_circle</span>1</span>
+          <span class="pill vac"><span class="mi">person_off</span>1</span>
+        </div>
+        <div class="mod">Medio tiempo<span class="h">· 4h</span></div>
+        <div class="con temp">Temporal</div>
+        <div class="sch">L · Mi · V</div>
+      </div>
+    </div>
+
+    <div class="col-note">
+      <b>Cómo lo bajamos:</b> elimina la duplicación (Mantenimiento aparecía 2 veces) fusionando ambas secciones en una tabla. La columna <i>Status</i> muestra cuántos hay asignados y cuántos faltan por puesto con pills verde/rojo. La opción más densa.
+    </div>
+  </section>
+
+  <!-- ============================================== -->
+  <!-- OPCIÓN C — header + spec strip                   -->
+  <!-- ============================================== -->
+  <section class="col">
+    <div class="col-h">
+      <span class="badge" style="background:rgba(216,87,17,.14);color:#B5572F">C</span>
+      <h2>Card con header + tira de specs</h2>
+      <span class="meta">~150 px · –46%</span>
+    </div>
+
+    <div class="b-h">
+      <span class="mi">flag</span>Puestos requeridos
+      <span class="count">
+        <span class="g"><span class="mi">check_circle</span>3 asignados</span>
+        <span class="r"><span class="mi">person_off</span>2 vacantes</span>
+      </span>
+    </div>
+
+    <div class="c-card">
+      <div class="c-head">
+        <div class="c-ic"><span class="mi">build</span></div>
+        <div class="c-name">Mantenimiento <span class="sub">3 puestos requeridos</span></div>
+        <div class="c-status">
+          <span class="pill asig"><span class="mi">check_circle</span>2 asignados</span>
+          <span class="pill vac"><span class="mi">person_off</span>1 sin asignar</span>
+        </div>
+      </div>
+      <div class="c-body">
+        <div class="c-spec"><span class="l"><span class="mi">schedule</span>Modalidad</span><span class="v">Tiempo completo <small>8h</small></span></div>
+        <div class="c-spec"><span class="l"><span class="mi">description</span>Contrato</span><span class="v fijo">Fijo</span></div>
+        <div class="c-spec"><span class="l"><span class="mi">calendar_month</span>Schedule</span><span class="v">L · M · Mi · J · V</span></div>
+      </div>
+    </div>
+
+    <div class="c-card">
+      <div class="c-head">
+        <div class="c-ic"><span class="mi">cleaning_services</span></div>
+        <div class="c-name">Houseman <span class="sub">2 puestos requeridos</span></div>
+        <div class="c-status">
+          <span class="pill asig"><span class="mi">check_circle</span>1 asignado</span>
+          <span class="pill vac"><span class="mi">person_off</span>1 sin asignar</span>
+        </div>
+      </div>
+      <div class="c-body">
+        <div class="c-spec"><span class="l"><span class="mi">schedule</span>Modalidad</span><span class="v">Medio tiempo <small>4h</small></span></div>
+        <div class="c-spec"><span class="l"><span class="mi">description</span>Contrato</span><span class="v temp">Temporal</span></div>
+        <div class="c-spec"><span class="l"><span class="mi">calendar_month</span>Schedule</span><span class="v">L · Mi · V</span></div>
+      </div>
+    </div>
+
+    <div class="col-note">
+      <b>Cómo lo bajamos:</b> también fusiona las dos secciones en una sola card por puesto. El header lleva nombre + pills de status, y abajo va la tira de specs (modalidad / contrato / schedule). Más visual que la tabla, mantiene la sensación del componente actual.
+    </div>
+  </section>
+
+  <!-- ============================================== -->
+  <!-- OPCIÓN D — chip-style minimal (FULL WIDTH)      -->
+  <!-- ============================================== -->
+  <section class="col full">
+    <div class="col-h">
+      <span class="badge" style="background:rgba(139,92,246,.16);color:#6D28D9">D</span>
+      <h2>Chips minimalista — máxima densidad</h2>
+      <span class="meta">~95 px · –66%</span>
+    </div>
+
+    <div class="d-sub" data-k="asig"><span class="mi">check_circle</span>Vacantes asignadas<span class="count">3 asignados</span></div>
+    <div class="d-row">
+      <span class="nm">Mantenimiento</span>
+      <div class="d-chips">
+        <span class="d-chip"><span class="mi">schedule</span>Tiempo completo<span class="h">· 8h</span></span>
+        <span class="d-chip fijo"><span class="mi">description</span>Fijo</span>
+        <span class="d-chip"><span class="mi">calendar_month</span>L · M · Mi · J · V</span>
+      </div>
+    </div>
+    <div class="d-row">
+      <span class="nm">Houseman</span>
+      <div class="d-chips">
+        <span class="d-chip"><span class="mi">schedule</span>Medio tiempo<span class="h">· 4h</span></span>
+        <span class="d-chip temp"><span class="mi">description</span>Temporal</span>
+        <span class="d-chip"><span class="mi">calendar_month</span>L · Mi · V</span>
+      </div>
+    </div>
+
+    <div class="d-sub" data-k="vac"><span class="mi">person_off</span>Vacantes sin asignar<span class="count">2 vacantes</span></div>
+    <div class="d-row">
+      <span class="nm">Mantenimiento</span>
+      <div class="d-chips">
+        <span class="d-chip"><span class="mi">schedule</span>Tiempo completo<span class="h">· 8h</span></span>
+        <span class="d-chip fijo"><span class="mi">description</span>Fijo</span>
+        <span class="d-chip"><span class="mi">calendar_month</span>L · M · Mi · J · V</span>
+      </div>
+    </div>
+    <div class="d-row">
+      <span class="nm">Houseman</span>
+      <div class="d-chips">
+        <span class="d-chip"><span class="mi">schedule</span>Medio tiempo<span class="h">· 4h</span></span>
+        <span class="d-chip temp"><span class="mi">description</span>Temporal</span>
+        <span class="d-chip"><span class="mi">calendar_month</span>L · Mi · V</span>
+      </div>
+    </div>
+
+    <div class="col-note">
+      <b>Cómo lo bajamos:</b> sin "celdas" — solo chips horizontales por fila. Cada chip es auto-ajustable; el contrato lleva color (verde fijo, marrón temporal). Es la más ligera visualmente pero pierde el grid alineado entre filas. Si una fila tiene más días, los chips se desplazan a la derecha en vez de truncarse con "…".
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>
