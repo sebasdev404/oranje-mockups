@@ -1,0 +1,2128 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+
+
+
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oranje — Plataforma</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round|Material+Icons+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+
+</head>
+<body data-cc-id="cc-94" style="background-color: rgb(251, 250, 247); cursor: crosshair;" class="">
+
+<div class="app" id="app">
+
+  <!-- ==================== SIDEBAR ==================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <div class="dot"></div>
+      <span class="mark hide-collapsed">ORANJE</span>
+    </div>
+
+    <div class="sb-toggle" onclick="toggleSidebar()" title="Colapsar">
+      <span class="mi">chevron_left</span>
+    </div>
+
+    <nav class="sb-nav" data-cc-id="cc-90">
+      <div class="sb-label hide-collapsed">Principal</div>
+
+      <div class="sb-item" data-page="Dashboard" onclick="navigate(this,'Dashboard')">
+        <span class="mi">dashboard</span>
+        <span class="lbl hide-collapsed">Dashboard</span>
+      </div>
+      <div class="sb-item active" data-page="Reclutamiento" onclick="navigate(this,'Reclutamiento')">
+        <span class="mi">person_search</span>
+        <span class="lbl hide-collapsed">Reclutamiento</span>
+        <span class="count hide-collapsed">24</span>
+      </div>
+      <div class="sb-item" data-page="Requisiciones" onclick="navigate(this,'Requisiciones')">
+        <span class="mi">assignment</span>
+        <span class="lbl hide-collapsed">Requisiciones</span>
+        <span class="count hide-collapsed">08</span>
+      </div>
+      <div class="sb-item" data-page="Blacklist" onclick="navigate(this,'Blacklist')">
+        <span class="mi">block</span>
+        <span class="lbl hide-collapsed">Blacklist</span>
+      </div>
+
+      <div class="sb-label hide-collapsed">Supervisión</div>
+      <div class="sb-item" data-page="Mi Grupo" onclick="navigate(this,'Mi Grupo')">
+        <span class="mi">groups</span>
+        <span class="lbl hide-collapsed">Mi Grupo</span>
+        <span class="count hide-collapsed">06</span>
+      </div>
+      <div class="sb-item" data-page="Reportes" onclick="navigate(this,'Reportes')">
+        <span class="mi">insert_chart</span>
+        <span class="lbl hide-collapsed">Reportes</span>
+      </div>
+    </nav>
+
+    <div class="sb-foot" data-cc-id="cc-89">
+      <button class="sb-support hide-collapsed" onclick="toast('Abriendo soporte…','support_agent')">
+        <span class="mi">support_agent</span>
+        Soporte
+      </button>
+    </div>
+  </aside>
+
+  <!-- ==================== MAIN ==================== -->
+  <div class="main" data-cc-id="cc-41">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="header" data-cc-id="cc-1">
+      <div class="hd-crumbs" id="crumbsWrap">
+        <span class="crumb crumb-root" style="cursor:pointer" onclick="closeMyInfoIfOpen()">Oranje</span>
+        <span class="mi sep">chevron_right</span>
+        <span class="current" id="crumb" style="font-weight: 600">Reclutamiento</span>
+      </div>
+
+      <!-- BUSCADOR -->
+      <div class="hd-search" id="searchWrap">
+        <span class="mi si">search</span>
+        <input type="text" class="hd-search-input" placeholder="Buscar requisiciones, colaboradores, hoteles, blacklist…" id="gsearch" onfocus="openSearch()" data-cc-id="cc-85">
+        <span class="kb" data-cc-id="cc-86">⌘K</span>
+
+        <div class="search-dd" id="searchDd">
+          <div class="sdd-filters">
+            <div class="sdd-chip active"><span class="mi">tune</span>Todo</div>
+            <div class="sdd-chip"><span class="mi">description</span>Requisiciones</div>
+            <div class="sdd-chip"><span class="mi">groups</span>Colaboradores</div>
+            <div class="sdd-chip"><span class="mi">hotel</span>Hoteles</div>
+            <div class="sdd-chip"><span class="mi">block</span>Blacklist</div>
+          </div>
+
+          <div class="sdd-section">
+            <div class="sdd-label"><span>Búsquedas recientes</span><span style="font-size:12px;color:var(--ink-3);letter-spacing:.08em;font-weight:600">HISTORIAL</span></div>
+            <div class="sdd-row">
+              <div class="sdd-ic"><span class="mi">history</span></div>
+              <div class="sdd-txt"><div class="sdd-name">Housekeeper · Costa del Sol</div></div>
+              <span class="sdd-kind">Req</span>
+            </div>
+            <div class="sdd-row">
+              <div class="sdd-ic"><span class="mi">history</span></div>
+              <div class="sdd-txt"><div class="sdd-name">María López</div></div>
+              <span class="sdd-kind">Colab.</span>
+            </div>
+            <div class="sdd-row">
+              <div class="sdd-ic"><span class="mi">history</span></div>
+              <div class="sdd-txt"><div class="sdd-name">REQ #001</div></div>
+              <span class="sdd-kind">Req</span>
+            </div>
+          </div>
+
+          <div class="sdd-section">
+            <div class="sdd-label"><span>Requisiciones</span></div>
+            <div class="sdd-row">
+              <div class="sdd-ic o"><span class="mi">description</span></div>
+              <div class="sdd-txt">
+                <div class="sdd-name">REQ #001 · Housekeeper</div>
+                <div class="sdd-meta">Hotel Costa del Sol · Urgente · 8/10</div>
+              </div>
+              <span class="sdd-kind">Req</span>
+            </div>
+            <div class="sdd-row">
+              <div class="sdd-ic o"><span class="mi">description</span></div>
+              <div class="sdd-txt">
+                <div class="sdd-name">REQ #002 · Chef</div>
+                <div class="sdd-meta">Hotel Punta Vista · Media · 5/8</div>
+              </div>
+              <span class="sdd-kind">Req</span>
+            </div>
+          </div>
+
+          <div class="sdd-section">
+            <div class="sdd-label"><span>Colaboradores</span></div>
+            <div class="sdd-row">
+              <div class="avatar sm" style="background:linear-gradient(135deg,#FFA21F,#FF5A00)">ML</div>
+              <div class="sdd-txt">
+                <div class="sdd-name">María López Hernández</div>
+                <div class="sdd-meta">DOC 4521 · +52 55 1234 5678 · Housekeeper</div>
+              </div>
+              <span class="sdd-kind">Colab.</span>
+            </div>
+            <div class="sdd-row">
+              <div class="avatar sm" style="background:linear-gradient(135deg,#FFB840,#FF7A00)">CR</div>
+              <div class="sdd-txt">
+                <div class="sdd-name">Carlos Ruiz Méndez</div>
+                <div class="sdd-meta">DOC 7812 · +52 55 9988 1122 · Chef</div>
+              </div>
+              <span class="sdd-kind">Colab.</span>
+            </div>
+          </div>
+
+          <div class="sdd-section">
+            <div class="sdd-label"><span>Hoteles</span></div>
+            <div class="sdd-row">
+              <div class="sdd-ic b"><span class="mi">hotel</span></div>
+              <div class="sdd-txt">
+                <div class="sdd-name">Hotel Costa del Sol</div>
+                <div class="sdd-meta">Zona Centro · 3 requisiciones activas</div>
+              </div>
+              <span class="sdd-kind">Hotel</span>
+            </div>
+          </div>
+
+          <div class="sdd-section">
+            <div class="sdd-label"><span>Blacklist</span></div>
+            <div class="sdd-row">
+              <div class="sdd-ic r"><span class="mi">block</span></div>
+              <div class="sdd-txt">
+                <div class="sdd-name">Jorge P. · DOC 3311</div>
+                <div class="sdd-meta">Vetado · Motivo: ausentismo reiterado</div>
+              </div>
+              <span class="sdd-kind">Veto</span>
+            </div>
+          </div>
+
+          <div class="notif-footer" style="justify-content:center;gap:8px">
+            Atajo para abrir rápido: <kbd style="background:#fff;border:1px solid var(--line-2);padding:2px 6px;border-radius:4px;font-family:Poppins,monospace;font-size:11px;font-weight:600;color:var(--ink-2)">/</kbd> <span style="color:var(--ink-3);font-weight:400">o</span> <kbd style="background:#fff;border:1px solid var(--line-2);padding:2px 6px;border-radius:4px;font-family:Poppins,monospace;font-size:11px;font-weight:600;color:var(--ink-2)">Ctrl+K</kbd>
+          </div>
+        </div>
+      </div>
+
+      <div class="hd-right" data-cc-id="cc-2">
+        <div class="ic-btn" title="Mensajes">
+          <span class="mio" data-cc-id="cc-72">chat_bubble_outline</span>
+        </div>
+
+        <!-- NOTIFICACIONES -->
+        <div style="position:relative" id="notifWrap">
+          <div class="ic-btn" title="Notificaciones" onclick="toggleDd('notifDd')" data-cc-id="cc-3">
+            <span class="mio">notifications_none</span>
+            <span class="badge">5</span>
+          </div>
+
+          <div class="dd" id="notifDd">
+            <div class="dd-head">
+              <h4>Notificaciones</h4>
+              <span class="act">Marcar todas como leídas</span>
+            </div>
+            <div class="notif-filter-bar">
+              <div class="nfb-tab active">Todas<span class="num">5</span></div>
+              <div class="nfb-tab">Sin leer<span class="num">3</span></div>
+              <div class="nfb-tab">Requisiciones</div>
+              <div class="nfb-tab">Blacklist</div>
+            </div>
+
+            <div class="notif-item">
+              <div class="ni-ic orange"><span class="mi">assignment_ind</span></div>
+              <div class="txt">
+                <div><strong>Nueva requisición asignada</strong> — El Manager de Reclutamiento te distribuyó <strong>REQ #001 Housekeeper</strong></div>
+                <div class="tm">Hace 4 min · Hotel Costa del Sol</div>
+              </div>
+              <div class="dot-unread"></div>
+            </div>
+
+            <div class="notif-item">
+              <div class="ni-ic blue"><span class="mi">how_to_reg</span></div>
+              <div class="txt">
+                <div><strong>Candidato completó la App</strong> — María López terminó Fase 2, listo para validar en Fase 3</div>
+                <div class="tm">Hace 22 min · Ir a Nuevo Candidato ▸ Validar</div>
+              </div>
+              <div class="dot-unread"></div>
+            </div>
+
+            <div class="notif-item">
+              <div class="ni-ic red"><span class="mi">priority_high</span></div>
+              <div class="txt">
+                <div><strong>Requisición con urgencia Red</strong> — REQ #001 pasó al umbral crítico (&lt;72h)</div>
+                <div class="tm">Hace 1 hr · Requiere atención inmediata</div>
+              </div>
+              <div class="dot-unread"></div>
+            </div>
+
+            <div class="notif-item">
+              <div class="ni-ic" style="background:rgba(26,17,8,.08);color:var(--ink)"><span class="mi">block</span></div>
+              <div class="txt">
+                <div><strong>Blacklist actualizado</strong> — Nuevo colaborador vetado agregado por QA</div>
+                <div class="tm">Hace 3 hrs · Ver detalle</div>
+              </div>
+            </div>
+
+            <div class="notif-item">
+              <div class="ni-ic" style="background:rgba(139,85,214,.1);color:var(--purple)"><span class="mi">search</span></div>
+              <div class="txt">
+                <div><strong>Caso escalado por QA</strong> — Investigación de Rojo cerrada para Carlos Ruiz</div>
+                <div class="tm">Ayer · 17:40</div>
+              </div>
+            </div>
+
+            <div class="notif-footer">
+              <span>Ver todas las notificaciones</span>
+              <span class="mi">arrow_forward</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PERFIL -->
+        <div style="position:relative" id="profWrap" data-cc-id="cc-2">
+          <div class="hd-profile" onclick="toggleDd('profDd')" data-cc-id="cc-71">
+            <div class="avatar" data-cc-id="cc-33">JL</div>
+            <div class="who">
+              <div class="n" data-cc-id="cc-70" style="color: rgb(83, 59, 23); font-weight: 600">Juanita López</div>
+              <div class="r" data-cc-id="cc-69">Líder de Grupo · Zona Centro</div>
+            </div>
+            <span class="mi chev">expand_more</span>
+          </div>
+
+          <div class="dd prof-dd" id="profDd">
+            <div class="prof-head">
+              <div class="avatar lg">JL</div>
+              <div>
+                <div class="pn">Juana López Torres</div>
+                <div class="prof-zone"><span class="mi">location_on</span>Zona Centro · Líder de Grupo</div>
+              </div>
+            </div>
+
+            <div class="prof-menu">
+              <div class="prof-sect" style="padding-top:6px">Cuenta</div>
+              <div class="mi-item" onclick="openMyInfo('info')"><span class="mio">person</span>Mi información</div>
+              <div class="mi-item" onclick="openMyInfo('zona')"><span class="mio">location_on</span>Mi zona asignada</div>
+              <div class="mi-item" onclick="openMyInfo('metricas')"><span class="mio">insights</span>Mis métricas</div>
+
+              <div class="divider"></div>
+              <div class="prof-sect">Configuración</div>
+              <div class="mi-item" onclick="openMyInfo('seguridad')"><span class="mio">lock</span>Cambiar contraseña</div>
+              <div class="mi-item" onclick="openMyInfo('preferencias')"><span class="mio">notifications</span>Preferencias de notificación</div>
+
+              <div class="divider"></div>
+              <div class="mi-item danger" onclick="toast('Sesión cerrada','logout')"><span class="mi">logout</span>Cerrar sesión</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==================== CONTENT ==================== -->
+    <main class="content" style="border-radius: 20px 20px 0px; background-color: rgb(255, 252, 249)" data-cc-id="cc-3">
+
+      <!-- ============= DASHBOARD PAGE ============= -->
+      <div class="page-view" data-page-view="Dashboard" style="display: none;">
+
+      <!-- PAGE HEADER -->
+      <div class="ph" data-cc-id="cc-68">
+        <div>
+          <h1 style="color: rgb(83, 59, 23); font-weight: 600" data-cc-id="cc-93">Bienvenida a Oranje, Juanita López <span class="wave"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" data-cc-id="cc-92"><defs><radialGradient id="orangeGr" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#FFCB70"></stop><stop offset="50%" stop-color="#FF8A1F"></stop><stop offset="100%" stop-color="#E85C00"></stop></radialGradient></defs><circle cx="20" cy="22" r="15" fill="url(#orangeGr)"></circle><ellipse cx="15" cy="17" rx="4" ry="2.4" fill="#FFE1AE" opacity=".55"></ellipse><path d="M20 7 Q22 4 26 5 Q24 8 22 9" fill="#3FA84C"></path><path d="M20 7 Q19 4 17 4" stroke="#7A4A1E" stroke-width="1.3" stroke-linecap="round" fill="none"></path></svg></span></h1>
+          <div class="sub" style="font-weight: 500;" data-cc-id="cc-95">Esto es lo que está pasando hoy, 24 de abril con tu naranjitas.</div>
+        </div>
+        <div class="ph-right">
+          <button class="btn ghost" data-cc-id="cc-5">
+            <span class="mi">calendar_today</span>
+            Abril 2026
+            <span class="mi">expand_more</span>
+          </button>
+          <button class="btn ghost">
+            <span class="mi">file_download</span>
+            Exportar
+          </button>
+        </div>
+      </div>
+
+      <!-- ========== KPIS + ACCIONES RÁPIDAS ========== -->
+      <div class="row-kpi">
+
+      <!-- ========== KPIS ========== -->
+      <div class="kpis" id="kpisWrap" data-cc-id="cc-11">
+        <div class="kpi" style="border-color:rgba(31,168,74,.18);background:linear-gradient(135deg,rgba(31,168,74,.07),rgba(31,168,74,.02))" data-cc-id="cc-45">
+          <div class="kh">
+            <div class="ki" style="background:rgba(31,168,74,.12);color:#1FA84A"><span class="mi">folder_open</span></div>
+            <span class="trend up" style="font-weight: 500"><span class="mi">arrow_upward</span>12%</span>
+          </div>
+          <div class="val" style="color:var(--green)">08</div>
+          <div class="lbl" data-cc-id="cc-56">Requisiciones abiertas</div>
+          <svg class="kpi-spark default-spark" viewBox="0 0 120 28" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="sp-orange" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#1FA84A" stop-opacity=".25"></stop>
+                <stop offset="100%" stop-color="#1FA84A" stop-opacity="0"></stop>
+              </linearGradient>
+            </defs>
+            <path d="M0,20 L15,17 L30,19 L45,12 L60,15 L75,8 L90,11 L105,6 L120,4 L120,28 L0,28 Z" fill="url(#sp-orange)"></path>
+            <path d="M0,20 L15,17 L30,19 L45,12 L60,15 L75,8 L90,11 L105,6 L120,4" fill="none" stroke="#1FA84A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+            <circle cx="120" cy="4" r="2.8" fill="#1FA84A"></circle>
+          </svg>
+          <svg class="kpi-spark hero-spark" viewBox="0 0 120 28" preserveAspectRatio="none" data-cc-id="cc-49">
+            <defs>
+              <linearGradient id="sp-white" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#fff" stop-opacity=".4"></stop>
+                <stop offset="100%" stop-color="#fff" stop-opacity="0"></stop>
+              </linearGradient>
+            </defs>
+            <path d="M0,20 L15,17 L30,19 L45,12 L60,15 L75,8 L90,11 L105,6 L120,4 L120,28 L0,28 Z" fill="url(#sp-white)" data-cc-id="cc-48"></path>
+            <path d="M0,20 L15,17 L30,19 L45,12 L60,15 L75,8 L90,11 L105,6 L120,4" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".95"></path>
+            <circle cx="120" cy="4" r="2.8" fill="#fff"></circle>
+          </svg>
+          <div class="foot" data-cc-id="cc-47">En <strong data-cc-id="cc-46">3 propiedades</strong> activas</div>
+        </div>
+
+        <div class="kpi" style="border-color:rgba(228,74,74,.18);background:linear-gradient(135deg,rgba(228,74,74,.07),rgba(228,74,74,.02))" data-cc-id="cc-40">
+          <div class="kh" data-cc-id="cc-67">
+            <div class="ki" style="background:rgba(228,74,74,.1);color:var(--red)"><span class="mi">priority_high</span></div>
+            <span class="trend down" style="font-weight: 500"><span class="mi">arrow_upward</span>+2</span>
+          </div>
+          <div class="val" style="color:var(--red)" data-cc-id="cc-66">03</div>
+          <div class="lbl" data-cc-id="cc-55">Requisiciones urgentes</div>
+          <svg class="kpi-spark" viewBox="0 0 120 28" preserveAspectRatio="none" data-cc-id="cc-50">
+            <defs>
+              <linearGradient id="sp-red" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#E44A4A" stop-opacity=".28"></stop>
+                <stop offset="100%" stop-color="#E44A4A" stop-opacity="0"></stop>
+              </linearGradient>
+            </defs>
+            <path d="M0,22 L15,18 L30,20 L45,14 L60,16 L75,10 L90,12 L105,6 L120,8 L120,28 L0,28 Z" fill="url(#sp-red)" data-cc-id="cc-51"></path>
+            <path d="M0,22 L15,18 L30,20 L45,14 L60,16 L75,10 L90,12 L105,6 L120,8" fill="none" stroke="#E44A4A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" data-cc-id="cc-54"></path>
+          </svg>
+          <div class="foot danger" data-cc-id="cc-52">Atiende <strong data-cc-id="cc-53">antes de 24 hrs</strong></div>
+        </div>
+
+        <div class="kpi" style="border-color: rgb(217, 180, 71); background: linear-gradient(135deg,rgba(230,180,34,.18),rgba(230,180,34,.05))" data-cc-id="cc-12">
+          <div class="kh" data-cc-id="cc-43">
+            <div class="ki" style="background:rgba(230,180,34,.14);color:#C79400" data-cc-id="cc-44"><span class="mi">how_to_reg</span></div>
+            <span class="trend warn" style="font-weight: 500"><span class="mi">schedule</span>hoy</span>
+          </div>
+          <div class="val" style="color:rgb(83,59,23)" data-cc-id="cc-42">14</div>
+          <div class="lbl">Candidatos pendientes validar</div>
+          <div class="kpi-bars">
+            <div class="kpi-bar" style="--h:35%;background:rgba(230,180,34,.28)" title="Lun"></div>
+            <div class="kpi-bar" style="--h:55%;background:rgba(230,180,34,.28)" title="Mar"></div>
+            <div class="kpi-bar" style="--h:45%;background:rgba(230,180,34,.28)" title="Mié"></div>
+            <div class="kpi-bar" style="--h:75%;background:rgba(230,180,34,.28)" title="Jue"></div>
+            <div class="kpi-bar" style="--h:60%;background:rgba(230,180,34,.28)" title="Vie"></div>
+            <div class="kpi-bar" style="--h:90%;background:rgba(230,180,34,.28)" title="Sáb"></div>
+            <div class="kpi-bar active" style="--h:100%;background:#C79400;box-shadow:0 2px 6px rgba(199,148,0,.35)" title="Hoy" data-cc-id="cc-57"></div>
+          </div>
+          <div class="foot" data-cc-id="cc-13"><strong>9</strong> aplicaciones completas</div>
+        </div>
+
+        <div class="kpi" style="border-color: rgb(237, 144, 26); background: linear-gradient(135deg,var(--o-100),rgba(255,237,213,.45))" data-cc-id="cc-7">
+          <div class="kh" data-cc-id="cc-6">
+            <div class="ki" style="background:#FFE4C7;color:var(--o-700)"><span class="mi">warning_amber</span></div>
+            <span class="trend" style="background: #FFE4C7; color: var(--o-700); font-weight: 500"><span class="mi">priority_high</span>Alta</span>
+          </div>
+          <div class="val" style="color:var(--o-600)" data-cc-id="cc-8">05</div>
+          <div class="lbl" data-cc-id="cc-9">Alertas críticas</div>
+          <div class="kpi-alerts" data-cc-id="cc-88">
+            <div class="kpi-alert-row" data-cc-id="cc-10">
+              <div class="ai red"><span class="mi">block</span></div>
+              <div class="a-bar" data-cc-id="cc-87"><div class="a-fill red" style="width:40%"></div></div>
+              <div class="a-meta">
+                <span class="a-num" style="color: rgb(62, 60, 60)">02</span>
+                <span class="a-lbl" style="font-weight: 500">Blacklist</span>
+              </div>
+            </div>
+            <div class="kpi-alert-row" data-cc-id="cc-65">
+              <div class="ai orange"><span class="mi">schedule</span></div>
+              <div class="a-bar"><div class="a-fill orange" style="width:60%"></div></div>
+              <div class="a-meta">
+                <span class="a-num" style="color: rgb(255, 142, 0)">03</span>
+                <span class="a-lbl" style="font-weight: 500">Vencidas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <!-- ACCIONES RÁPIDAS -->
+        <div class="card" style="padding:20px;display:flex;flex-direction:column">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+            <div>
+              <h3 style="font-size: 15px; font-weight: 700; color: rgb(83, 59, 23)">Acciones rápidas</h3>
+              <div class="sub" style="font-size:12.5px;color:var(--ink-3);margin-top:2px">Atajos más usados</div>
+            </div>
+            <span class="mi" style="color:var(--ink-4)">auto_awesome</span>
+          </div>
+
+          <div class="qa-hero" style="margin-top:16px">
+            <div class="lbl" style="font-weight: 600; color: rgb(83, 59, 23)">Eficiencia esta semana</div>
+            <div class="v" style="font-weight: 700">+23%</div>
+            <div class="v2">Has validado <strong>11 candidatos</strong> más que la semana pasada</div>
+            <span class="mi mi-big">trending_up</span>
+          </div>
+
+          <div class="qa-grid" style="margin-top:12px">
+            <div class="qa primary" onclick="navigate(document.querySelector('.sb-item[data-page=\'Reclutamiento\']'),'Reclutamiento'); window.__reclOpenNew && window.__reclOpenNew()">
+              <div class="qa-ic"><span class="mi">person_add</span></div>
+              <div class="qa-txt">
+                <div class="qa-title" style="font-weight: 600">Nuevo colaborador</div>
+                <div class="qa-sub">Crear perfil manualmente</div>
+              </div>
+              <span class="mi qa-arrow">arrow_forward</span>
+            </div>
+
+            <div class="qa purple" onclick="navigate(document.querySelector('.sb-item[data-page=\'Reclutamiento\']'),'Reclutamiento'); window.__reclSetSubtab && window.__reclSetSubtab('pool')">
+              <div class="qa-ic"><span class="mi">search</span></div>
+              <div class="qa-txt">
+                <div class="qa-title" style="font-weight: 600">Buscar en pool</div>
+                <div class="qa-sub">47 candidatos disponibles</div>
+              </div>
+              <span class="mi qa-arrow">arrow_forward</span>
+            </div>
+
+            <div class="qa teal" onclick="toast('Abriendo blacklist…','block')">
+              <div class="qa-ic"><span class="mi">block</span></div>
+              <div class="qa-txt">
+                <div class="qa-title" style="font-weight: 600">Consultar blacklist</div>
+                <div class="qa-sub">Verificar historial</div>
+              </div>
+              <span class="mi qa-arrow">arrow_forward</span>
+            </div>
+
+            <div class="qa primary" onclick="navigate(document.querySelector('.sb-item[data-page=\'Requisiciones\']'),'Requisiciones')">
+              <div class="qa-ic"><span class="mi">flag</span></div>
+              <div class="qa-txt">
+                <div class="qa-title" style="font-weight: 600">Tomar requisición</div>
+                <div class="qa-sub">08 en la bandeja de autorizadas</div>
+              </div>
+              <span class="mi qa-arrow">arrow_forward</span>
+            </div>
+
+            <div class="qa purple" onclick="navigate(document.querySelector('.sb-item[data-page=\'Reportes\']'),'Reportes')">
+              <div class="qa-ic"><span class="mi">insert_chart</span></div>
+              <div class="qa-txt">
+                <div class="qa-title" style="font-weight: 600">Generar reporte</div>
+                <div class="qa-sub">Cobertura del grupo</div>
+              </div>
+              <span class="mi qa-arrow">arrow_forward</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ========== KPIS DEL GRUPO (exclusivo Líder) ========== -->
+      <div style="display:flex;align-items:center;gap:10px;margin:6px 2px 14px;flex-wrap:wrap">
+        <span class="mi" style="color:var(--o-600)">groups</span>
+        <h3 style="font-size:15px;font-weight:700;color:#533B17">Resumen del grupo</h3>
+        <span style="font-size:12.5px;color:var(--ink-3)">6 reclutadoras · Zonas Centro y Sur</span>
+        <button class="btn ghost" style="margin-left:auto" onclick="navigate(document.querySelector('.sb-item[data-page=\'Mi Grupo\']'),'Mi Grupo')"><span class="mi">arrow_forward</span>Ver Mi Grupo</button>
+      </div>
+      <div class="kpis" style="margin-bottom:24px">
+        <div class="kpi" style="border-color:rgba(31,168,74,.18);background:linear-gradient(135deg,rgba(31,168,74,.07),rgba(31,168,74,.02))">
+          <div class="kh"><div class="ki" style="background:rgba(31,168,74,.12);color:#1FA84A"><span class="mi">verified</span></div><span class="trend up" style="font-weight:500"><span class="mi">arrow_upward</span>4%</span></div>
+          <div class="val" style="color:var(--green)">87%</div>
+          <div class="lbl">Cobertura del grupo</div>
+          <div class="foot">Meta mensual <strong>90%</strong></div>
+        </div>
+        <div class="kpi" style="border-color:rgb(237,144,26);background:linear-gradient(135deg,var(--o-100),rgba(255,237,213,.45))">
+          <div class="kh"><div class="ki" style="background:#FFE4C7;color:var(--o-700)"><span class="mi">assignment_turned_in</span></div></div>
+          <div class="val" style="color:var(--o-600)">32 <span style="font-size:18px;color:var(--ink-3)">/ 6</span></div>
+          <div class="lbl">Cubiertas · pendientes</div>
+          <div class="foot"><strong>6</strong> requisiciones en proceso</div>
+        </div>
+        <div class="kpi" style="border-color:rgba(59,125,221,.18);background:linear-gradient(135deg,rgba(59,125,221,.07),rgba(59,125,221,.02))">
+          <div class="kh"><div class="ki" style="background:rgba(59,125,221,.12);color:var(--blue)"><span class="mi">groups</span></div><span class="trend" style="background:rgba(59,125,221,.12);color:var(--blue);font-weight:500">activas</span></div>
+          <div class="val" style="color:var(--blue)">06</div>
+          <div class="lbl">Reclutadoras activas</div>
+          <div class="foot"><strong>1</strong> en vacaciones</div>
+        </div>
+        <div class="kpi" style="border-color:rgba(228,74,74,.18);background:linear-gradient(135deg,rgba(228,74,74,.07),rgba(228,74,74,.02))">
+          <div class="kh"><div class="ki" style="background:rgba(228,74,74,.1);color:var(--red)"><span class="mi">priority_high</span></div></div>
+          <div class="val" style="color:var(--red)">02</div>
+          <div class="lbl">Casos escalados</div>
+          <div class="foot danger">Pendientes de atención</div>
+        </div>
+      </div>
+
+      <!-- ========== ROW: POOL + REQUISICIONES ========== -->
+      <div class="row-2" data-cc-id="cc-33">
+
+        <!-- POOL -->
+        <div class="card" data-cc-id="cc-58">
+          <div class="card-h" data-cc-id="cc-59">
+            <div>
+              <h3 style="font-weight: 600" data-cc-id="cc-60">Pool de candidatos</h3>
+              <div class="sub" data-cc-id="cc-61">Disponibilidad por posición · en tiempo real</div>
+            </div>
+            <div class="r">
+              <span class="link-more" data-cc-id="cc-84">Ver pool completo <span class="mi" style="font-size:14px">arrow_forward</span></span>
+            </div>
+          </div>
+          <div class="card-b" data-cc-id="cc-39">
+            <div class="pool-summary" data-cc-id="cc-62">
+              <div>
+                <div class="big">47</div>
+                <div class="lbl">Candidatos totales disponibles</div>
+              </div>
+              <div class="ic"><span class="mi">groups</span></div>
+            </div>
+
+            <div class="pool-list" data-cc-id="cc-78">
+              <div class="pool-item" data-cc-id="cc-63">
+                <div class="pi-ic"><span class="mio">bed</span></div>
+                <div class="pi-text">
+                  <div class="pi-name" data-cc-id="cc-64">Housekeeper</div>
+                  <div class="pi-meta" data-cc-id="cc-83">Promedio 4.7★ · 8 verificados</div>
+                </div>
+                <div class="bar"><span style="width:80%"></span></div>
+                <div class="pi-count">08<span class="u">disp.</span></div>
+              </div>
+
+              <div class="pool-item">
+                <div class="pi-ic" data-cc-id="cc-91"><span class="mio">restaurant</span></div>
+                <div class="pi-text">
+                  <div class="pi-name">Hoseman</div>
+                  <div class="pi-meta">Promedio 4.3★ · 3 verificados</div>
+                </div>
+                <div class="bar"><span style="width:30%"></span></div>
+                <div class="pi-count">03<span class="u">disp.</span></div>
+              </div>
+
+              <div class="pool-item" data-cc-id="cc-73">
+                <div class="pi-ic"><span class="mio">soup_kitchen</span></div>
+                <div class="pi-text">
+                  <div class="pi-name" data-cc-id="cc-80">Chef / Cocinero</div>
+                  <div class="pi-meta" data-cc-id="cc-79">Promedio 4.6★ · 12 verificados</div>
+                </div>
+                <div class="bar"><span style="width:90%"></span></div>
+                <div class="pi-count" data-cc-id="cc-74">12<span class="u">disp.</span></div>
+              </div>
+
+              <div class="pool-item" data-cc-id="cc-75">
+                <div class="pi-ic"><span class="mio">cleaning_services</span></div>
+                <div class="pi-text">
+                  <div class="pi-name" data-cc-id="cc-76">Steward</div>
+                  <div class="pi-meta" data-cc-id="cc-77">Promedio 4.2★ · 6 verificados</div>
+                </div>
+                <div class="bar"><span style="width:60%"></span></div>
+                <div class="pi-count">06<span class="u">disp.</span></div>
+              </div>
+
+              <div class="pool-item" data-cc-id="cc-82">
+                <div class="pi-ic"><span class="mio">room_service</span></div>
+                <div class="pi-text">
+                  <div class="pi-name" data-cc-id="cc-81">Mesero</div>
+                  <div class="pi-meta">Promedio 4.5★ · 18 verificados</div>
+                </div>
+                <div class="bar"><span style="width:100%"></span></div>
+                <div class="pi-count">18<span class="u">disp.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MIS REQUISICIONES -->
+        <div class="card" data-cc-id="cc-14">
+          <div class="card-h" data-cc-id="cc-15">
+            <div data-cc-id="cc-31">
+              <h3 data-cc-id="cc-32">Mis requisiciones</h3>
+              <div class="sub" data-cc-id="cc-30">5 activas · ordenadas por prioridad</div>
+            </div>
+            <div class="r">
+              <button class="btn sm ghost"><span class="mi">filter_list</span>Filtrar</button>
+            </div>
+          </div>
+          <div class="card-b" data-cc-id="cc-16" style="">
+            <div class="req-list" data-cc-id="cc-23">
+
+              <div class="req-item red" data-cc-id="cc-17">
+                <span class="sig" data-cc-id="cc-29"></span>
+                <div>
+                  <span class="rn">REQ #001</span>
+                </div>
+                <div class="rt" data-cc-id="cc-18">
+                  Housekeeper
+                  <span class="sub" data-cc-id="cc-19">Hotel Costa del Sol · abierta hace 3 días</span>
+                </div>
+                <span class="tag amarillo">Comodín</span>
+                <span class="mi chev">chevron_right</span>
+              </div>
+
+              <div class="req-item red" data-cc-id="cc-20">
+                <span class="sig" data-cc-id="cc-28"></span>
+                <div>
+                  <span class="rn">REQ #014</span>
+                </div>
+                <div class="rt">
+                  Mantenimiento
+                  <span class="sub">Hotel Marina Bay · abierta hace 4 días</span>
+                </div>
+                <span class="tag rosa">Stand by</span>
+                <span class="mi chev">chevron_right</span>
+              </div>
+
+              <div class="req-item yellow" data-cc-id="cc-21">
+                <span class="sig"></span>
+                <div>
+                  <span class="rn">REQ #002</span>
+                </div>
+                <div class="rt">
+                  Chef
+                  <span class="sub">Hotel Punta Vista · abierta hace 1 día</span>
+                </div>
+                <span class="tag rosa">Stand by</span>
+                <span class="mi chev">chevron_right</span>
+              </div>
+
+              <div class="req-item green" data-cc-id="cc-26">
+                <span class="sig" data-cc-id="cc-27"></span>
+                <div data-cc-id="cc-34">
+                  <span class="rn">REQ #003</span>
+                </div>
+                <div class="rt">
+                  Hoseman
+                  <span class="sub">Hotel Marina Bay · abierta hoy</span>
+                </div>
+                <span class="tag green">Disponible</span>
+                <span class="mi chev">chevron_right</span>
+              </div>
+
+              <div class="req-item green" data-cc-id="cc-24">
+                <span class="sig" data-cc-id="cc-25"></span>
+                <div data-cc-id="cc-35">
+                  <span class="rn">REQ #008</span>
+                </div>
+                <div class="rt">
+                  Recepción
+                  <span class="sub">Hotel Costa del Sol · abierta hoy</span>
+                </div>
+                <span class="tag green">Disponible</span>
+                <span class="mi chev">chevron_right</span>
+              </div>
+
+              <div class="see-all-row" onclick="navigate(document.querySelector('[data-page=Requisiciones]'),'Requisiciones')" data-cc-id="cc-22">
+                Ver todas las requisiciones (08) <span class="mi" style="font-size:16px">arrow_forward</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== ROW: BANDEJAS + ACCIONES ========== -->
+      <div class="row-b" data-cc-id="cc-37">
+
+        <!-- BANDEJAS DE ACCIÓN -->
+        <div class="card">
+          <div class="tray-head">
+            <div>
+              <h3 style="font-size:15px;font-weight:700">Bandejas de acción</h3>
+              <div class="sub" style="font-size:12.5px;color:var(--ink-3);margin-top:2px">Requieren tu revisión ahora</div>
+            </div>
+            <div class="tray-tabs">
+              <div class="tray-tab active" onclick="switchTab(this)">
+                <span class="mi" style="font-size:15px">how_to_reg</span>
+                Candidatos listos
+                <span class="num">09</span>
+              </div>
+              <div class="tray-tab" onclick="switchTab(this)">
+                <span class="mi" style="font-size:15px">block</span>
+                Blacklist
+                <span class="num">02</span>
+              </div>
+              <div class="tray-tab" onclick="switchTab(this)">
+                <span class="mi" style="font-size:15px">update</span>
+                Actualizaciones
+                <span class="num">14</span>
+              </div>
+              <div class="tray-tab" onclick="switchTab(this)">
+                <span class="mi" style="font-size:15px">verified</span>
+                Aprobaciones
+                <span class="num">03</span>
+              </div>
+            </div>
+          </div>
+
+          <table class="tray-table">
+            <thead>
+              <tr>
+                <th>Candidato</th>
+                <th>Requisición</th>
+                <th>Estado app</th>
+                <th>Aplicó</th>
+                <th style="text-align:right" data-cc-id="cc-38">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="cand-cell">
+                    <div class="avatar sm" style="background:linear-gradient(135deg,#FF8E00,#C85F00)">ML</div>
+                    <div>
+                      <div class="nm">María López</div>
+                      <div class="ps">Housekeeper · 4.8 ★</div>
+                    </div>
+                  </div>
+                </td>
+                <td><strong style="color:var(--ink)">#001</strong> · Housekeeper</td>
+                <td><span class="badge-pill done"><span class="mi">check_circle</span>Completa</span></td>
+                <td>Hoy · 08:24</td>
+                <td data-cc-id="cc-36">
+                  <div class="row-actions">
+                    <button class="row-action-btn" title="Ver perfil"><span class="mi">visibility</span></button>
+                    <button class="row-action-btn" title="Rechazar"><span class="mi">close</span></button>
+                    <button class="row-action-btn primary" title="Validar"><span class="mi">check</span></button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="cand-cell">
+                    <div class="avatar sm" style="background:linear-gradient(135deg,#8B55D6,#3C1A6E)">CR</div>
+                    <div>
+                      <div class="nm">Carlos Ruiz</div>
+                      <div class="ps">Chef · 4.6 ★</div>
+                    </div>
+                  </div>
+                </td>
+                <td><strong style="color:var(--ink)">#002</strong> · Chef</td>
+                <td><span class="badge-pill done"><span class="mi">check_circle</span>Completa</span></td>
+                <td>Hoy · 07:55</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-action-btn" title="Ver perfil"><span class="mi">visibility</span></button>
+                    <button class="row-action-btn" title="Rechazar"><span class="mi">close</span></button>
+                    <button class="row-action-btn primary" title="Validar"><span class="mi">check</span></button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="cand-cell">
+                    <div class="avatar sm" style="background:linear-gradient(135deg,#2FD6A3,#0F8E6C)">AS</div>
+                    <div>
+                      <div class="nm">Ana Sánchez</div>
+                      <div class="ps">Hoseman · 4.4 ★</div>
+                    </div>
+                  </div>
+                </td>
+                <td><strong style="color:var(--ink)">#003</strong> · Hoseman</td>
+                <td><span class="badge-pill wait"><span class="mi">schedule</span>Pendiente docs</span></td>
+                <td>Ayer · 17:30</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-action-btn" title="Ver perfil"><span class="mi">visibility</span></button>
+                    <button class="row-action-btn" title="Enviar recordatorio"><span class="mi">send</span></button>
+                    <button class="row-action-btn primary" title="Validar"><span class="mi">check</span></button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="cand-cell">
+                    <div class="avatar sm" style="background:linear-gradient(135deg,#3B7DDD,#1E4C9E)">DH</div>
+                    <div>
+                      <div class="nm">Daniel Herrera</div>
+                      <div class="ps">Housekeeper · 4.9 ★</div>
+                    </div>
+                  </div>
+                </td>
+                <td><strong style="color:var(--ink)">#001</strong> · Housekeeper</td>
+                <td><span class="badge-pill done"><span class="mi">check_circle</span>Completa</span></td>
+                <td>Ayer · 14:10</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-action-btn" title="Ver perfil"><span class="mi">visibility</span></button>
+                    <button class="row-action-btn" title="Rechazar"><span class="mi">close</span></button>
+                    <button class="row-action-btn primary" title="Validar"><span class="mi">check</span></button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="cand-cell">
+                    <div class="avatar sm" style="background:linear-gradient(135deg,#E44A4A,#9A2020)">LM</div>
+                    <div>
+                      <div class="nm">Luis Morales</div>
+                      <div class="ps">Chef · 4.5 ★</div>
+                    </div>
+                  </div>
+                </td>
+                <td><strong style="color:var(--ink)">#002</strong> · Chef</td>
+                <td><span class="badge-pill info"><span class="mi">info</span>En revisión</span></td>
+                <td>Ayer · 11:02</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-action-btn" title="Ver perfil"><span class="mi">visibility</span></button>
+                    <button class="row-action-btn" title="Rechazar"><span class="mi">close</span></button>
+                    <button class="row-action-btn primary" title="Validar"><span class="mi">check</span></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ACCIONES RÁPIDAS movido arriba al row-kpi -->
+      </div>
+
+      </div><!-- /page-view Dashboard -->
+
+
+
+      <!-- ============= MI GRUPO PAGE (exclusivo Líder · RF-22/23/27) ============= -->
+      <div class="page-view" data-page-view="Mi Grupo" style="display:none">
+        <div class="ph">
+          <div>
+            <h1 style="color:#533B17;font-weight:600">Mi Grupo de Reclutadoras</h1>
+            <div class="sub" style="font-weight:500">Supervisa la carga y el desempeño de tu equipo · 6 reclutadoras</div>
+          </div>
+          <div class="ph-right">
+            <button class="lg-btn"><span class="mi">filter_list</span>Filtros</button>
+            <button class="lg-btn-pri" onclick="navigate(document.querySelector('.sb-item[data-page=\'Reportes\']'),'Reportes')"><span class="mi">insert_chart</span>Generar reporte</button>
+          </div>
+        </div>
+
+        <!-- KPIs del grupo -->
+        <div class="kpis" style="margin-bottom:22px">
+          <div class="kpi" style="border-color:rgba(31,168,74,.18);background:linear-gradient(135deg,rgba(31,168,74,.07),rgba(31,168,74,.02))">
+            <div class="kh"><div class="ki" style="background:rgba(31,168,74,.12);color:#1FA84A"><span class="mi">verified</span></div><span class="trend up" style="font-weight:500"><span class="mi">arrow_upward</span>4%</span></div>
+            <div class="val" style="color:var(--green)">87%</div><div class="lbl">Cobertura del grupo</div><div class="foot">Meta mensual <strong>90%</strong></div>
+          </div>
+          <div class="kpi" style="border-color:rgb(237,144,26);background:linear-gradient(135deg,var(--o-100),rgba(255,237,213,.45))">
+            <div class="kh"><div class="ki" style="background:#FFE4C7;color:var(--o-700)"><span class="mi">assignment_turned_in</span></div></div>
+            <div class="val" style="color:var(--o-600)">32 <span style="font-size:18px;color:var(--ink-3)">/ 6</span></div><div class="lbl">Cubiertas · pendientes</div><div class="foot"><strong>6</strong> en proceso</div>
+          </div>
+          <div class="kpi" style="border-color:rgba(59,125,221,.18);background:linear-gradient(135deg,rgba(59,125,221,.07),rgba(59,125,221,.02))">
+            <div class="kh"><div class="ki" style="background:rgba(59,125,221,.12);color:var(--blue)"><span class="mi">groups</span></div><span class="trend" style="background:rgba(59,125,221,.12);color:var(--blue);font-weight:500">activas</span></div>
+            <div class="val" style="color:var(--blue)">06</div><div class="lbl">Reclutadoras activas</div><div class="foot"><strong>1</strong> en vacaciones</div>
+          </div>
+          <div class="kpi" style="border-color:rgba(228,74,74,.18);background:linear-gradient(135deg,rgba(228,74,74,.07),rgba(228,74,74,.02))">
+            <div class="kh"><div class="ki" style="background:rgba(228,74,74,.1);color:var(--red)"><span class="mi">priority_high</span></div></div>
+            <div class="val" style="color:var(--red)">02</div><div class="lbl">Casos escalados</div><div class="foot danger">Pendientes de atención</div>
+          </div>
+        </div>
+
+        <!-- Lista de reclutadoras -->
+        <div class="lg-card" style="margin-bottom:22px">
+          <div class="lg-toolbar">
+            <div class="lg-search"><span class="mi" style="color:var(--ink-3);font-size:18px">search</span><input id="mgSearch" placeholder="Buscar reclutadora…" oninput="window.__grupoFilter&&window.__grupoFilter()"></div>
+            <select id="mgZona" class="lg-select" style="width:auto" onchange="window.__grupoFilter&&window.__grupoFilter()"><option value="">Zona: Todas</option><option>Centro</option><option>Sur</option><option>Este</option><option>Oeste</option></select>
+            <select id="mgEstado" class="lg-select" style="width:auto" onchange="window.__grupoFilter&&window.__grupoFilter()"><option value="">Estado: Todos</option><option>Activa</option><option>Vacaciones</option></select>
+            <select id="mgCarga" class="lg-select" style="width:auto" onchange="window.__grupoFilter&&window.__grupoFilter()"><option value="">Carga: Toda</option><option>Alta</option><option>Media</option><option>Baja</option></select>
+          </div>
+          <table class="lg-tbl">
+            <thead><tr><th>Reclutadora</th><th>Zona</th><th>Req. activas</th><th>% Cobertura</th><th>Casos escalados</th><th>Estado</th><th></th></tr></thead>
+            <tbody id="mgTbody"></tbody>
+          </table>
+        </div>
+
+        <!-- Detalle de reclutadora (drill-down · RF-23) · render dinámico en script.js -->
+        <div class="lg-card" id="mgDetail"></div>
+      </div>
+
+      <!-- ============= REPORTES PAGE (exclusivo Líder · RF-24/25) ============= -->
+      <div class="page-view" data-page-view="Reportes" style="display:none">
+        <div class="ph">
+          <div>
+            <h1 style="color:#533B17;font-weight:600">Reportes del grupo</h1>
+            <div class="sub" style="font-weight:500">Genera y envía reportes formales al Manager de Reclutamiento</div>
+          </div>
+          <div class="ph-right">
+            <button class="lg-btn"><span class="mi">schedule_send</span>Programar envío</button>
+          </div>
+        </div>
+
+        <div class="lg-grid2" style="margin-bottom:22px">
+          <!-- Generar -->
+          <div class="lg-card">
+            <div class="lg-card-h"><span class="mi">tune</span><h3>Generar reporte</h3></div>
+            <div style="padding:18px">
+              <div class="lg-field">
+                <label>Tipo de reporte</label>
+                <div class="lg-segs" id="rpTipoSegs">
+                  <span class="lg-seg on">Cobertura del grupo</span>
+                  <span class="lg-seg">Desempeño individual</span>
+                  <span class="lg-seg">Casos escalados</span>
+                  <span class="lg-seg">Distribución por zona</span>
+                </div>
+              </div>
+              <div class="lg-field">
+                <label>Rango de fechas</label>
+                <div class="lg-segs">
+                  <span class="lg-seg">Hoy</span><span class="lg-seg">Esta semana</span><span class="lg-seg on">Este mes</span><span class="lg-seg">Personalizado</span>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                <div class="lg-field"><label>Zona</label><select class="lg-select"><option>Todas</option><option>Centro</option><option>Sur</option><option>Este</option><option>Oeste</option></select></div>
+                <div class="lg-field"><label>Posición</label><select class="lg-select"><option>Todas</option><option>Housekeeper</option><option>Hoseman</option><option>Chef</option><option>Laundry</option></select></div>
+              </div>
+              <div class="lg-field"><label>Reclutadora</label><select class="lg-select" id="rpRecl"><option>Todo el grupo</option><option>Ana López</option><option>Beatriz Cruz</option><option>Carlos Mena</option><option>Diana Ríos</option><option>Esteban Vargas</option><option>Fátima Soto</option></select></div>
+              <div class="lg-field"><label>Destinatario</label><select class="lg-select" disabled style="opacity:.65"><option>Manager de Reclutamiento (automático)</option></select></div>
+              <button class="lg-btn-pri" style="width:100%;justify-content:center" onclick="toast('Generando vista previa…','insert_chart')"><span class="mi">visibility</span>Generar vista previa</button>
+            </div>
+          </div>
+
+          <!-- Vista previa -->
+          <div class="lg-card">
+            <div class="lg-card-h"><span class="mi">insert_chart</span><h3>Vista previa</h3><span class="lg-chip n" style="margin-left:auto" id="rpTag">Cobertura · Este mes</span></div>
+            <div style="padding:18px">
+              <div id="rpData">
+              <div style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:4px">
+                <div class="lg-stat"><span class="n" style="color:var(--green)">87%</span><span class="l">Cobertura</span></div>
+                <div class="lg-stat"><span class="n">38</span><span class="l">Requisiciones</span></div>
+                <div class="lg-stat"><span class="n">2.4 d</span><span class="l">Tiempo prom.</span></div>
+                <div class="lg-stat"><span class="n" style="color:var(--red)">2</span><span class="l">Escalados</span></div>
+              </div>
+              <div class="lg-chart">
+                <div class="b" style="height:62%"><span>72%</span><small>Sem 1</small></div>
+                <div class="b" style="height:78%"><span>81%</span><small>Sem 2</small></div>
+                <div class="b" style="height:70%"><span>76%</span><small>Sem 3</small></div>
+                <div class="b" style="height:92%"><span>87%</span><small>Sem 4</small></div>
+              </div>
+              </div>
+              <div style="height:1px;background:var(--line);margin:6px 0 0"></div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;padding-top:16px">
+                <button class="lg-btn-pri" onclick="toast('Reporte enviado al Manager','send')"><span class="mi">send</span>Enviar al Manager</button>
+                <button class="lg-btn" onclick="toast('Exportando CSV…','file_download')"><span class="mi">file_download</span>CSV</button>
+                <button class="lg-btn" onclick="toast('Exportando PDF…','picture_as_pdf')"><span class="mi">picture_as_pdf</span>PDF</button>
+                <button class="lg-btn" onclick="toast('Borrador guardado','save')"><span class="mi">save</span>Borrador</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Histórico -->
+        <div class="lg-card">
+          <div class="lg-card-h"><span class="mi">history</span><h3>Histórico de reportes enviados</h3></div>
+          <table class="lg-tbl">
+            <thead><tr><th>Fecha</th><th>Tipo</th><th>Destinatario</th><th>Estado</th><th></th></tr></thead>
+            <tbody>
+              <tr><td>02 Jun 2026</td><td>Cobertura del grupo</td><td>Manager de Reclutamiento</td><td><span class="lg-chip g">Leído</span></td><td style="text-align:right"><button class="lg-btn" style="padding:6px 11px"><span class="mi" style="font-size:16px">content_copy</span>Reutilizar</button></td></tr>
+              <tr><td>26 May 2026</td><td>Desempeño individual</td><td>Manager de Reclutamiento</td><td><span class="lg-chip a">Enviado</span></td><td style="text-align:right"><button class="lg-btn" style="padding:6px 11px"><span class="mi" style="font-size:16px">content_copy</span>Reutilizar</button></td></tr>
+              <tr><td>19 May 2026</td><td>Casos escalados</td><td>Manager de Reclutamiento</td><td><span class="lg-chip g">Leído</span></td><td style="text-align:right"><button class="lg-btn" style="padding:6px 11px"><span class="mi" style="font-size:16px">content_copy</span>Reutilizar</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ============= RECLUTAMIENTO PAGE ============= -->
+      <div class="page-view" data-page-view="Reclutamiento" style="">
+        <div id="recl-root" data-cc-id="cc-7">
+        <!-- HERO -->
+        <div class="recl-hero">
+          <div class="recl-hero-left" style="height:160px">
+            <div class="eyebrow"><span class="pulse"></span>Pool de colaboradores · Vivo</div>
+            <h1>Captura y mantén el <span class="accent">pool de colaboradores</span> al día.</h1>
+            <div class="lead">Da de alta nuevos colaboradores, mantén su semáforo actualizado y consulta su historial. Las asignaciones se registran automáticamente en el Schedule del hotel.</div>
+          </div>
+          <div class="recl-hero-right" style="height:160px">
+            <div class="recl-stat">
+              <div class="rs-top">
+                <div class="rs-ic" style="background:rgba(255,142,0,.12);color:var(--o-600)"><span class="mi">groups</span></div>
+                <span class="rs-trend up"><span class="mi">arrow_upward</span>+4</span>
+              </div>
+              <div class="rs-val">18</div>
+              <div class="rs-lbl">Colaboradores en pool</div>
+            </div>
+            <div class="recl-stat">
+              <div class="rs-top">
+                <div class="rs-ic" style="background:rgba(31,168,74,.12);color:#1F8F50"><span class="mi">check_circle</span></div>
+                <span class="rs-trend up"><span class="mi">arrow_upward</span>2</span>
+              </div>
+              <div class="rs-val">4</div>
+              <div class="rs-lbl">Disponibles ahora</div>
+            </div>
+            <div class="recl-stat">
+              <div class="rs-top">
+                <div class="rs-ic" style="background:rgba(63,184,230,.14);color:#1583B0"><span class="mi">school</span></div>
+                <span class="rs-trend warn"><span class="mi">schedule</span>hoy</span>
+              </div>
+              <div class="rs-val">5</div>
+              <div class="rs-lbl">En onboarding / pre-asignación</div>
+            </div>
+            <div class="recl-stat">
+              <div class="rs-top">
+                <div class="rs-ic" style="background:rgba(225,25,25,.1);color:var(--red)"><span class="mi">warning_amber</span></div>
+                <span class="rs-trend down"><span class="mi">arrow_upward</span>+1</span>
+              </div>
+              <div class="rs-val">3</div>
+              <div class="rs-lbl">Casos críticos / blacklist</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TOOLBAR -->
+        <div class="recl-toolbar">
+          <div class="recl-search">
+            <span class="mi">search</span>
+            <input type="text" id="recl-search-input" placeholder="Buscar por nombre, documento, teléfono o ID…" value="">
+            <span class="kbd">⌘F</span>
+          </div>
+          <div class="recl-toolbar-divider"></div>
+          <button class="btn primary" onclick="window.__reclOpenNew()"><span class="mi">person_add</span>Nuevo colaborador</button>
+        </div>
+
+        <!-- FILTROS + view switcher -->
+        <div class="recl-filters">
+          <div class="recl-filters-left">
+            
+        <div class="recl-filter-grp  " onclick="event.stopPropagation();window.__reclToggleDD('filterPos')">
+          <span class="lbl-grp">Posición</span>
+          <span class="val">Todas</span>
+          <span class="mi">expand_more</span>
+          <div class="recl-fdd" onclick="event.stopPropagation()">
+            <div class="recl-fdd-item all" onclick="window.__reclPickFilter('filterPos','')">
+              <span>Todas</span>
+            </div>
+            <div class="recl-fdd-item " onclick="window.__reclPickFilter('filterPos','Housekeeper')"><span>Housekeeper</span><span class="mi">check</span></div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterPos','Hoseman')"><span>Hoseman</span><span class="mi">check</span></div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterPos','Chef')"><span>Chef</span><span class="mi">check</span></div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterPos','Laundry')"><span>Laundry</span><span class="mi">check</span></div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterPos','Steward')"><span>Steward</span><span class="mi">check</span></div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterPos','Mesero')"><span>Mesero</span><span class="mi">check</span></div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterPos','Mantenimiento')"><span>Mantenimiento</span><span class="mi">check</span></div>
+          </div>
+        </div>
+            
+        <div class="recl-filter-grp  " onclick="event.stopPropagation();window.__reclToggleDD('filterZone')">
+          <span class="lbl-grp">Zona</span>
+          <span class="val">Todas</span>
+          <span class="mi">expand_more</span>
+          <div class="recl-fdd" onclick="event.stopPropagation()">
+            <div class="recl-fdd-item all" onclick="window.__reclPickFilter('filterZone','')">
+              <span>Todas</span>
+            </div>
+            <div class="recl-fdd-item " onclick="window.__reclPickFilter('filterZone','Centro')"><span>Centro</span><span class="mi">check</span></div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterZone','Sur')"><span>Sur</span><span class="mi">check</span></div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterZone','Este')"><span>Este</span><span class="mi">check</span></div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterZone','Oeste')"><span>Oeste</span><span class="mi">check</span></div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterZone','Noroeste')"><span>Noroeste</span><span class="mi">check</span></div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterZone','Sureste')"><span>Sureste</span><span class="mi">check</span></div>
+          </div>
+        </div>
+            
+        <div class="recl-filter-grp  " onclick="event.stopPropagation();window.__reclToggleDD('filterMod')">
+          <span class="lbl-grp">Modalidad</span>
+          <span class="val">Todas</span>
+          <span class="mi">expand_more</span>
+          <div class="recl-fdd" onclick="event.stopPropagation()">
+            <div class="recl-fdd-item all" onclick="window.__reclPickFilter('filterMod','')">
+              <span>Todas</span>
+            </div>
+            <div class="recl-fdd-item " onclick="window.__reclPickFilter('filterMod','Tiempo \ncompleto')"><span>Tiempo completo</span><span class="mi">check</span></div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterMod','Medio tiempo')"><span>Medio tiempo</span><span class="mi">check</span></div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterMod','Por hora')"><span>Por hora</span><span class="mi">check</span></div>
+          </div>
+        </div>
+            
+        <div class="recl-filter-grp  " onclick="event.stopPropagation();window.__reclToggleDD('filterEng')">
+          <span class="lbl-grp">Inglés</span>
+          <span class="val">Todas</span>
+          <span class="mi">expand_more</span>
+          <div class="recl-fdd" onclick="event.stopPropagation()">
+            <div class="recl-fdd-item all" onclick="window.__reclPickFilter('filterEng','')">
+              <span>Todas</span>
+            </div>
+            <div class="recl-fdd-item " onclick="window.__reclPickFilter('filterEng','Básico')"><span>Básico</span><span class="mi">check</span></div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterEng','Intermedio')"><span>Intermedio</span><span class="mi">check</span></div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterEng','Avanzado')"><span>Avanzado</span><span class="mi">check</span></div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterEng','Conversacional')"><span>Conversacional</span><span class="mi">check</span></div>
+          </div>
+        </div>
+            
+        <div class="recl-filter-grp  " onclick="event.stopPropagation();window.__reclToggleDD('filterStatus')">
+          <span class="lbl-grp">Estado</span>
+          <span class="val">Todos</span>
+          <span class="mi">expand_more</span>
+          <div class="recl-fdd recl-fdd-status" onclick="event.stopPropagation()">
+            <div class="recl-fdd-item all" onclick="window.__reclPickFilter('filterStatus','')">
+              <span>Todos</span>
+            </div>
+            <div class="recl-fdd-item " onclick="window.__reclPickFilter('filterStatus','verdef')">
+                <span class="recl-fdd-dot" style="background:#1FA84A"></span>
+                <span class="recl-fdd-lbl">Disponible<small>Listo para asignar</small></span>
+                <span class="mi">check</span>
+              </div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterStatus','amarillo')">
+                <span class="recl-fdd-dot" style="background:#FFD500"></span>
+                <span class="recl-fdd-lbl">Disp. voluntario<small>Por horas / fin de semana</small></span>
+                <span class="mi">check</span>
+              </div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterStatus','naranja')">
+                <span class="recl-fdd-dot" style="background:#FF7A00"></span>
+                <span class="recl-fdd-lbl">Fijo<small>En requisición permanente</small></span>
+                <span class="mi">check</span>
+              </div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterStatus','cafe')">
+                <span class="recl-fdd-dot" style="background:#8B5A2B"></span>
+                <span class="recl-fdd-lbl">Asignación temp.<small>Cobertura corta</small></span>
+                <span class="mi">check</span>
+              </div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterStatus','verdem')">
+                <span class="recl-fdd-dot" style="background:#7CDB45"></span>
+                <span class="recl-fdd-lbl">Onboarding D1-2<small>Inducción inicial</small></span>
+                <span class="mi">check</span>
+              </div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterStatus','azul')">
+                <span class="recl-fdd-dot" style="background:#3FB8E6"></span>
+                <span class="recl-fdd-lbl">Día 3+ uniforme<small>En entrega de uniforme</small></span>
+                <span class="mi">check</span>
+              </div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterStatus','blanco')">
+                <span class="recl-fdd-dot" style="background:#E8E0D5"></span>
+                <span class="recl-fdd-lbl">Pre-asignación<small>Captura sin asignar</small></span>
+                <span class="mi">check</span>
+              </div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterStatus','rosa')">
+                <span class="recl-fdd-dot" style="background:#FF1493"></span>
+                <span class="recl-fdd-lbl">Stand by<small>Pausa temporal</small></span>
+                <span class="mi">check</span>
+              </div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterStatus','morado')">
+                <span class="recl-fdd-dot" style="background:#7B2CBF"></span>
+                <span class="recl-fdd-lbl">No regresó<small>Falta sin aviso</small></span>
+                <span class="mi">check</span>
+              </div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterStatus','rojo')">
+                <span class="recl-fdd-dot" style="background:#E11919"></span>
+                <span class="recl-fdd-lbl">Reportado<small>Incidencia abierta</small></span>
+                <span class="mi">check</span>
+              </div><div class="recl-fdd-item " onclick="window.__reclPickFilter('filterStatus','negro')">
+                <span class="recl-fdd-dot" style="background:#1A1108"></span>
+                <span class="recl-fdd-lbl">Blacklist<small>Vetado</small></span>
+                <span class="mi">check</span>
+              </div>
+          </div>
+        </div>
+            
+          </div>
+          <div class="recl-filters-right">
+            <div class="recl-segmented recl-segmented-inline">
+              <button class="active" onclick="window.__reclSetView('board')"><span class="mi">view_kanban</span>Tablero</button>
+              <button class="" onclick="window.__reclSetView('list')"><span class="mi">grid_view</span>Tarjetas</button>
+              <button class="" onclick="window.__reclSetView('table')"><span class="mi">table_rows</span>Tabla</button>
+              <button class="" onclick="window.__reclSetView('map')"><span class="mi">map</span>Por zona</button>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="recl-board-title">
+          <h2><span class="recl-board-ic"><span class="mi">groups</span></span>Pool de colaboradores</h2>
+          <div class="recl-board-sub">18 colaboradores en pool · 11 estados</div>
+        </div>
+        <div class="recl-board">
+          <div class="recl-col">
+            <div class="recl-col-head">
+              <span class="recl-col-dot" style="background:#1FA84A"></span>
+              <div class="recl-col-name">Disponible<span class="sub-st">Listo para asignar</span></div>
+              <span class="recl-col-count">04</span>
+            </div>
+            
+        <div class="recl-card " style="--card-st:#1FA84A" onclick="window.__reclSelect('C-4521')">
+          <div class="recl-card-top">
+            <div class="recl-avatar ">
+              ML
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">María López Hernández</div>
+              <div class="doc">ID C-4521</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Housekeeper</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Centro</span>
+            <span class="meta-pill modw" data-m="tc"><span class="mi">schedule</span>Tiempo completo</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb on"></span><span class="eb on"></span><span class="eb "></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Avanzado</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>2 hoteles</div>
+            <button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__reclSelect('C-4521')"><span class="mi">visibility</span>Ver detalle</button>
+          </div>
+        </div>
+        <div class="recl-card " style="--card-st:#1FA84A" onclick="window.__reclSelect('C-7812')">
+          <div class="recl-card-top">
+            <div class="recl-avatar gradG">
+              CR
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">Carlos Ruiz Méndez</div>
+              <div class="doc">ID C-7812</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Chef</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Sur</span>
+            <span class="meta-pill modw" data-m="tc"><span class="mi">schedule</span>Tiempo completo</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb on"></span><span class="eb on"></span><span class="eb on"></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Conversacional</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>1 hotel</div>
+            <button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__reclSelect('C-7812')"><span class="mi">visibility</span>Ver detalle</button>
+          </div>
+        </div>
+        <div class="recl-card " style="--card-st:#1FA84A" onclick="window.__reclSelect('C-3398')">
+          <div class="recl-card-top">
+            <div class="recl-avatar gradE">
+              AS
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">Ana Sofía Reyes</div>
+              <div class="doc">ID C-3398</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Mesero</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Centro</span>
+            <span class="meta-pill modw" data-m="mt"><span class="mi">schedule</span>Medio tiempo</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb on"></span><span class="eb on"></span><span class="eb "></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Avanzado</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>1 hotel</div>
+            <button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__reclSelect('C-3398')"><span class="mi">visibility</span>Ver detalle</button>
+          </div>
+        </div>
+        <div class="recl-card " style="--card-st:#1FA84A" onclick="window.__reclSelect('C-9023')">
+          <div class="recl-card-top">
+            <div class="recl-avatar ">
+              LP
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">Luis Pérez Gómez</div>
+              <div class="doc">ID C-9023</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Steward</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Sur</span>
+            <span class="meta-pill modw" data-m="tc"><span class="mi">schedule</span>Tiempo completo</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb on"></span><span class="eb "></span><span class="eb "></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Intermedio</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>1 hotel</div>
+            <button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__reclSelect('C-9023')"><span class="mi">visibility</span>Ver detalle</button>
+          </div>
+        </div>
+          </div>
+          <div class="recl-col">
+            <div class="recl-col-head">
+              <span class="recl-col-dot" style="background:#FFD500"></span>
+              <div class="recl-col-name">Disp. voluntario<span class="sub-st">Por horas / fin de semana</span></div>
+              <span class="recl-col-count">02</span>
+            </div>
+            
+        <div class="recl-card selected" style="--card-st:#FFD500" onclick="window.__reclSelect('C-5562')">
+          <div class="recl-card-top">
+            <div class="recl-avatar gradB">
+              JM
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">Julia Mendoza Torres</div>
+              <div class="doc">ID C-5562</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Housekeeper</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Oeste</span>
+            <span class="meta-pill modw" data-m="mt"><span class="mi">schedule</span>Medio tiempo</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb on"></span><span class="eb "></span><span class="eb "></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Intermedio</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>1 hotel</div>
+            <button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__reclSelect('C-5562')"><span class="mi">visibility</span>Ver detalle</button>
+          </div>
+        </div>
+        <div class="recl-card " style="--card-st:#FFD500" onclick="window.__reclSelect('C-6841')">
+          <div class="recl-card-top">
+            <div class="recl-avatar gradF">
+              PS
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">Pedro Salinas</div>
+              <div class="doc">ID C-6841</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Hoseman</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Este</span>
+            <span class="meta-pill modw" data-m="ph"><span class="mi">schedule</span>Por horas</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb "></span><span class="eb "></span><span class="eb "></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Básico</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>1 hotel</div>
+            <button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__reclSelect('C-6841')"><span class="mi">visibility</span>Ver detalle</button>
+          </div>
+        </div>
+          </div>
+          <div class="recl-col">
+            <div class="recl-col-head">
+              <span class="recl-col-dot" style="background:#FF7A00"></span>
+              <div class="recl-col-name">Fijo<span class="sub-st">En requisición permanente</span></div>
+              <span class="recl-col-count">02</span>
+            </div>
+            
+        <div class="recl-card " style="--card-st:#FF7A00" onclick="window.__reclSelect('C-1108')">
+          <div class="recl-card-top">
+            <div class="recl-avatar ">
+              RF
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">Rosario Flores Díaz</div>
+              <div class="doc">ID C-1108</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Housekeeper</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Sur</span>
+            <span class="meta-pill modw" data-m="tc"><span class="mi">schedule</span>Tiempo completo</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb on"></span><span class="eb "></span><span class="eb "></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Intermedio</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>1 hotel</div>
+            <button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__reclSelect('C-1108')"><span class="mi">visibility</span>Ver detalle</button>
+          </div>
+        </div>
+        <div class="recl-card " style="--card-st:#FF7A00" onclick="window.__reclSelect('C-2299')">
+          <div class="recl-card-top">
+            <div class="recl-avatar gradC">
+              DH
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">Diego Hernández Vega</div>
+              <div class="doc">ID C-2299</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Chef</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Noroeste</span>
+            <span class="meta-pill modw" data-m="tc"><span class="mi">schedule</span>Tiempo completo</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb on"></span><span class="eb on"></span><span class="eb "></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Avanzado</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>1 hotel</div>
+            <button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__reclSelect('C-2299')"><span class="mi">visibility</span>Ver detalle</button>
+          </div>
+        </div>
+          </div>
+          <div class="recl-col">
+            <div class="recl-col-head">
+              <span class="recl-col-dot" style="background:#8B5A2B"></span>
+              <div class="recl-col-name">Asignación temp.<span class="sub-st">Cobertura corta</span></div>
+              <span class="recl-col-count">01</span>
+            </div>
+            
+        <div class="recl-card " style="--card-st:#8B5A2B" onclick="window.__reclSelect('C-7741')">
+          <div class="recl-card-top">
+            <div class="recl-avatar gradF">
+              LC
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">Laura Castillo Ramos</div>
+              <div class="doc">ID C-7741</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Laundry</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Centro</span>
+            <span class="meta-pill modw" data-m="ph"><span class="mi">schedule</span>Por horas</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb "></span><span class="eb "></span><span class="eb "></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Básico</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>1 hotel</div>
+            <button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__reclSelect('C-7741')"><span class="mi">visibility</span>Ver detalle</button>
+          </div>
+        </div>
+          </div>
+          <div class="recl-col">
+            <div class="recl-col-head">
+              <span class="recl-col-dot" style="background:#7CDB45"></span>
+              <div class="recl-col-name">Onboarding D1-2<span class="sub-st">Inducción inicial</span></div>
+              <span class="recl-col-count">02</span>
+            </div>
+            
+        <div class="recl-card " style="--card-st:#7CDB45" onclick="window.__reclSelect('C-9901')">
+          <div class="recl-card-top">
+            <div class="recl-avatar gradC">
+              MS
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">Mariana Solís</div>
+              <div class="doc">ID C-9901</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Mesero</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Centro</span>
+            <span class="meta-pill modw" data-m="tc"><span class="mi">schedule</span>Tiempo completo</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb on"></span><span class="eb on"></span><span class="eb "></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Avanzado</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>0 hoteles</div>
+            <button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__reclSelect('C-9901')"><span class="mi">visibility</span>Ver detalle</button>
+          </div>
+        </div>
+        <div class="recl-card " style="--card-st:#7CDB45" onclick="window.__reclSelect('C-9912')">
+          <div class="recl-card-top">
+            <div class="recl-avatar gradC">
+              JA
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">José Aguilar</div>
+              <div class="doc">ID C-9912</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Steward</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Oeste</span>
+            <span class="meta-pill modw" data-m="mt"><span class="mi">schedule</span>Medio tiempo</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb on"></span><span class="eb "></span><span class="eb "></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Intermedio</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>0 hoteles</div>
+            <button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__reclSelect('C-9912')"><span class="mi">visibility</span>Ver detalle</button>
+          </div>
+        </div>
+          </div>
+          <div class="recl-col">
+            <div class="recl-col-head">
+              <span class="recl-col-dot" style="background:#3FB8E6"></span>
+              <div class="recl-col-name">Día 3+ uniforme<span class="sub-st">En entrega de uniforme</span></div>
+              <span class="recl-col-count">01</span>
+            </div>
+            
+        <div class="recl-card " style="--card-st:#3FB8E6" onclick="window.__reclSelect('C-3344')">
+          <div class="recl-card-top">
+            <div class="recl-avatar gradE">
+              RC
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">Roberto Cruz</div>
+              <div class="doc">ID C-3344</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Hoseman</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Sur</span>
+            <span class="meta-pill modw" data-m="tc"><span class="mi">schedule</span>Tiempo completo</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb on"></span><span class="eb "></span><span class="eb "></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Intermedio</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>1 hotel</div>
+            <button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__reclSelect('C-3344')"><span class="mi">visibility</span>Ver detalle</button>
+          </div>
+        </div>
+          </div>
+          <div class="recl-col">
+            <div class="recl-col-head">
+              <span class="recl-col-dot" style="background:#E8E0D5"></span>
+              <div class="recl-col-name">Pre-asignación<span class="sub-st">Captura sin asignar</span></div>
+              <span class="recl-col-count">02</span>
+            </div>
+            
+        <div class="recl-card " style="--card-st:#E8E0D5" onclick="window.__reclSelect('C-7700')">
+          <div class="recl-card-top">
+            <div class="recl-avatar gradF">
+              SV
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">Sandra Vázquez</div>
+              <div class="doc">ID C-7700</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Housekeeper</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Oeste</span>
+            <span class="meta-pill modw" data-m="tc"><span class="mi">schedule</span>Tiempo completo</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb on"></span><span class="eb "></span><span class="eb "></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Intermedio</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>0 hoteles</div>
+            <button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__reclSelect('C-7700')"><span class="mi">visibility</span>Ver detalle</button>
+          </div>
+        </div>
+        <div class="recl-card " style="--card-st:#E8E0D5" onclick="window.__reclSelect('C-7780')">
+          <div class="recl-card-top">
+            <div class="recl-avatar gradF">
+              TR
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">Tomás Ríos</div>
+              <div class="doc">ID C-7780</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Mantenimiento</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Sureste</span>
+            <span class="meta-pill modw" data-m="tc"><span class="mi">schedule</span>Tiempo completo</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb "></span><span class="eb "></span><span class="eb "></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Básico</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>0 hoteles</div>
+            <button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__reclSelect('C-7780')"><span class="mi">visibility</span>Ver detalle</button>
+          </div>
+        </div>
+          </div>
+          <div class="recl-col">
+            <div class="recl-col-head">
+              <span class="recl-col-dot" style="background:#FF1493"></span>
+              <div class="recl-col-name">Stand by<span class="sub-st">Pausa temporal</span></div>
+              <span class="recl-col-count">01</span>
+            </div>
+            
+        <div class="recl-card " style="--card-st:#FF1493" onclick="window.__reclSelect('C-4012')">
+          <div class="recl-card-top">
+            <div class="recl-avatar gradC">
+              PN
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">Patricia Núñez</div>
+              <div class="doc">ID C-4012</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Housekeeper</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Centro</span>
+            <span class="meta-pill modw" data-m="tc"><span class="mi">schedule</span>Tiempo completo</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb on"></span><span class="eb on"></span><span class="eb "></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Avanzado</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>1 hotel</div>
+            <button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__reclSelect('C-4012')"><span class="mi">visibility</span>Ver detalle</button>
+          </div>
+        </div>
+          </div>
+          <div class="recl-col">
+            <div class="recl-col-head">
+              <span class="recl-col-dot" style="background:#7B2CBF"></span>
+              <div class="recl-col-name">No regresó<span class="sub-st">Falta sin aviso</span></div>
+              <span class="recl-col-count">01</span>
+            </div>
+            
+        <div class="recl-card " style="--card-st:#7B2CBF" onclick="window.__reclSelect('C-2233')">
+          <div class="recl-card-top">
+            <div class="recl-avatar gradC">
+              FL
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">Fernando Lozano</div>
+              <div class="doc">ID C-2233</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Steward</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Centro</span>
+            <span class="meta-pill modw" data-m="ph"><span class="mi">schedule</span>Por horas</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb "></span><span class="eb "></span><span class="eb "></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Básico</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>1 hotel</div>
+            <button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__reclSelect('C-2233')"><span class="mi">visibility</span>Ver detalle</button>
+          </div>
+        </div>
+          </div>
+          <div class="recl-col">
+            <div class="recl-col-head">
+              <span class="recl-col-dot" style="background:#E11919"></span>
+              <div class="recl-col-name">Reportado<span class="sub-st">Incidencia abierta</span></div>
+              <span class="recl-col-count">01</span>
+            </div>
+            
+        <div class="recl-card " style="--card-st:#E11919" onclick="window.__reclSelect('C-5050')">
+          <div class="recl-card-top">
+            <div class="recl-avatar gradD">
+              IR
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">Iván Rodríguez</div>
+              <div class="doc">ID C-5050</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Hoseman</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Noroeste</span>
+            <span class="meta-pill modw" data-m="tc"><span class="mi">schedule</span>Tiempo completo</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb "></span><span class="eb "></span><span class="eb "></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Básico</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>1 hotel</div>
+            <button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__reclSelect('C-5050')"><span class="mi">visibility</span>Ver detalle</button>
+          </div>
+        </div>
+          </div>
+          <div class="recl-col">
+            <div class="recl-col-head">
+              <span class="recl-col-dot" style="background:#1A1108"></span>
+              <div class="recl-col-name">Blacklist<span class="sub-st">Vetado</span></div>
+              <span class="recl-col-count">01</span>
+            </div>
+            
+        <div class="recl-card " style="--card-st:#1A1108" onclick="window.__reclSelect('C-3311')">
+          <div class="recl-card-top">
+            <div class="recl-avatar gradE">
+              JP
+              <span class="recl-st-ring"></span>
+            </div>
+            <div class="nm">
+              <div class="name">Jorge Pérez Mata</div>
+              <div class="doc">ID C-3311</div>
+            </div>
+          </div>
+          <div class="recl-card-meta">
+            <span class="meta-pill pos"><span class="mi">work_outline</span>Housekeeper</span>
+            <span class="meta-pill zone"><span class="mi">place</span>Este</span>
+            <span class="meta-pill modw" data-m="tc"><span class="mi">schedule</span>Tiempo completo</span>
+          </div>
+          <div class="recl-eng">
+            <span>EN</span>
+            <div class="eng-bars"><span class="eb on"></span><span class="eb "></span><span class="eb "></span><span class="eb "></span></div>
+            <span style="margin-left:auto;color:rgb(83,59,23);font-weight:600">Básico</span>
+          </div>
+          <div class="recl-card-foot">
+            <div class="info"><span class="mi">history</span>1 hotel</div>
+            <span class="assign-btn" style="background:rgba(225,25,25,.08);color:var(--red);border-color:rgba(225,25,25,.2)" onclick="event.stopPropagation();window.__reclSelect('C-3311')"><span class="mi">block</span>Blacklist</span>
+          </div>
+        </div>
+          </div></div>
+      
+      </div>
+      </div>
+
+
+      <!-- ============= REQUISICIONES PAGE ============= -->
+      <div class="page-view" data-page-view="Requisiciones" style="display:none">
+        <div id="requi-root">
+
+          <!-- HERO (estilo recl) -->
+          <div class="recl-hero">
+            <div class="recl-hero-left" style="height:160px">
+              <div class="eyebrow"><span class="pulse"></span>Bandeja de hoy · Self-pick activo</div>
+              <h1>Toma <span class="accent">requisiciones autorizadas</span> y cubre la posición.</h1>
+              <div class="lead">Las urgentes (rojo) entran primero. Toma las que puedas cubrir, asigna colaboradores del pool y cierra cuando estén completas.</div>
+            </div>
+            <div class="recl-hero-right" style="height:160px">
+              <div class="recl-stat" style="cursor:pointer" onclick="window.__requiSetTab('autorizadas')">
+                <div class="rs-top">
+                  <div class="rs-ic" style="background:rgba(31,168,74,.12);color:#1F8F50"><span class="mi">inbox</span></div>
+                  <div class="rs-val" id="kpi-aut-val">8</div>
+                  <div class="rs-trend up"><span class="mi">schedule</span>3 +24h</div>
+                </div>
+                <div class="rs-lbl">Bandeja autorizadas</div>
+              </div>
+              <div class="recl-stat" style="cursor:pointer" onclick="window.__requiSetTab('mias')">
+                <div class="rs-top">
+                  <div class="rs-ic" style="background:rgba(255,142,0,.12);color:var(--o-600)"><span class="mi">assignment_ind</span></div>
+                  <div class="rs-val" id="kpi-mias-val">5</div>
+                  <div class="rs-trend up"><span class="mi">trending_up</span>+2</div>
+                </div>
+                <div class="rs-lbl">Mis requisiciones</div>
+              </div>
+              <div class="recl-stat" style="cursor:pointer" onclick="window.__requiSetUrg('high')">
+                <div class="rs-top">
+                  <div class="rs-ic" style="background:rgba(225,25,25,.1);color:var(--red)"><span class="mi">priority_high</span></div>
+                  <div class="rs-val" id="kpi-urg-val" style="color:var(--red)">3</div>
+                  <div class="rs-trend down"><span class="mi">timer</span>SLA</div>
+                </div>
+                <div class="rs-lbl">Urgentes (24h)</div>
+              </div>
+              <div class="recl-stat">
+                <div class="rs-top">
+                  <div class="rs-ic" style="background:rgba(63,184,230,.14);color:#1583B0"><span class="mi">verified</span></div>
+                  <div class="rs-val">86<span style="font-size:14px;color:var(--ink-3);font-weight:600">%</span></div>
+                  <div class="rs-trend up"><span class="mi">arrow_upward</span>+4pp</div>
+                </div>
+                <div class="rs-lbl">Tasa cobertura (mes)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TABS PRINCIPALES (full width) -->
+          <div class="recl-segmented requi-tabs-full" id="requi-tabs">
+            <button class="active" data-tab="autorizadas" onclick="window.__requiSetTab('autorizadas')">
+              <span class="mi">inbox</span>
+              <span class="requi-tab-label">Bandeja de Autorizadas</span>
+              <span class="requi-tab-count" data-tone="ok" id="tab-aut-num">8</span>
+            </button>
+            <button data-tab="mias" onclick="window.__requiSetTab('mias')">
+              <span class="mi">assignment_ind</span>
+              <span class="requi-tab-label">Mis requisiciones</span>
+              <span class="requi-tab-count" data-tone="info" id="tab-mias-num">5</span>
+            </button>
+          </div>
+
+          <!-- SUB-TABS (solo Mis Req) -->
+          <div id="requi-subtabs-wrap" style="display:none;margin:14px 0 0"></div>
+
+          <!-- TOOLBAR + FILTROS (una sola fila, search incluido) -->
+          <div class="recl-filters" id="requi-filters" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 16px"></div>
+
+          <!-- LEYENDA removida -->
+
+          <!-- TÍTULO -->
+          <div class="recl-board-title">
+            <h2>
+              <span class="recl-board-ic"><span class="mi" id="requi-section-icon">inbox</span></span>
+              <span id="requi-section-title">Bandeja de Autorizadas</span>
+              <span class="recl-board-sub" id="requi-section-sub">8 requisiciones · ordenadas por urgencia</span>
+            </h2>
+            <div class="recl-segmented" id="requi-views">
+              <button data-view="board" class="active" onclick="window.__requiSetView('board')"><span class="mi">view_kanban</span>Tablero</button>
+              <button data-view="cards" onclick="window.__requiSetView('cards')"><span class="mi">grid_view</span>Tarjetas</button>
+              <button data-view="table" onclick="window.__requiSetView('table')"><span class="mi">table_rows</span>Tabla</button>
+            </div>
+          </div>
+
+          <!-- CONTENT -->
+          <div id="requi-content"></div>
+
+        </div>
+      </div><!-- /page-view Requisiciones -->
+
+    </main>
+
+    <!-- ==================== MI INFORMACION PAGE ==================== -->
+    <div class="mi-page" id="miPage">
+      <div class="mi-page-inner">
+        <!-- SIDEBAR INTERNO -->
+        <aside class="mi-side" style="background-color: rgb(255, 252, 249)">
+          <div class="mi-back" onclick="closeMyInfo()">
+            <span class="mi">arrow_back</span>Volver
+          </div>
+          <div class="mi-side-title">Mi cuenta</div>
+          <div class="mi-nav active" onclick="miNav(this,'info')">
+            <span class="mi">person</span>Mi información
+          </div>
+          <div class="mi-nav" onclick="miNav(this,'zona')">
+            <span class="mi">location_on</span>Mi zona asignada
+          </div>
+          <div class="mi-nav" onclick="miNav(this,'metricas')">
+            <span class="mi">insights</span>Mis métricas
+          </div>
+          <div class="mi-nav" onclick="miNav(this,'seguridad')">
+            <span class="mi">lock</span>Seguridad
+          </div>
+          <div class="mi-nav" onclick="miNav(this,'preferencias')">
+            <span class="mi">tune</span>Preferencias
+          </div>
+        </aside>
+
+        <!-- CONTENIDO -->
+        <div class="mi-content" style="background-color: rgb(255, 255, 255)">
+
+          <!-- PANE: MI INFORMACION -->
+          <div class="mi-pane active" id="miPane-info">
+            <div class="mi-avatar-row">
+              <div class="mi-avatar">JL<div class="mi-avatar-edit" onclick="toast('Subir nueva foto…','photo_camera')" title="Cambiar foto"><span class="mi">photo_camera</span></div></div>
+              <div class="mi-name-block">
+                <h3 style="font-size: 24px">Juanita López Martínez</h3>
+                <div class="role" style="font-size: 16px">Líder de Grupo de Reclutadoras</div>
+              </div>
+            </div>
+
+            <div class="mi-hero">
+              <h2>Mi información</h2>
+              <div class="sub">Consulta los datos de tu perfil o cambia tu foto de perfil.</div>
+            </div>
+
+            <div class="mi-body">
+              <div class="mi-section">
+                <h4>Mi información de perfil</h4>
+                <div class="mi-grid">
+                  <div class="mi-field wide" data-cc-id="cc-1">
+                    <div class="fi-ic"><span class="mi">person</span></div>
+                    <div class="fi-txt">
+                      <div class="fi-label">Nombre completo</div>
+                      <div class="fi-val">Juanita López Martínez</div>
+                    </div>
+                    <span class="mi fi-lock">lock</span>
+                  </div>
+                  <div class="mi-field wide">
+                    <div class="fi-ic"><span class="mi">mail</span></div>
+                    <div class="fi-txt">
+                      <div class="fi-label">Correo electrónico</div>
+                      <div class="fi-val">juanita.lopez@oranje.com</div>
+                    </div>
+                    <span class="mi fi-lock">lock</span>
+                  </div>
+                  <div class="mi-field wide">
+                    <div class="fi-ic"><span class="mi">phone</span></div>
+                    <div class="fi-txt">
+                      <div class="fi-label">Teléfono</div>
+                      <div class="fi-val">+52 55 4821 0935</div>
+                    </div>
+                    <span class="mi fi-lock">lock</span>
+                  </div>
+                  <div class="mi-field wide">
+                    <div class="fi-ic"><span class="mi">work</span></div>
+                    <div class="fi-txt">
+                      <div class="fi-label">Rol</div>
+                      <div class="fi-val">Líder de Grupo de Reclutadoras</div>
+                    </div>
+                    <span class="mi fi-lock">lock</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANE: ZONA -->
+          <div class="mi-pane" id="miPane-zona">
+            <div class="mi-hero">
+              <h2>Mi zona asignada</h2>
+              <div class="sub">Zona geográfica y propiedades que tienes a tu cargo.</div>
+            </div>
+            <div class="mi-body">
+              <div class="mi-section">
+                <div class="mi-zone-card">
+                  <div class="zc-ic"><span class="mi">map</span></div>
+                  <div>
+                    <div class="zc-lbl">Zona</div>
+                    <div class="zc-val">Zona Centro</div>
+                    <div class="zc-meta">3 propiedades activas · CDMX</div>
+                  </div>
+                </div>
+              </div>
+              <div class="mi-section">
+                <h4 style="font-weight: 500; font-size: 12px">Propiedades asignadas</h4>
+                <div class="mi-grid">
+                  <div class="mi-field wide">
+                    <div class="fi-ic"><span class="mi">apartment</span></div>
+                    <div class="fi-txt">
+                      <div class="fi-label">Propiedad 01</div>
+                      <div class="fi-val">Hotel Costa del Sol</div>
+                    </div>
+                  </div>
+                  <div class="mi-field wide">
+                    <div class="fi-ic"><span class="mi">apartment</span></div>
+                    <div class="fi-txt">
+                      <div class="fi-label">Propiedad 02</div>
+                      <div class="fi-val">Hotel Palma Real</div>
+                    </div>
+                  </div>
+                  <div class="mi-field wide">
+                    <div class="fi-ic"><span class="mi">apartment</span></div>
+                    <div class="fi-txt">
+                      <div class="fi-label">Propiedad 03</div>
+                      <div class="fi-val">Hotel Mirador Centro</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANE: METRICAS -->
+          <div class="mi-pane" id="miPane-metricas">
+            <div class="mi-hero">
+              <h2>Mis métricas</h2>
+              <div class="sub">Indicadores de desempeño de tu gestión como reclutadora.</div>
+            </div>
+            <div class="mi-body">
+              <div class="mi-metrics-grid">
+                <div class="mi-metric">
+                  <div class="mm-ic"><span class="mi">assignment_turned_in</span></div>
+                  <div class="mm-lbl">Requisiciones cubiertas (mes)</div>
+                  <div class="mm-val">12<span class="mm-u">/15</span></div>
+                  <div class="mm-trend up"><span class="mi">trending_up</span>+3 vs. mes anterior</div>
+                </div>
+                <div class="mi-metric">
+                  <div class="mm-ic"><span class="mi">donut_small</span></div>
+                  <div class="mm-lbl">Tasa de cobertura</div>
+                  <div class="mm-val">80<span class="mm-u">%</span></div>
+                  <div class="mm-trend up"><span class="mi">trending_up</span>+5pp vs. mes anterior</div>
+                </div>
+                <div class="mi-metric">
+                  <div class="mm-ic"><span class="mi">how_to_reg</span></div>
+                  <div class="mm-lbl">Candidatos aprobados</div>
+                  <div class="mm-val">47</div>
+                  <div class="mm-trend up"><span class="mi">trending_up</span>+8 vs. mes anterior</div>
+                </div>
+                <div class="mi-metric">
+                  <div class="mm-ic"><span class="mi">schedule</span></div>
+                  <div class="mm-lbl">Tiempo promedio de asignación</div>
+                  <div class="mm-val">3.4<span class="mm-u">d</span></div>
+                  <div class="mm-trend down"><span class="mi">trending_down</span>-0.6d vs. mes anterior</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANE: SEGURIDAD -->
+          <div class="mi-pane" id="miPane-seguridad">
+            <div class="mi-hero">
+              <h2>Seguridad</h2>
+              <div class="sub">Administra tu contraseña y la seguridad de tu cuenta.</div>
+            </div>
+            <div class="mi-body">
+              <div class="mi-section">
+                <div class="mi-grid">
+                  <div class="mi-field wide" style="cursor:pointer" onclick="toast('Próximamente','lock')">
+                    <div class="fi-ic"><span class="mi">lock_reset</span></div>
+                    <div class="fi-txt">
+                      <div class="fi-label">Contraseña</div>
+                      <div class="fi-val">Cambiar contraseña</div>
+                    </div>
+                    <span class="mi fi-lock">chevron_right</span>
+                  </div>
+                  <div class="mi-field wide" style="cursor:pointer" onclick="toast('Próximamente','shield')">
+                    <div class="fi-ic"><span class="mi">verified_user</span></div>
+                    <div class="fi-txt">
+                      <div class="fi-label">Autenticación de dos factores</div>
+                      <div class="fi-val">Configurar 2FA</div>
+                    </div>
+                    <span class="mi fi-lock">chevron_right</span>
+                  </div>
+                  <div class="mi-field wide" style="cursor:pointer" onclick="toast('Próximamente','devices')">
+                    <div class="fi-ic"><span class="mi">devices</span></div>
+                    <div class="fi-txt">
+                      <div class="fi-label">Sesiones activas</div>
+                      <div class="fi-val">Ver dispositivos conectados</div>
+                    </div>
+                    <span class="mi fi-lock">chevron_right</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANE: PREFERENCIAS -->
+          <div class="mi-pane" id="miPane-preferencias">
+            <div class="mi-hero">
+              <h2>Preferencias</h2>
+              <div class="sub">Personaliza tu experiencia en la plataforma.</div>
+            </div>
+            <div class="mi-body">
+              <div class="mi-section">
+                <div class="mi-grid">
+                  <div class="mi-field wide">
+                    <div class="fi-ic"><span class="mi">notifications</span></div>
+                    <div class="fi-txt">
+                      <div class="fi-label">Notificaciones</div>
+                      <div class="fi-val">Email, push y en la app</div>
+                    </div>
+                    <span class="mi fi-lock">chevron_right</span>
+                  </div>
+                  <div class="mi-field wide">
+                    <div class="fi-ic"><span class="mi">language</span></div>
+                    <div class="fi-txt">
+                      <div class="fi-label">Idioma</div>
+                      <div class="fi-val">Español (México)</div>
+                    </div>
+                    <span class="mi fi-lock">chevron_right</span>
+                  </div>
+                  <div class="mi-field wide">
+                    <div class="fi-ic"><span class="mi">palette</span></div>
+                    <div class="fi-txt">
+                      <div class="fi-label">Tema</div>
+                      <div class="fi-val">Claro</div>
+                    </div>
+                    <span class="mi fi-lock">chevron_right</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /page-view Reclutamiento -->
+
+<!-- TWEAKS -->
+<div class="tweaks" id="tweaks">
+  <div class="tw-head">
+    <h4>Tweaks</h4>
+    <span class="ic-btn" style="width:28px;height:28px" onclick="closeTweaks()"><span class="mi" style="font-size:16px">close</span></span>
+  </div>
+  <div class="tw-body">
+    <div class="tw-row">
+      <label>Tono del logo</label>
+      <div class="tw-swatches" id="logoTone">
+        <div class="tw-sw active" style="background:#FF8E00" data-tone="#FF8E00"></div>
+        <div class="tw-sw" style="background:#FFB840" data-tone="#FFB840"></div>
+        <div class="tw-sw" style="background:#C85F00" data-tone="#C85F00"></div>
+        <div class="tw-sw" style="background:#8B55D6" data-tone="#8B55D6"></div>
+      </div>
+    </div>
+    <div class="tw-row">
+      <label>Densidad</label>
+      <select id="density">
+        <option value="cozy">Cómoda</option>
+        <option value="compact">Compacta</option>
+      </select>
+    </div>
+    <div class="tw-row">
+      <label>Saludo del dashboard</label>
+      <select id="greet">
+        <option value="informal">Informal</option>
+        <option value="formal">Formal</option>
+      </select>
+    </div>
+    <div class="tw-row">
+      <label>Sidebar</label>
+      <select id="sbState">
+        <option value="expanded">Expandido</option>
+        <option value="collapsed">Colapsado</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="mi" id="toastIcon">check_circle</span><span id="toastMsg">OK</span><button class="toast-action" id="toastAction" style="display:none"></button></div>
+
+<script src="script.js"></script>
+
+
+
+
+
+
+</body></html>

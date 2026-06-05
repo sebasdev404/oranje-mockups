@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"c:/Users/SebasDev/Desktop/oranje-mockups\" status --short --branch)",
+      "Bash(git -C \"c:/Users/SebasDev/Desktop/oranje-matrix-system\" status --short --branch)",
+      "Bash(cp \"repo elba/Oranje Platform.html\" \"Mockups/Reclutamiento/Lider de grupo/Lider de Grupo - Oranje.html\")",
+      "Bash(sed -n '7650,7653p' \"repo elba/Oranje Platform.html\")",
+      "Bash(sed -n '7330,7334p' \"repo elba/Oranje Platform.html\")",
+      "Bash(sed -n '4205,4216p' \"repo elba/Oranje Platform.html\")",
+      "Bash(python -)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(grep -oain 'href=\"styles.css\"\\\\|href=\"./styles.css\"\\\\|src=\"uploads\\\\|src=\"./uploads\\\\|src=\"screenshots\\\\|url\\(uploads\\\\|url\\(./uploads\\\\|\\\\.\\\\./\\\\|src=\"\\\\.\\\\|href=\"\\\\.' \"Lider de Grupo - Oranje.html\")",
+      "Bash(rm -f \"Oranje Platform \\(offline\\).html\" \"Oranje Platform \\(standalone\\).html\" \"Oranje Platform \\(standalone-src\\).html\" \"Oranje Platform.html\" \"Resumen Redesign.html\" \"_unpacked.html\" \"n.zip\" \"styles.css\")",
+      "Bash(rm -rf \"screenshots\" \"uploads\")",
+      "Bash(awk -F: '$1>=7170 && $1<=7755')"
+    ]
+  }
+}
