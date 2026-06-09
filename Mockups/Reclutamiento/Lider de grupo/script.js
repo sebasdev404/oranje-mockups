@@ -2961,6 +2961,50 @@
       {id:'REQ-2410', mine:true, hotel:'Hotel Ejemplo Parcial', zone:'Este', urg:'low', state:'parcial', age:'Cerrada parcial', positions:buildPositions([{pos:'Mantenimiento',total:3,cubierto:2,proceso:0},{pos:'Hoseman',total:2,cubierto:1,proceso:0}]), period:'25–30 Nov', shift:'Tiempo \ncompleto', took:'Domingo 18:45'},
     ];
 
+    // ===== Modelo COLABORATIVO de requisición: reclutadores participantes + historial =====
+    // Una requisición ya no tiene dueño único: r.takers[] son los reclutadores que la trabajan.
+    // r.history[] es el timeline con actor (quién tomó/se unió/asignó/salió). r.mine = soy taker.
+    const ME = {id:'me', nm:'Tú'};
+    const REC_ANA = {id:'al', nm:'Ana López'};
+    const REC_CARLOS = {id:'cr', nm:'Carlos Ruiz'};
+    const REC_BEA = {id:'bc', nm:'Beatriz Cruz'};
+    const _now = Date.now();
+    const mins = m => _now - m*60000;
+    function pushHist(r, ev){ if(!r.history) r.history=[]; r.history.push({ts: ev.ts!=null?ev.ts:Date.now(), ...ev}); }
+    REQUIS.forEach(r=>{
+      if(!r.history) r.history=[];
+      if(!r.takers) r.takers = r.mine ? [{...ME, ts:mins(120)}] : [];
+      if(r.mine && !r.history.length) r.history.push({ts:mins(120), who:ME, type:'take'});
+    });
+    // Demo colaborativo: requisiciones de la BANDEJA ya trabajadas por OTROS reclutadores
+    // (aparecen con badge "En colaboración · N" y botón "Unirme"), y una MÍA con co-reclutador.
+    (function seedColab(){
+      const set = (id, takers, hist) => { const r=REQUIS.find(x=>x.id===id); if(r){ r.takers=takers; r.history=hist; } };
+      set('REQ-2462', [{...REC_ANA, ts:mins(300)}], [
+        {ts:mins(300), who:REC_ANA, type:'take'},
+        {ts:mins(280), who:REC_ANA, type:'assign', pos:'Chef', names:['Diego Fuentes','Marcela Ruiz','Iván Soto','Paola Méndez','Luis Cano']},
+        {ts:mins(120), who:REC_ANA, type:'assign', pos:'Steward', names:['Jorge Lima','Ana Vega','Saúl Ortiz']},
+      ]);
+      set('REQ-2471', [{...REC_CARLOS, ts:mins(480)}], [
+        {ts:mins(480), who:REC_CARLOS, type:'take'},
+        {ts:mins(60), who:REC_CARLOS, type:'assign', pos:'Hoseman', names:['Pedro Salinas','Mario Gil','Tomás Bravo','Rocío Paz','Hugo Lara','Sara Mena','Beto Ríos']},
+      ]);
+      set('REQ-2468', [{...REC_ANA, ts:mins(840)},{...REC_BEA, ts:mins(200)}], [
+        {ts:mins(840), who:REC_ANA, type:'take'},
+        {ts:mins(800), who:REC_ANA, type:'assign', pos:'Chef', names:['Nadia Cruz','Omar Téllez']},
+        {ts:mins(200), who:REC_BEA, type:'take'},
+        {ts:mins(180), who:REC_BEA, type:'assign', pos:'Electricista', names:['Raúl Pinto']},
+        {ts:mins(160), who:REC_BEA, type:'assign', pos:'Mesero', names:['Karla Díaz']},
+      ]);
+      // Una MÍA con co-reclutador (Carlos también participa) → timeline multi-actor en "Mis requisiciones"
+      set('REQ-2562', [{...ME, ts:mins(1500)},{...REC_CARLOS, ts:mins(90)}], [
+        {ts:mins(1500), who:ME, type:'take'},
+        {ts:mins(1400), who:ME, type:'assign', pos:'Chef', names:['Sergio Vidal','Lucía Parra','Iker Sosa','Noa Frías','Beni Mar']},
+        {ts:mins(90), who:REC_CARLOS, type:'take'},
+        {ts:mins(60), who:REC_CARLOS, type:'assign', pos:'Steward', names:['Karen Ruiz','Diana Cruz','Saúl Vela']},
+      ]);
+    })();
+
     const POOL = [
       {id:'C-4521', nm:'María López Hernández', pos:'Housekeeper', zone:'Centro', eng:'Avanzado', exp:'4 años'},
       {id:'C-3398', nm:'Ana Sofía Reyes', pos:'Mesero', zone:'Centro', eng:'Avanzado', exp:'2 años'},
@@ -3200,6 +3244,8 @@
     // Liberada → tiene cobertura parcial — alguien avanzó y la dejó
     function reqContext(r){
       const t = totals(r);
+      const otros = r.takers ? r.takers.filter(x=>x.id!=='me').length : 0;
+      if(otros) return {key:'colab', lbl:'En colaboración', sub:`${otros} reclutador${otros>1?'es':''} trabajándola`, ic:'groups'};
       if(t.cub === 0) return {key:'nueva', lbl:'Autorizadas', sub:'Ya puede recibir colaboradores', ic:'fiber_new'};
       if(t.cub >= t.total) return null; // ya completa
       return {key:'liberada', lbl:'Liberada', sub:'Otro reclutador la dejó con avances', ic:'volunteer_activism'};
@@ -3211,6 +3257,7 @@
       const sub = SUBSTATES[r.state];
       const stColor = URG_COLOR[r.urg];
       const isMine = !!r.mine;
+      const othersN = r.takers ? r.takers.filter(x=>x.id!=='me').length : 0;
       const _d = reqDerive(r);
       // El ribbon de contexto (Autorizadas / Liberada) solo aplica en la Bandeja.
       // En "Mis requisiciones" no tiene sentido — ya las tomaste.
@@ -3222,7 +3269,7 @@
              <button class="req-take-btn" onclick="event.stopPropagation();window.__requiOpen('${r.id}','asignacion')"><span class="mi">person_add</span>Asignar colaboradores</button>`
           : `<button class="req-take-btn" onclick="event.stopPropagation();window.__requiOpen('${r.id}','detalles')"><span class="mi">visibility</span>Ver requisición</button>`)
         : `<button class="assign-btn" style="background:transparent;color:var(--ink-2);border-color:var(--line-2)" onclick="event.stopPropagation();window.__requiOpen('${r.id}','detalles')"><span class="mi">visibility</span>Ver detalle</button>
-           <button class="req-take-btn" onclick="event.stopPropagation();window.__requiTake('${r.id}')"><span class="mi">flag</span>Tomar requisición</button>`;
+           <button class="req-take-btn" onclick="event.stopPropagation();window.__requiTake('${r.id}')"><span class="mi">${othersN?'group_add':'flag'}</span>${othersN?'Unirme':'Tomar requisición'}</button>`;
 
       // Badge especial: auto-asignación por menor carga (REQ-2598).
       // La requi estuvo 24h sin que ningún reclutador la tomara, así que
@@ -3377,9 +3424,10 @@
             const _d = reqDerive(r);
             const sem = domSemaforo(r);
             const ctx = !isMine ? reqContext(r) : null;
+            const othersN = r.takers ? r.takers.filter(x=>x.id!=='me').length : 0;
             const cta = isMine
               ? `<button class="req-take-btn" onclick="event.stopPropagation();window.__requiOpen('${r.id}')"><span class="mi">visibility</span>Ver</button>`
-              : `<button class="req-take-btn" onclick="event.stopPropagation();window.__requiTake('${r.id}')"><span class="mi">flag</span>Tomar requisición</button>`;
+              : `<button class="req-take-btn" onclick="event.stopPropagation();window.__requiTake('${r.id}')"><span class="mi">${othersN?'group_add':'flag'}</span>${othersN?'Unirme':'Tomar requisición'}</button>`;
 
             // Contrato pill (Mixto si distintas posiciones tienen contratos diferentes)
             const conPill = (()=>{
@@ -3478,9 +3526,13 @@
     window.__requiTake = id => {
       const r = REQUIS.find(x=>x.id===id);
       if(!r) return;
-      r.mine = true; r.state='proceso'; r.took='Hace un momento'; r.age='Tomada hace 0h';
+      if(!r.takers) r.takers = [];
+      const yaSoy = r.takers.some(t=>t.id==='me');
+      const otros = r.takers.filter(t=>t.id!=='me').length;
+      if(!yaSoy){ r.takers.push({...ME, ts:Date.now()}); pushHist(r,{who:ME, type:'take'}); }
+      r.mine = true; if(r.state==='autorizada') r.state='proceso'; r.took='Hace un momento'; r.age='Tomada hace 0h';
       state.tab='mias'; state.fSub='proceso'; window.__renderRequi();
-      showToast(`✓ ${r.id} movida a Mis requisiciones`, {
+      showToast(otros ? `✓ Te uniste a ${r.id} · ${otros+1} reclutadores trabajándola` : `✓ ${r.id} movida a Mis requisiciones`, {
         actionLabel: 'Ver',
         actionIcon: 'arrow_forward',
         onAction: () => { state.tab='mias'; window.__renderRequi(); window.__requiOpen(r.id); },
@@ -3490,11 +3542,19 @@
     window.__requiRelease = id => {
       const r = REQUIS.find(x=>x.id===id);
       if(!r) return;
-      r.mine=false; r.state='autorizada'; r.age='Devuelta a bandeja';
-      r.positions = r.positions.map(p=>({...p, cubierto:0, proceso:0, segs:p.segs.map(()=>({st:'vacante'})), vacante:p.total}));
+      if(r.takers) r.takers = r.takers.filter(t=>t.id!=='me');
+      r.mine=false; pushHist(r,{who:ME, type:'leave'});
+      const quedan = r.takers ? r.takers.length : 0;
+      if(quedan===0){
+        r.state='autorizada'; r.age='Devuelta a bandeja';
+        r.positions = r.positions.map(p=>({...p, cubierto:0, proceso:0, segs:p.segs.map(()=>({st:'vacante'})), vacante:p.total}));
+        showToast(`↩ ${r.id} devuelta a la bandeja (saliste y no quedan reclutadores)`);
+      } else {
+        r.age='Saliste';
+        showToast(`Saliste de ${r.id} · ${quedan} reclutador(es) siguen trabajándola`);
+      }
       window.__requiCloseDrawer(); state.tab='autorizadas';
       window.__renderRequi();
-      showToast(`↩ ${r.id} devuelta a la bandeja`);
     };
     window.__requiReport = id => {
       state.drawerMoreOpen = false;
@@ -4854,51 +4914,40 @@
       const insp = INSPECTORES[r.zone] || 'Carlos Méndez';
       items.push({when:'Hace 2 días', what:`<strong>Inspector asignado</strong> a la zona ${escR(r.zone||'')} · <strong>${escR(insp)}</strong>`, muted:true});
 
-      // 2) Liberación previa (si aplica)
-      if(fromLiberada){
-        items.push({when:'Hace 1 día', what:`<strong>Reclutador liberó</strong> la requisición`, muted:true});
+      // 2-3) Historial COLABORATIVO multi-actor: toma/unión, asignaciones y salidas por reclutador.
+      // Funciona tanto para "Mis requisiciones" como para las de la bandeja ya trabajadas por otros.
+      const evs = (r.history || []).slice().sort((a,b)=>a.ts-b.ts);
+      if(r.mine && !evs.some(e=>e.type==='take' && e.who && e.who.id==='me')){
+        evs.push({ts:_now-7200000, who:ME, type:'take'}); evs.sort((a,b)=>a.ts-b.ts);
       }
-
-      // 3) Toma y avance propio
-      if(r.mine){
-        const tookWhen = (r.age && r.age.indexOf('Tomada ')===0) ? r.age.replace('Tomada ','') : 'Hace 5 min';
-        // CASO ESPECIAL — REQ-2598 (Hotel Ejemplo Parcial): la requisición
-        // estuvo 24 h en la bandeja sin que ningún reclutador la tomara, así
-        // que el sistema la auto-asignó a la reclutadora con menor carga.
-        // En vez de "Tomaste la requisición liberada" se registra como
-        // asignación automática del sistema.
-        if(r.id === 'REQ-2598'){
-          items.push({when: tookWhen, what: `<strong>Se te auto-asignó</strong> esta requisición por menor carga · 24h sin self-pick`});
-        } else {
-          items.push({when: tookWhen, what: wasLiberada
-            ? `<strong>Tomaste</strong> la requisición liberada`
-            : `<strong>Tomaste</strong> la requisición autorizada`});
+      const firstTakeTs = (evs.find(e=>e.type==='take')||{}).ts;
+      const loggedN = evs.filter(e=>e.type==='assign').reduce((s,e)=>s+(e.names?e.names.length:0),0);
+      if(t.cub>loggedN){
+        const inh = t.cub - loggedN;
+        items.push({when:'Antes', what:`<strong>${inh} colaborador${inh>1?'es':''}</strong> ya asignado${inh>1?'s':''} previamente`, muted:true});
+      }
+      evs.forEach(ev=>{
+        const isMe = ev.who && ev.who.id==='me';
+        const nm = ev.who ? (isMe ? 'Tú' : ev.who.nm) : 'Sistema';
+        let what='';
+        if(ev.type==='take'){
+          const first = ev.ts===firstTakeTs;
+          what = isMe ? (first?`<strong>Tomaste</strong> la requisición`:`<strong>Te uniste</strong> a la requisición`)
+                      : (first?`<strong>${escR(nm)}</strong> tomó la requisición`:`<strong>${escR(nm)}</strong> se unió a la requisición`);
+        } else if(ev.type==='leave'){
+          what = isMe ? `<strong>Saliste</strong> de la requisición` : `<strong>${escR(nm)}</strong> salió de la requisición`;
+        } else if(ev.type==='assign'){
+          const n = ev.names.length;
+          const names = n<=3 ? ev.names.map(x=>`<strong>${escR(x)}</strong>`).join(', ')
+                             : `<strong>${escR(ev.names[0])}</strong>, <strong>${escR(ev.names[1])}</strong> y <strong>${n-2} más</strong>`;
+          const actor = isMe ? 'Asignaste' : `<strong>${escR(nm)}</strong> asignó`;
+          const head = n===1 ? `${actor} a ${names}` : `${actor} ${n} colaboradores — ${names}`;
+          what = `${head} <span style="color:var(--ink-3);font-weight:400">· ${escR(ev.pos)}</span>`;
         }
-
-        // Si la requisición venía liberada, los cubiertos previos NO los asignaste tú
-        // (vienen heredados del reclutador que la liberó). Se reporta como agregado mudo
-        // sólo cuando la requi NO venía liberada y aún no hay log granular en sesión.
-        if(!wasLiberada && t.cub>0 && !(r._assignLog && r._assignLog.length)){
-          items.push({when:'Hace 1h', what: `Asignaste <strong>${t.cub} colaborador${t.cub>1?'es':''}</strong>`});
-        }
-
-        // 3.b) Asignaciones granulares de esta sesión — una entrada por evento.
-        // Cada entrada lista los nombres específicos y la hora relativa de cuando
-        // se confirmó la asignación (desde el modal Asignar / Asignar múltiples).
-        if(r._assignLog && r._assignLog.length){
-          r._assignLog.forEach(ev => {
-            const n = ev.names.length;
-            const names = n <= 3
-              ? ev.names.map(nm=>`<strong>${escR(nm)}</strong>`).join(', ')
-              : `<strong>${escR(ev.names[0])}</strong>, <strong>${escR(ev.names[1])}</strong> y <strong>${n-2} más</strong>`;
-            const verb = n===1 ? 'Asignaste a' : `Asignaste ${n} colaboradores —`;
-            items.push({when: fmtAgo(ev.ts), what: `${verb} ${names} <span style="color:var(--ink-3);font-weight:400">· ${escR(ev.pos)}</span>`});
-          });
-        }
-
-        if(t.proc>0){
-          items.push({when:'Hace 30min', what: `${t.proc} colaborador${t.proc>1?'es':''} en <strong>onboarding</strong>`});
-        }
+        if(what) items.push({when: fmtAgo(ev.ts), what});
+      });
+      if(t.proc>0){
+        items.push({when:'Hace 30min', what: `${t.proc} colaborador${t.proc>1?'es':''} en <strong>onboarding</strong>`});
       }
 
       // 4) Cierre (si aplica)
@@ -6381,7 +6430,8 @@
     function renderDrawerFoot(r, t, showAssign){
       let foot;
       if(!r.mine){
-        foot = `<button class="btn primary" onclick="window.__requiTake('${r.id}')"><span class="mi">flag</span>Tomar requisición</button>`;
+        const otrosN = r.takers ? r.takers.filter(x=>x.id!=='me').length : 0;
+        foot = `<button class="btn primary" onclick="window.__requiTake('${r.id}')"><span class="mi">${otrosN?'group_add':'flag'}</span>${otrosN?'Unirme a la requisición':'Tomar requisición'}</button>`;
       } else if(r.state==='proceso'){
         if(state.drawerTab==='asignacion'){
           // En tab asignación viven las acciones de cierre.
@@ -6520,7 +6570,9 @@
     // por evento, en lugar de un agregado anónimo "Asignaste N colaboradores".
     function logAssign(r, posName, names){
       if(!r._assignLog) r._assignLog = [];
-      r._assignLog.push({ts: Date.now(), pos: posName, names: names.filter(Boolean)});
+      const clean = names.filter(Boolean);
+      r._assignLog.push({ts: Date.now(), pos: posName, names: clean});
+      pushHist(r, {who: ME, type:'assign', pos: posName, names: clean});
     }
     window.__requiMultiConfirm = () => {
       const r = REQUIS.find(x=>x.id===state.assignReqId);
