@@ -96,6 +96,7 @@
             <div class="sdd-chip"><span class="mi">description</span>Requisiciones</div>
             <div class="sdd-chip"><span class="mi">groups</span>Colaboradores</div>
             <div class="sdd-chip"><span class="mi">hotel</span>Hoteles</div>
+            <div class="sdd-chip"><span class="mi">badge</span>Reclutadoras</div>
             <div class="sdd-chip"><span class="mi">block</span>Blacklist</div>
           </div>
 
@@ -171,6 +172,26 @@
           </div>
 
           <div class="sdd-section">
+            <div class="sdd-label"><span>Reclutadoras del grupo</span></div>
+            <div class="sdd-row">
+              <div class="sdd-ic" style="background:var(--o-100);color:var(--o-700)"><span class="mi">badge</span></div>
+              <div class="sdd-txt">
+                <div class="sdd-name">Ana López</div>
+                <div class="sdd-meta">Zona Centro · 3 req. activas · 85% cobertura</div>
+              </div>
+              <span class="sdd-kind">Reclutadora</span>
+            </div>
+            <div class="sdd-row">
+              <div class="sdd-ic" style="background:var(--o-100);color:var(--o-700)"><span class="mi">badge</span></div>
+              <div class="sdd-txt">
+                <div class="sdd-name">Beatriz Cruz</div>
+                <div class="sdd-meta">Zona Sur · 2 req. activas · 92% cobertura</div>
+              </div>
+              <span class="sdd-kind">Reclutadora</span>
+            </div>
+          </div>
+
+          <div class="sdd-section">
             <div class="sdd-label"><span>Blacklist</span></div>
             <div class="sdd-row">
               <div class="sdd-ic r"><span class="mi">block</span></div>
@@ -189,9 +210,6 @@
       </div>
 
       <div class="hd-right" data-cc-id="cc-2">
-        <div class="ic-btn" title="Mensajes">
-          <span class="mio" data-cc-id="cc-72">chat_bubble_outline</span>
-        </div>
 
         <!-- NOTIFICACIONES -->
         <div style="position:relative" id="notifWrap">
@@ -206,8 +224,9 @@
               <span class="act">Marcar todas como leídas</span>
             </div>
             <div class="notif-filter-bar">
-              <div class="nfb-tab active">Todas<span class="num">5</span></div>
-              <div class="nfb-tab">Sin leer<span class="num">3</span></div>
+              <div class="nfb-tab active">Todas<span class="num">8</span></div>
+              <div class="nfb-tab">Sin leer<span class="num">5</span></div>
+              <div class="nfb-tab">Grupo<span class="num">3</span></div>
               <div class="nfb-tab">Requisiciones</div>
               <div class="nfb-tab">Blacklist</div>
             </div>
@@ -255,6 +274,32 @@
               </div>
             </div>
 
+            <div class="notif-item">
+              <div class="ni-ic" style="background:rgba(31,168,74,.12);color:var(--green)"><span class="mi">verified</span></div>
+              <div class="txt">
+                <div><strong>Reclutadora cubrió al 100%</strong> — Fátima Soto cubrió REQ #0418 (Housekeeper) · ¡felicítala!</div>
+                <div class="tm">Hace 35 min · Cobertura del grupo +1</div>
+              </div>
+              <div class="dot-unread"></div>
+            </div>
+
+            <div class="notif-item">
+              <div class="ni-ic orange"><span class="mi">report_problem</span></div>
+              <div class="txt">
+                <div><strong>Reclutadora reportó un problema</strong> — Carlos Mena escaló un caso · requiere tu atención de 1er nivel</div>
+                <div class="tm">Hace 1 hr · Mi Grupo ▸ Carlos Mena</div>
+              </div>
+              <div class="dot-unread"></div>
+            </div>
+
+            <div class="notif-item">
+              <div class="ni-ic" style="background:rgba(59,125,221,.12);color:var(--blue)"><span class="mi">insert_chart</span></div>
+              <div class="txt">
+                <div><strong>Solicitud de reporte del Manager</strong> — Te pidió el reporte de cobertura del grupo</div>
+                <div class="tm">Hace 2 hrs · Reportes ▸ Generar</div>
+              </div>
+            </div>
+
             <div class="notif-footer">
               <span>Ver todas las notificaciones</span>
               <span class="mi">arrow_forward</span>
@@ -287,6 +332,22 @@
               <div class="mi-item" onclick="openMyInfo('info')"><span class="mio">person</span>Mi información</div>
               <div class="mi-item" onclick="openMyInfo('zona')"><span class="mio">location_on</span>Mi zona asignada</div>
               <div class="mi-item" onclick="openMyInfo('metricas')"><span class="mio">insights</span>Mis métricas</div>
+
+              <div class="divider"></div>
+              <div class="prof-sect">Mi grupo</div>
+              <div style="padding:4px 14px 8px">
+                <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px">
+                  <span class="mi" style="color:var(--o-600)">groups</span>
+                  <div style="flex:1"><div style="font-weight:600;color:var(--ink);font-size:13px">Grupo Centro-Sur</div><div style="font-size:11.5px;color:var(--ink-3)">6 reclutadoras a cargo · Zonas Centro y Sur</div></div>
+                </div>
+                <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+                  <span class="lg-chip g" style="font-size:10.5px">Cobertura 87%</span>
+                  <span class="lg-chip n" style="font-size:10.5px">32 distribuidas</span>
+                  <span class="lg-chip r" style="font-size:10.5px">2 escalados</span>
+                  <span class="lg-chip n" style="font-size:10.5px">T. prom. 2.4d</span>
+                </div>
+              </div>
+              <div class="mi-item" onclick="navigate(document.querySelector('.sb-item[data-page=&quot;Mi Grupo&quot;]'),'Mi Grupo');toggleDd('profDd')"><span class="mio">arrow_forward</span>Ver Mi Grupo</div>
 
               <div class="divider"></div>
               <div class="prof-sect">Configuración</div>
@@ -542,7 +603,7 @@
               <div class="sub" data-cc-id="cc-61">Disponibilidad por posición · en tiempo real</div>
             </div>
             <div class="r">
-              <span class="link-more" data-cc-id="cc-84">Ver pool completo <span class="mi" style="font-size:14px">arrow_forward</span></span>
+              <span class="link-more" data-cc-id="cc-84" onclick="lgGoPool()" style="cursor:pointer">Ver pool completo <span class="mi" style="font-size:14px">arrow_forward</span></span>
             </div>
           </div>
           <div class="card-b" data-cc-id="cc-39">
@@ -554,7 +615,7 @@
               <div class="ic"><span class="mi">groups</span></div>
             </div>
 
-            <div class="pool-list" data-cc-id="cc-78">
+            <div class="pool-list" data-cc-id="cc-78" onclick="lgGoPool()" style="cursor:pointer">
               <div class="pool-item" data-cc-id="cc-63">
                 <div class="pi-ic"><span class="mio">bed</span></div>
                 <div class="pi-text">
@@ -616,13 +677,13 @@
               <div class="sub" data-cc-id="cc-30">5 activas · ordenadas por prioridad</div>
             </div>
             <div class="r">
-              <button class="btn sm ghost"><span class="mi">filter_list</span>Filtrar</button>
+              <button class="btn sm ghost" onclick="lgGoMisRequis()"><span class="mi">filter_list</span>Filtrar</button>
             </div>
           </div>
           <div class="card-b" data-cc-id="cc-16" style="">
             <div class="req-list" data-cc-id="cc-23">
 
-              <div class="req-item red" data-cc-id="cc-17">
+              <div class="req-item red" data-cc-id="cc-17" onclick="lgGoMisRequis()" style="cursor:pointer">
                 <span class="sig" data-cc-id="cc-29"></span>
                 <div>
                   <span class="rn">REQ #001</span>
@@ -635,7 +696,7 @@
                 <span class="mi chev">chevron_right</span>
               </div>
 
-              <div class="req-item red" data-cc-id="cc-20">
+              <div class="req-item red" data-cc-id="cc-20" onclick="lgGoMisRequis()" style="cursor:pointer">
                 <span class="sig" data-cc-id="cc-28"></span>
                 <div>
                   <span class="rn">REQ #014</span>
@@ -648,7 +709,7 @@
                 <span class="mi chev">chevron_right</span>
               </div>
 
-              <div class="req-item yellow" data-cc-id="cc-21">
+              <div class="req-item yellow" data-cc-id="cc-21" onclick="lgGoMisRequis()" style="cursor:pointer">
                 <span class="sig"></span>
                 <div>
                   <span class="rn">REQ #002</span>
@@ -661,7 +722,7 @@
                 <span class="mi chev">chevron_right</span>
               </div>
 
-              <div class="req-item green" data-cc-id="cc-26">
+              <div class="req-item green" data-cc-id="cc-26" onclick="lgGoMisRequis()" style="cursor:pointer">
                 <span class="sig" data-cc-id="cc-27"></span>
                 <div data-cc-id="cc-34">
                   <span class="rn">REQ #003</span>
@@ -674,7 +735,7 @@
                 <span class="mi chev">chevron_right</span>
               </div>
 
-              <div class="req-item green" data-cc-id="cc-24">
+              <div class="req-item green" data-cc-id="cc-24" onclick="lgGoMisRequis()" style="cursor:pointer">
                 <span class="sig" data-cc-id="cc-25"></span>
                 <div data-cc-id="cc-35">
                   <span class="rn">REQ #008</span>
@@ -687,7 +748,7 @@
                 <span class="mi chev">chevron_right</span>
               </div>
 
-              <div class="see-all-row" onclick="navigate(document.querySelector('[data-page=Requisiciones]'),'Requisiciones')" data-cc-id="cc-22">
+              <div class="see-all-row" onclick="lgGoMisRequis()" data-cc-id="cc-22">
                 Ver todas las requisiciones (08) <span class="mi" style="font-size:16px">arrow_forward</span>
               </div>
             </div>
@@ -706,22 +767,22 @@
               <div class="sub" style="font-size:12.5px;color:var(--ink-3);margin-top:2px">Requieren tu revisión ahora</div>
             </div>
             <div class="tray-tabs">
-              <div class="tray-tab active" onclick="switchTab(this)">
+              <div class="tray-tab active" onclick="lgTrayTab(this,'candidatos')">
                 <span class="mi" style="font-size:15px">how_to_reg</span>
                 Candidatos listos
                 <span class="num">09</span>
               </div>
-              <div class="tray-tab" onclick="switchTab(this)">
+              <div class="tray-tab" onclick="lgTrayTab(this,'blacklist')">
                 <span class="mi" style="font-size:15px">block</span>
                 Blacklist
                 <span class="num">02</span>
               </div>
-              <div class="tray-tab" onclick="switchTab(this)">
+              <div class="tray-tab" onclick="lgTrayTab(this,'actualizaciones')">
                 <span class="mi" style="font-size:15px">update</span>
                 Actualizaciones
                 <span class="num">14</span>
               </div>
-              <div class="tray-tab" onclick="switchTab(this)">
+              <div class="tray-tab" onclick="lgTrayTab(this,'aprobaciones')">
                 <span class="mi" style="font-size:15px">verified</span>
                 Aprobaciones
                 <span class="num">03</span>
@@ -739,7 +800,7 @@
                 <th style="text-align:right" data-cc-id="cc-38">Acciones</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="lgTrayBody">
               <tr>
                 <td>
                   <div class="cand-cell">
@@ -915,7 +976,7 @@
             <div class="sub" style="font-weight:500">Genera y envía reportes formales al Manager de Reclutamiento</div>
           </div>
           <div class="ph-right">
-            <button class="lg-btn"><span class="mi">schedule_send</span>Programar envío</button>
+            <button class="lg-btn" onclick="window.__rpProgramar&&window.__rpProgramar()"><span class="mi">schedule_send</span>Programar envío</button>
           </div>
         </div>
 
@@ -927,22 +988,25 @@
               <div class="lg-field">
                 <label>Tipo de reporte</label>
                 <div class="lg-segs" id="rpTipoSegs">
-                  <span class="lg-seg on">Cobertura del grupo</span>
-                  <span class="lg-seg">Desempeño individual</span>
-                  <span class="lg-seg">Casos escalados</span>
-                  <span class="lg-seg">Distribución por zona</span>
+                  <span class="lg-seg on" onclick="window.__lgSeg&&window.__lgSeg(this)">Cobertura del grupo</span>
+                  <span class="lg-seg" onclick="window.__lgSeg&&window.__lgSeg(this)">Desempeño individual</span>
+                  <span class="lg-seg" onclick="window.__lgSeg&&window.__lgSeg(this)">Casos escalados</span>
+                  <span class="lg-seg" onclick="window.__lgSeg&&window.__lgSeg(this)">Tiempo promedio de cobertura</span>
+                  <span class="lg-seg" onclick="window.__lgSeg&&window.__lgSeg(this)">Distribución de requisiciones</span>
                 </div>
               </div>
               <div class="lg-field">
                 <label>Rango de fechas</label>
                 <div class="lg-segs">
-                  <span class="lg-seg">Hoy</span><span class="lg-seg">Esta semana</span><span class="lg-seg on">Este mes</span><span class="lg-seg">Personalizado</span>
+                  <span class="lg-seg" onclick="window.__rpRango&&window.__rpRango(this,false)">Hoy</span><span class="lg-seg" onclick="window.__rpRango&&window.__rpRango(this,false)">Esta semana</span><span class="lg-seg on" onclick="window.__rpRango&&window.__rpRango(this,false)">Este mes</span><span class="lg-seg" onclick="window.__rpRango&&window.__rpRango(this,true)">Personalizado</span>
                 </div>
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
                 <div class="lg-field"><label>Zona</label><select class="lg-select"><option>Todas</option><option>Centro</option><option>Sur</option><option>Este</option><option>Oeste</option></select></div>
                 <div class="lg-field"><label>Posición</label><select class="lg-select"><option>Todas</option><option>Housekeeper</option><option>Hoseman</option><option>Chef</option><option>Laundry</option></select></div>
+                <div class="lg-field"><label>Hotel</label><select class="lg-select"><option>Todos</option><option>Hotel Marbella</option><option>Hotel Aurora</option><option>Hotel Sol</option><option>Hotel Palma</option><option>Hotel Coral</option></select></div>
               </div>
+              <div class="lg-field" id="rpCustom" style="display:none"><label>Rango personalizado</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><input type="date" class="lg-select"><input type="date" class="lg-select"></div></div>
               <div class="lg-field"><label>Reclutadora</label><select class="lg-select" id="rpRecl"><option>Todo el grupo</option><option>Ana López</option><option>Beatriz Cruz</option><option>Carlos Mena</option><option>Diana Ríos</option><option>Esteban Vargas</option><option>Fátima Soto</option></select></div>
               <div class="lg-field"><label>Destinatario</label><select class="lg-select" disabled style="opacity:.65"><option>Manager de Reclutamiento (automático)</option></select></div>
               <button class="lg-btn-pri" style="width:100%;justify-content:center" onclick="toast('Generando vista previa…','insert_chart')"><span class="mi">visibility</span>Generar vista previa</button>
@@ -967,6 +1031,18 @@
                 <div class="b" style="height:92%"><span>87%</span><small>Sem 4</small></div>
               </div>
               </div>
+              <div style="font-size:11.5px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em;margin:14px 0 8px">Desglose por reclutadora</div>
+              <table class="lg-tbl" style="border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;margin-bottom:6px">
+                <thead><tr><th>Reclutadora</th><th>Cobertura</th><th>Cubiertas</th><th>T. prom.</th><th>Escalados</th></tr></thead>
+                <tbody id="rpTable">
+                  <tr><td>Ana López</td><td><span class="lg-chip g">85%</span></td><td>17</td><td>2.1 d</td><td>0</td></tr>
+                  <tr><td>Beatriz Cruz</td><td><span class="lg-chip g">92%</span></td><td>21</td><td>1.8 d</td><td><span class="lg-chip r">1</span></td></tr>
+                  <tr><td>Carlos Mena</td><td><span class="lg-chip a">70%</span></td><td>9</td><td>3.4 d</td><td><span class="lg-chip r">1</span></td></tr>
+                  <tr><td>Diana Ríos</td><td><span class="lg-chip g">88%</span></td><td>24</td><td>2.0 d</td><td>0</td></tr>
+                  <tr><td>Esteban Vargas</td><td><span class="lg-chip a">79%</span></td><td>12</td><td>2.6 d</td><td>0</td></tr>
+                  <tr><td>Fátima Soto</td><td><span class="lg-chip g">95%</span></td><td>28</td><td>1.6 d</td><td>0</td></tr>
+                </tbody>
+              </table>
               <div style="height:1px;background:var(--line);margin:6px 0 0"></div>
               <div style="display:flex;gap:10px;flex-wrap:wrap;padding-top:16px">
                 <button class="lg-btn-pri" onclick="toast('Reporte enviado al Manager','send')"><span class="mi">send</span>Enviar al Manager</button>
@@ -984,9 +1060,9 @@
           <table class="lg-tbl">
             <thead><tr><th>Fecha</th><th>Tipo</th><th>Destinatario</th><th>Estado</th><th></th></tr></thead>
             <tbody>
-              <tr><td>02 Jun 2026</td><td>Cobertura del grupo</td><td>Manager de Reclutamiento</td><td><span class="lg-chip g">Leído</span></td><td style="text-align:right"><button class="lg-btn" style="padding:6px 11px"><span class="mi" style="font-size:16px">content_copy</span>Reutilizar</button></td></tr>
-              <tr><td>26 May 2026</td><td>Desempeño individual</td><td>Manager de Reclutamiento</td><td><span class="lg-chip a">Enviado</span></td><td style="text-align:right"><button class="lg-btn" style="padding:6px 11px"><span class="mi" style="font-size:16px">content_copy</span>Reutilizar</button></td></tr>
-              <tr><td>19 May 2026</td><td>Casos escalados</td><td>Manager de Reclutamiento</td><td><span class="lg-chip g">Leído</span></td><td style="text-align:right"><button class="lg-btn" style="padding:6px 11px"><span class="mi" style="font-size:16px">content_copy</span>Reutilizar</button></td></tr>
+              <tr><td>02 Jun 2026</td><td>Cobertura del grupo</td><td>Manager de Reclutamiento</td><td><span class="lg-chip g">Leído</span></td><td style="text-align:right"><button class="lg-btn" style="padding:6px 11px" onclick="window.__rpReutilizar&&window.__rpReutilizar()"><span class="mi" style="font-size:16px">content_copy</span>Reutilizar</button></td></tr>
+              <tr><td>26 May 2026</td><td>Desempeño individual</td><td>Manager de Reclutamiento</td><td><span class="lg-chip a">Enviado</span></td><td style="text-align:right"><button class="lg-btn" style="padding:6px 11px" onclick="window.__rpReutilizar&&window.__rpReutilizar()"><span class="mi" style="font-size:16px">content_copy</span>Reutilizar</button></td></tr>
+              <tr><td>19 May 2026</td><td>Casos escalados</td><td>Manager de Reclutamiento</td><td><span class="lg-chip g">Leído</span></td><td style="text-align:right"><button class="lg-btn" style="padding:6px 11px" onclick="window.__rpReutilizar&&window.__rpReutilizar()"><span class="mi" style="font-size:16px">content_copy</span>Reutilizar</button></td></tr>
             </tbody>
           </table>
         </div>

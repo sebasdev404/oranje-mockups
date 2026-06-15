@@ -43,6 +43,200 @@
     el.classList.add('active');
   }
 
+  // ===================================================================
+  // DASHBOARD (Líder de Grupo) — acciones de los widgets
+  // ===================================================================
+  function lgToast(msg){
+    const t=document.getElementById('toast'), m=document.getElementById('toastMsg'), a=document.getElementById('toastAction');
+    if(!t||!m){ return; }
+    m.textContent = msg;
+    if(a){ a.style.display='none'; a.onclick=null; }
+    t.classList.add('show');
+    clearTimeout(window.__lgToastT);
+    window.__lgToastT = setTimeout(()=>t.classList.remove('show'), 2600);
+  }
+  // Navegación desde los widgets del dashboard hacia las páginas reales
+  function lgGoPool(){
+    navigate(document.querySelector('.sb-item[data-page="Reclutamiento"]'),'Reclutamiento');
+  }
+  function lgGoMisRequis(){
+    navigate(document.querySelector('.sb-item[data-page="Requisiciones"]'),'Requisiciones');
+    if(window.__requiSetTab) window.__requiSetTab('mias');
+  }
+
+  // ---- Bandejas de acción (tabla con pestañas reales) ----
+  const LG_GRADS = {
+    orange:'linear-gradient(135deg,#FF8E00,#C85F00)', purple:'linear-gradient(135deg,#8B55D6,#3C1A6E)',
+    green:'linear-gradient(135deg,#2FD6A3,#0F8E6C)',  blue:'linear-gradient(135deg,#3B7DDD,#1E4C9E)',
+    red:'linear-gradient(135deg,#E44A4A,#9A2020)'
+  };
+  const LG_BADGES = {
+    done:{cls:'done', ic:'check_circle', lbl:'Completa'},
+    wait:{cls:'wait', ic:'schedule',     lbl:'Pendiente docs'},
+    info:{cls:'info', ic:'info',         lbl:'En revisión'},
+    upd: {cls:'info', ic:'sync',         lbl:'Datos actualizados'},
+    appr:{cls:'wait', ic:'how_to_reg',   lbl:'Espera aprobación'}
+  };
+  const LG_ACTS = {
+    view:    {ic:'visibility', title:'Ver perfil'},
+    reject:  {ic:'close',      title:'Rechazar'},
+    validate:{ic:'check',      title:'Validar', primary:true},
+    remind:  {ic:'send',       title:'Enviar recordatorio'},
+    approve: {ic:'check',      title:'Aprobar', primary:true}
+  };
+  const LG_TRAY = {
+    candidatos: [
+      {ini:'ML', grad:'orange', nm:'María López',     ps:'Housekeeper · 4.8 ★', req:'#001', pos:'Housekeeper', badge:'done', when:'Hoy · 08:24',  acts:['view','reject','validate'],
+        prof:{zona:'Centro', tel:'310 555 0142', mail:'maria.lopez@oranje.app', mod:'Tiempo completo', ing:'Intermedio', exp:'3 años en housekeeping (Hotel Andino, Hotel Real).', docs:[['Cédula',true],['Hoja de vida',true],['Certificado EPS',true],['Antecedentes',true]]}},
+      {ini:'CR', grad:'purple', nm:'Carlos Ruiz',     ps:'Chef · 4.6 ★',        req:'#002', pos:'Chef',        badge:'done', when:'Hoy · 07:55',  acts:['view','reject','validate'],
+        prof:{zona:'Sur', tel:'320 555 0188', mail:'carlos.ruiz@oranje.app', mod:'Tiempo completo', ing:'Avanzado', exp:'5 años como chef de línea (Hotel Marina, Restaurante Sal).', docs:[['Cédula',true],['Hoja de vida',true],['Certificado EPS',true],['Antecedentes',true]]}},
+      {ini:'AS', grad:'green',  nm:'Ana Sánchez',     ps:'Hoseman · 4.4 ★',     req:'#003', pos:'Hoseman',     badge:'wait', when:'Ayer · 17:30', acts:['view','remind','validate'],
+        prof:{zona:'Este', tel:'315 555 0273', mail:'ana.sanchez@oranje.app', mod:'Medio tiempo', ing:'Básico', exp:'2 años en steward / hoseman (Hotel Aurora).', docs:[['Cédula',true],['Hoja de vida',true],['Certificado EPS',false],['Antecedentes',false]]}},
+      {ini:'DH', grad:'blue',   nm:'Daniel Herrera',  ps:'Housekeeper · 4.9 ★', req:'#001', pos:'Housekeeper', badge:'done', when:'Ayer · 14:10', acts:['view','reject','validate'],
+        prof:{zona:'Norte', tel:'301 555 0319', mail:'daniel.herrera@oranje.app', mod:'Tiempo completo', ing:'Intermedio', exp:'4 años en housekeeping (Hotel Bahía, Hotel Sol).', docs:[['Cédula',true],['Hoja de vida',true],['Certificado EPS',true],['Antecedentes',true]]}},
+      {ini:'LM', grad:'red',    nm:'Luis Morales',    ps:'Chef · 4.5 ★',        req:'#002', pos:'Chef',        badge:'info', when:'Ayer · 11:02', acts:['view','reject','validate'],
+        prof:{zona:'Oeste', tel:'318 555 0402', mail:'luis.morales@oranje.app', mod:'Tiempo completo', ing:'Conversacional', exp:'3 años como cocinero (Hotel Las Brisas).', docs:[['Cédula',true],['Hoja de vida',true],['Certificado EPS',true],['Antecedentes',false]]}}
+    ],
+    actualizaciones: [
+      {ini:'PT', grad:'green',  nm:'Paola Torres',    ps:'Subió documento faltante', req:'#008', pos:'Recepción',   badge:'upd', when:'Hoy · 09:10',  acts:['view']},
+      {ini:'JR', grad:'blue',   nm:'Jorge Ramírez',   ps:'Actualizó disponibilidad', req:'#002', pos:'Chef',        badge:'upd', when:'Hoy · 08:02',  acts:['view']},
+      {ini:'NM', grad:'orange', nm:'Nadia Mejía',     ps:'Renovó cédula / RUT',      req:'#001', pos:'Housekeeper', badge:'upd', when:'Ayer · 19:40', acts:['view']}
+    ],
+    aprobaciones: [
+      {ini:'AL', grad:'purple', nm:'Reasignar · Ana → Bea',     ps:'Solicitado por Ana López',   req:'#002', pos:'Chef',        badge:'appr', when:'Hoy · 07:30',  acts:['view','reject','approve']},
+      {ini:'CS', grad:'orange', nm:'Reasignar · Carlos → Diana', ps:'Solicitado por Carlos Ruiz', req:'#003', pos:'Hoseman',     badge:'appr', when:'Ayer · 16:15', acts:['view','reject','approve']},
+      {ini:'MV', grad:'green',  nm:'Rebalanceo de carga',        ps:'Solicitado por Marina Vega', req:'#001', pos:'Housekeeper', badge:'appr', when:'Ayer · 10:05', acts:['view','reject','approve']}
+    ]
+  };
+  function lgTrayRow(r){
+    const nm = String(r.nm).replace(/'/g,'');
+    const acts = r.acts.map(a=>{
+      const A = LG_ACTS[a];
+      return `<button class="row-action-btn${A.primary?' primary':''}" title="${A.title}" onclick="lgTrayAct(this,'${a}','${nm}')"><span class="mi">${A.ic}</span></button>`;
+    }).join('');
+    const b = LG_BADGES[r.badge] || LG_BADGES.info;
+    return `<tr>
+      <td><div class="cand-cell"><div class="avatar sm" style="background:${LG_GRADS[r.grad]||LG_GRADS.orange}">${r.ini}</div><div><div class="nm">${r.nm}</div><div class="ps">${r.ps}</div></div></div></td>
+      <td><strong style="color:var(--ink)">${r.req}</strong> · ${r.pos}</td>
+      <td><span class="badge-pill ${b.cls}"><span class="mi">${b.ic}</span>${b.lbl}</span></td>
+      <td>${r.when}</td>
+      <td><div class="row-actions">${acts}</div></td>
+    </tr>`;
+  }
+  function lgRenderTray(key){
+    const body = document.getElementById('lgTrayBody');
+    if(!body) return;
+    if(key==='blacklist'){
+      body.innerHTML = `<tr><td colspan="5"><div class="lg-tray-note"><span class="mi">block</span><div class="t"><strong>Módulo de Blacklist en definición</strong><span>Cualquier persona de reclutamiento podrá reportar colaboradores. El flujo se habilitará cuando se valide con ingeniería.</span></div></div></td></tr>`;
+      return;
+    }
+    const rows = LG_TRAY[key] || [];
+    body.innerHTML = rows.length
+      ? rows.map(lgTrayRow).join('')
+      : `<tr><td colspan="5"><div class="lg-tray-note"><span class="mi">inbox</span><div class="t"><strong>Sin pendientes</strong><span>No hay elementos en esta bandeja por ahora.</span></div></div></td></tr>`;
+  }
+  function lgTrayTab(el, key){
+    el.parentElement.querySelectorAll('.tray-tab').forEach(x=>x.classList.remove('active'));
+    el.classList.add('active');
+    lgRenderTray(key);
+  }
+  // Descontar el contador de la pestaña activa al resolver un item
+  function lgDecActiveCount(){
+    const num = document.querySelector('.tray-tabs .tray-tab.active .num');
+    if(num){ const n = parseInt(num.textContent,10)||0; if(n>0) num.textContent = String(n-1).padStart(2,'0'); }
+  }
+  // Lógica central de cada acción (la fila puede ser null si se dispara desde el modal)
+  function lgDoAct(tr, action, name){
+    const drop = ()=>{
+      if(tr){
+        tr.style.transition='opacity .24s, transform .24s'; tr.style.opacity='0'; tr.style.transform='translateX(10px)';
+        setTimeout(()=>{ const tb=tr.parentElement; lgDecActiveCount(); tr.remove(); if(tb && !tb.children.length) lgRenderTray('__empty'); },230);
+      } else { lgDecActiveCount(); }
+    };
+    if(action==='view'){     lgOpenCand(name); return; }
+    if(action==='remind'){   lgToast('Recordatorio de documentos enviado a '+name); return; }
+    if(action==='reject'){   drop(); lgToast(name+' · descartado de la bandeja'); return; }
+    if(action==='validate'){ drop(); lgToast('✓ '+name+' validado · enviado a asignación'); return; }
+    if(action==='approve'){  drop(); lgToast('✓ Aprobado · '+name); return; }
+  }
+  function lgTrayAct(btn, action, name){
+    // "Enviar recordatorio": feedback visible en el propio botón
+    if(action==='remind' && btn && btn.tagName==='BUTTON'){
+      btn.innerHTML='<span class="mi">done</span>'; btn.classList.add('sent'); btn.disabled=true; btn.title='Recordatorio enviado';
+      lgToast('Recordatorio de documentos enviado a '+name); return;
+    }
+    lgDoAct(btn ? btn.closest('tr') : null, action, name);
+  }
+  // Disparar una acción buscando la fila por nombre (usado desde el modal de perfil)
+  function lgTrayActByName(action, name){
+    const body = document.getElementById('lgTrayBody');
+    let tr = null;
+    if(body){ tr = Array.prototype.slice.call(body.querySelectorAll('tr')).find(t=>{ const e=t.querySelector('.cand-cell .nm'); return e && e.textContent.trim()===name; }) || null; }
+    lgDoAct(tr, action, name);
+  }
+  // ---- Modal de perfil del candidato ----
+  function lgFindRow(name){
+    let r=null;
+    Object.keys(LG_TRAY).forEach(k=>{ const f=(LG_TRAY[k]||[]).find(x=>String(x.nm).replace(/'/g,'')===name); if(f) r=f; });
+    return r;
+  }
+  function lgCloseCand(){ const o=document.getElementById('lgCandOverlay'); if(o) o.remove(); }
+  function lgOpenCand(name){
+    const r = lgFindRow(name); if(!r) return;
+    lgCloseCand();
+    const b = LG_BADGES[r.badge] || LG_BADGES.info;
+    const grad = LG_GRADS[r.grad] || LG_GRADS.orange;
+    const p = r.prof;
+    let body, foot;
+    if(p){
+      const fields = [['Posición', r.pos],['Zona', p.zona],['Teléfono', p.tel],['Correo', p.mail],['Modalidad', p.mod],['Inglés', p.ing]]
+        .map(f=>`<div class="lg-cand-field"><div class="k">${f[0]}</div><div class="v">${f[1]}</div></div>`).join('');
+      const docs = p.docs.map(d=>`<li class="${d[1]?'ok':'no'}"><span class="mi">${d[1]?'check_circle':'cancel'}</span>${d[0]}</li>`).join('');
+      const faltan = p.docs.filter(d=>!d[1]).length;
+      body = `
+        <div class="lg-cand-sec">
+          <div class="lg-cand-sec-t">Aplicó a</div>
+          <div class="lg-cand-applied"><span class="mi">assignment</span><strong>${r.req}</strong> · ${r.pos} <span class="dot-sep">·</span> ${r.when}</div>
+        </div>
+        <div class="lg-cand-grid">${fields}</div>
+        <div class="lg-cand-sec">
+          <div class="lg-cand-sec-t">Experiencia</div>
+          <div class="lg-cand-exp">${p.exp}</div>
+        </div>
+        <div class="lg-cand-sec">
+          <div class="lg-cand-sec-t">Documentos ${faltan?`<span class="lg-cand-warn">· faltan ${faltan}</span>`:'<span class="lg-cand-ok">· completos</span>'}</div>
+          <ul class="lg-cand-docs">${docs}</ul>
+        </div>`;
+      foot = `
+        <button class="btn ghost" onclick="lgCloseCand()">Cerrar</button>
+        <button class="btn ghost danger" onclick="lgCloseCand();lgTrayActByName('reject','${name}')"><span class="mi">close</span>Rechazar</button>
+        <button class="btn primary" onclick="lgCloseCand();lgTrayActByName('validate','${name}')"><span class="mi">check</span>Validar candidato</button>`;
+    } else {
+      body = `
+        <div class="lg-cand-sec">
+          <div class="lg-cand-applied"><span class="mi">assignment</span><strong>${r.req}</strong> · ${r.pos} <span class="dot-sep">·</span> ${r.when}</div>
+        </div>
+        <div class="lg-cand-exp">${r.ps}</div>`;
+      foot = `<button class="btn primary" onclick="lgCloseCand()">Cerrar</button>`;
+    }
+    const ov = document.createElement('div');
+    ov.id = 'lgCandOverlay'; ov.className = 'lg-cand-overlay';
+    ov.onclick = (e)=>{ if(e.target===ov) lgCloseCand(); };
+    ov.innerHTML = `<div class="lg-cand-modal" role="dialog" aria-modal="true">
+      <div class="lg-cand-head">
+        <div class="avatar lg" style="background:${grad}">${r.ini}</div>
+        <div class="lg-cand-id"><div class="nm">${r.nm}</div><div class="ps">${r.ps}</div></div>
+        <span class="badge-pill ${b.cls}"><span class="mi">${b.ic}</span>${b.lbl}</span>
+        <button class="lg-cand-x" title="Cerrar" onclick="lgCloseCand()"><span class="mi">close</span></button>
+      </div>
+      <div class="lg-cand-body">${body}</div>
+      <div class="lg-cand-foot">${foot}</div>
+    </div>`;
+    document.body.appendChild(ov);
+  }
+  // Render inicial de la bandeja (el DOM ya está parseado: script va al final del body)
+  try { lgRenderTray('candidatos'); } catch(e){}
+
   // MI INFORMACION
   const MI_LABELS={
     info:'Mi información',
@@ -1051,14 +1245,8 @@
       if(!nombre) setErr('nombre','Ingresa el nombre completo del colaborador');
       else if(nombre.length<3) setErr('nombre','El nombre debe tener al menos 3 caracteres');
 
-      const documento = getVal('documento');
-      if(!documento) setErr('documento','Captura el documento o ID interno');
-
-      const edad = getVal('edad');
-      if(edad){
-        const n = parseInt(edad,10);
-        if(isNaN(n) || n<18 || n>80) setErr('edad','La edad debe estar entre 18 y 80 años');
-      }
+      const fechanac = getVal('fechanac');
+      if(!fechanac) setErr('fechanac','Selecciona la fecha de nacimiento');
 
       const telefono = getVal('telefono');
       const telDigits = telefono.replace(/\D/g,'');
@@ -1073,10 +1261,6 @@
       const domicilio = getVal('domicilio');
       if(!domicilio) setErr('domicilio','Captura el domicilio completo');
       else if(domicilio.length<8) setErr('domicilio','Captura calle, número y colonia');
-
-      const cedulaField = modal.querySelector('[data-field="cedula"]');
-      const hasCedula = cedulaField && cedulaField.dataset.uploaded === '1';
-      if(!hasCedula) setErr('cedula','Adjunta una cédula o identificación oficial');
 
       if(errors.length){
         toast(`Faltan ${errors.length} campo${errors.length>1?'s':''} por completar`,'error');
@@ -1109,6 +1293,18 @@
     };
 
     // Limpiar error al editar el campo
+    window.__reclCalcEdad = function(input){
+      const modal = document.getElementById('recl-modal');
+      const edad = modal && modal.querySelector('input[name="edad"]');
+      if(!edad) return;
+      if(!input.value){ edad.value=''; return; }
+      const b = new Date(input.value + 'T00:00:00');
+      const now = new Date(2026, 3, 24); // "hoy" del mock = 24 abril 2026
+      let age = now.getFullYear() - b.getFullYear();
+      const mo = now.getMonth() - b.getMonth();
+      if(mo < 0 || (mo === 0 && now.getDate() < b.getDate())) age--;
+      edad.value = (age >= 0 && age < 120) ? (age + ' años') : '';
+    };
     window.__reclClearErr = (input)=>{
       const f = input.closest('.recl-field');
       if(f) f.classList.remove('error');
@@ -1233,15 +1429,14 @@
               <div class="input-w-ic"><span class="mi">person</span><input name="nombre" placeholder="Ej. María López Hernández" oninput="window.__reclClearErr(this)"></div>
               <div class="err-msg"><span class="mi">error</span><span class="txt">Ingresa el nombre completo del colaborador</span></div>
             </div>
-            <div class="recl-field span2" data-field="documento">
-              <label>Documento / ID interno<span class="req">*</span></label>
-              <div class="input-w-ic"><span class="mi">badge</span><input name="documento" placeholder="Ej. ORJ-04821" oninput="window.__reclClearErr(this)"></div>
-              <div class="err-msg"><span class="mi">error</span><span class="txt">Captura el documento o ID interno</span></div>
+            <div class="recl-field span2" data-field="fechanac">
+              <label>Fecha de nacimiento<span class="req">*</span></label>
+              <div class="input-w-ic"><span class="mi">cake</span><input name="fechanac" type="date" max="2008-01-01" oninput="window.__reclClearErr(this);window.__reclCalcEdad(this)"></div>
+              <div class="err-msg"><span class="mi">error</span><span class="txt">Selecciona la fecha de nacimiento</span></div>
             </div>
             <div class="recl-field" data-field="edad">
-              <label>Edad</label>
-              <input name="edad" type="number" placeholder="32" min="18" max="80" oninput="window.__reclClearErr(this)">
-              <div class="err-msg"><span class="mi">error</span><span class="txt">La edad debe estar entre 18 y 80 años</span></div>
+              <label>Edad <span style="color:var(--ink-3);font-weight:400;font-size:11px">· calculada</span></label>
+              <input name="edad" type="text" placeholder="—" readonly style="background:var(--surface-2);cursor:default">
             </div>
             <div class="recl-field" data-field="genero">
               <label>Género</label>
@@ -1277,25 +1472,6 @@
               <label>Domicilio<span class="req">*</span></label>
               <div class="input-w-ic"><span class="mi">home</span><input name="domicilio" placeholder="Calle, número, colonia, ciudad" oninput="window.__reclClearErr(this)"></div>
               <div class="err-msg"><span class="mi">error</span><span class="txt">Captura el domicilio completo</span></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- BLOQUE 3: Documentación -->
-        <div class="recl-form-section">
-          <div class="recl-form-section-title"><span class="num">3</span>Documentación</div>
-          <div class="recl-form-grid full">
-            <div class="recl-field span2" data-field="cedula">
-              <label>Cédula / Identificación oficial<span class="req">*</span></label>
-              <div class="recl-upload" onclick="window.__reclMockUpload(this)">
-                <span class="mi">cloud_upload</span>
-                <div class="info">
-                  <div class="t">Sube cédula o identificación oficial</div>
-                  <div class="s">PDF o imagen (JPG, PNG) · máx. 10 MB</div>
-                </div>
-                <div class="browse">Examinar</div>
-              </div>
-              <div class="err-msg"><span class="mi">error</span><span class="txt">Adjunta una cédula o identificación oficial</span></div>
             </div>
           </div>
         </div>`;
@@ -1476,6 +1652,11 @@
       { id:'E-9716', name:'Marisol Padilla Cano',    doc:'DOC 9716', phone:'+52 55 8833 2294', pos:'Mesero',      zone:'Sur',     hotel:'Hotel Marina Sur',         mod:'Según \nsolicitud', origen:'Referido',             entrevista:'Hace 22 días', fecha:'02 abr 2026', dias:22, st:'valid', ssContract:'temporal', ssMonths:1, ssFrom:'15 may 2026', ssTo:'15 jun 2026' },
     ];
 
+    // Modo supervisión del Líder (RF-23): cada entrevista tiene una RECLUTADORA RESPONSABLE.
+    // "Tú (Líder)" = entrevistas que el propio Líder hizo (modo operativo); el resto, su grupo.
+    const E_RECS = ['Tú (Líder)','Ana López','Beatriz Cruz','Carlos Mena','Diana Ríos','Fátima Soto'];
+    ENTREV.forEach((c,i)=>{ if(!c.reclutadora) c.reclutadora = E_RECS[i % E_RECS.length]; });
+
     // Devuelve el schedule deseado del candidato — los días/horario que él
     // mismo seleccionó en la app, dentro de la modalidad indicada. Hay 2
     // variantes por modalidad para que distintos candidatos tengan distintos
@@ -1508,6 +1689,9 @@
       const fromD = state.eFilterFromISO ? new Date(state.eFilterFromISO+'T00:00:00') : null;
       const toD   = state.eFilterToISO   ? new Date(state.eFilterToISO+'T23:59:59')   : null;
       return ENTREV.filter(c=>{
+        const eMode = state.eMode || 'mias';
+        if(eMode==='mias' && c.reclutadora !== 'Tú (Líder)') return false;
+        if(eMode==='grupo' && state.eFilterRec && c.reclutadora !== state.eFilterRec) return false;
         if(state.eFilterPos && c.pos!==state.eFilterPos) return false;
         if(state.eFilterZone && c.zone!==state.eFilterZone) return false;
         if(state.eFilterMod && c.mod!==state.eFilterMod) return false;
@@ -1529,6 +1713,8 @@
       });
     }
     window.__entrevList = eFilter;
+    window.__entrevSetMode = m => { state.eMode = m; if(m!=='grupo') state.eFilterRec=''; window.__renderRecl && window.__renderRecl(); };
+    window.__entrevSetRec = v => { state.eFilterRec = (state.eFilterRec===v?'':v); window.__renderRecl && window.__renderRecl(); };
 
     function eFilterChip(grp,label,active,opts){
       const open = state.openFilter===grp;
@@ -1625,6 +1811,11 @@
               <div class="rs-lbl">Abandonados (>7 días)</div>
             </div>
           </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin:14px 0 0;flex-wrap:wrap">
+          <span class="lg-seg ${(state.eMode||'mias')==='mias'?'on':''}" onclick="window.__entrevSetMode('mias')" style="cursor:pointer"><span class="mi" style="font-size:16px;vertical-align:-3px">person</span> Mis Entrevistas</span>
+          <span class="lg-seg ${(state.eMode||'mias')==='grupo'?'on':''}" onclick="window.__entrevSetMode('grupo')" style="cursor:pointer"><span class="mi" style="font-size:16px;vertical-align:-3px">groups</span> Historial del Grupo</span>
+          ${(state.eMode||'mias')==='grupo' ? `<span style="font-size:12px;color:var(--ink-3);margin-left:4px">Filtrar por reclutadora:</span>`+['Ana López','Beatriz Cruz','Carlos Mena','Diana Ríos','Fátima Soto'].map(r=>`<span class="lg-chip ${state.eFilterRec===r?'g':'n'}" style="cursor:pointer" onclick="window.__entrevSetRec('${r}')">${r}</span>`).join('') : ''}
         </div>
       `;
     };
@@ -1902,7 +2093,7 @@
             </div>
             <div class="nm">
               <div class="name">${c.name}</div>
-              <div class="doc">ID ${c.id}</div>
+              <div class="doc">ID ${c.id}${(state.eMode==='grupo') ? ` · <span style="color:var(--o-700);font-weight:600">${c.reclutadora}</span>` : ''}</div>
             </div>
           </div>
           <div class="recl-card-meta">
@@ -2525,6 +2716,17 @@
           </div>
         </div>
         <div class="entrev-dr-body">
+          <div class="entrev-section" style="margin-bottom:14px">
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--o-50);border:1px solid var(--o-200);border-radius:10px">
+              <span class="mi" style="color:var(--o-600)">badge</span>
+              <div style="flex:1"><div style="font-size:11px;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.04em">Reclutadora responsable</div><div style="font-weight:600;color:var(--ink)">${c.reclutadora}</div></div>
+            </div>
+            ${c.reclutadora!=='Tú (Líder)' ? `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+              <button class="btn ghost" style="font-size:12px;padding:7px 11px" onclick="navigate(document.querySelector('.sb-item[data-page=&quot;Mi Grupo&quot;]'),'Mi Grupo');toast('Abriendo desempeño de ${c.reclutadora}','insights')"><span class="mi" style="font-size:16px">insights</span>Ver desempeño</button>
+              <button class="btn ghost" style="font-size:12px;padding:7px 11px" onclick="toast('Comentario agregado al expediente · visible para ${c.reclutadora}','comment')"><span class="mi" style="font-size:16px">comment</span>Comentar</button>
+              <button class="btn ghost" style="font-size:12px;padding:7px 11px" onclick="toast('Reasignar candidato a otra reclutadora del grupo…','swap_horiz')"><span class="mi" style="font-size:16px">swap_horiz</span>Reasignar candidato</button>
+            </div>` : ''}
+          </div>
           <div class="entrev-section">
             <div class="entrev-section-h">
               <h4>Datos del candidato</h4>
@@ -2964,10 +3166,10 @@
     // ===== Modelo COLABORATIVO de requisición: reclutadores participantes + historial =====
     // Una requisición ya no tiene dueño único: r.takers[] son los reclutadores que la trabajan.
     // r.history[] es el timeline con actor (quién tomó/se unió/asignó/salió). r.mine = soy taker.
-    const ME = {id:'me', nm:'Tú'};
-    const REC_ANA = {id:'al', nm:'Ana López'};
-    const REC_CARLOS = {id:'cr', nm:'Carlos Ruiz'};
-    const REC_BEA = {id:'bc', nm:'Beatriz Cruz'};
+    const ME = {id:'me', nm:'Tú', rol:'Líder de Grupo'};
+    const REC_ANA = {id:'al', nm:'Ana López', rol:'Reclutadora'};
+    const REC_CARLOS = {id:'cr', nm:'Carlos Ruiz', rol:'Reclutadora'};
+    const REC_BEA = {id:'bc', nm:'Beatriz Cruz', rol:'Reclutadora'};
     const _now = Date.now();
     const mins = m => _now - m*60000;
     function pushHist(r, ev){ if(!r.history) r.history=[]; r.history.push({ts: ev.ts!=null?ev.ts:Date.now(), ...ev}); }
@@ -2995,6 +3197,13 @@
         {ts:mins(200), who:REC_BEA, type:'take'},
         {ts:mins(180), who:REC_BEA, type:'assign', pos:'Electricista', names:['Raúl Pinto']},
         {ts:mins(160), who:REC_BEA, type:'assign', pos:'Mesero', names:['Karla Díaz']},
+      ]);
+      // Bahía Real: venía con avance parcial; ahora la trabaja Bea → "En colaboración"
+      set('REQ-2477', [{...REC_BEA, ts:mins(360)}], [
+        {ts:mins(360), who:REC_BEA, type:'take'},
+        {ts:mins(330), who:REC_BEA, type:'assign', pos:'Mesero', names:['Lucía Parra','Iker Sosa']},
+        {ts:mins(150), who:REC_BEA, type:'assign', pos:'Steward', names:['Noa Frías','Beni Mar']},
+        {ts:mins(90), who:REC_BEA, type:'assign', pos:'Recepción', names:['Sara Mena']},
       ]);
       // Una MÍA con co-reclutador (Carlos también participa) → timeline multi-actor en "Mis requisiciones"
       set('REQ-2562', [{...ME, ts:mins(1500)},{...REC_CARLOS, ts:mins(90)}], [
@@ -3050,7 +3259,7 @@
         if(state.fSem){
           const ctx = reqContext(r);
           if(state.fSem==='nueva' && ctx?.key !== 'nueva') return false;
-          if(state.fSem==='liberada' && ctx?.key !== 'liberada') return false;
+          if(state.fSem==='colab' && ctx?.key !== 'colab') return false;
         }
         if(state.fEstado){
           if(r.state !== state.fEstado) return false;
@@ -3089,8 +3298,9 @@
       });
       return out;
     };
-    // Orden dentro de columna: Liberadas anclan; Nuevas se distribuyen en el centro.
-    // Resto (cards sin contexto, p. ej. mías) van al final.
+    // Orden dentro de columna: las requisiciones activas (Autorizadas + En
+    // colaboración) van primero, ordenadas por urgencia. El resto (cards sin
+    // contexto, p. ej. mías) van al final.
     // Cards con `pinLast:true` se fuerzan al final de la columna independiente
     // de su urgencia — útil para casos ejemplo que el usuario quiere conservar
     // como referencia visible al final de la lista.
@@ -3100,10 +3310,9 @@
         if(!!a.pinLast !== !!b.pinLast) return a.pinLast ? 1 : -1;
         return urgRank(a.urg)-urgRank(b.urg);
       });
-      const liberadas = sorted.filter(r=> !r.mine && reqContext(r)?.key==='liberada' && !r.pinLast);
-      const nuevas    = sorted.filter(r=> !r.mine && reqContext(r)?.key==='nueva' && !r.pinLast);
-      const resto     = sorted.filter(r=> r.pinLast || r.mine || (!reqContext(r) || !['liberada','nueva'].includes(reqContext(r).key)));
-      return [...distributeCenter(liberadas, nuevas), ...resto];
+      const activas = sorted.filter(r=> !r.mine && ['nueva','colab'].includes(reqContext(r)?.key) && !r.pinLast);
+      const resto   = sorted.filter(r=> r.pinLast || r.mine || !['nueva','colab'].includes(reqContext(r)?.key));
+      return [...activas, ...resto];
     };
     function totals(req){
       const total = req.positions.reduce((s,p)=>s+p.total,0);
@@ -3185,7 +3394,7 @@
       const cfg = [
         {key:'fUrg', lbl:'Estados de urgencias', opts:[['','Todas'],['high','Urgente'],['med','Pronto'],['low','Normal']]},
         {key:'fEstado', lbl:'Estado de la requisición', opts:[['','Todos'],['proceso','En proceso'],['parcial','Parciales'],['cubierta','Cubiertas']]},
-        {key:'fSem', lbl:'Tipo de requisicion', opts:[['','Todas'],['nueva','Autorizadas|Ya puede recibir colaboradores'],['liberada','Liberadas|Otro reclutador las dejó con avance']]},
+        {key:'fSem', lbl:'Tipo de requisicion', opts:[['','Todas'],['nueva','Autorizadas|Ya puede recibir colaboradores'],['colab','En colaboración|Varios reclutadores trabajándola']]},
         {key:'fContrato', lbl:'Tipo de contrato', opts:[['','Todos'],['Fijo','Fijo|Recurrente'],['Temporal','Temporal|Por evento o fechas']]},
         {key:'fMod', lbl:'Modalidad', opts:[['','Todas'],['Tiempo \ncompleto','Tiempo \ncompleto'],['Medio tiempo','Medio tiempo'],['Por horas','Por horas']]},
         {key:'fPos', lbl:'Posición', opts:[['','Todas'], ...POSITIONS.map(p=>[p,p])]},
@@ -3218,7 +3427,7 @@
         };
         const open = state.openDD===c.key;
         const dotForUrg = c.key==='fUrg' && cur ? `<span class="recl-fdd-dot" style="background:${URG_COLOR[cur]}"></span>` : '';
-        const SEM_COLOR = {nueva:'#FF8E00', liberada:'#8B5CF6'};
+        const SEM_COLOR = {nueva:'#FF8E00', colab:'#0D9488'};
         const dotForSem = c.key==='fSem' && cur ? `<span class="recl-fdd-dot" style="background:${SEM_COLOR[cur]}"></span>` : '';
         const EST_COLOR = {proceso:'#FFC128', parcial:'#3B7DDD', cubierta:'#1FA84A'};
         const dotForEst = c.key==='fEstado' && cur ? `<span class="recl-fdd-dot" style="background:${EST_COLOR[cur]}"></span>` : '';
@@ -3240,19 +3449,23 @@
     }
 
     // ===== Contexto de la requisición autorizada =====
-    // Nueva → 0 cubiertos en TODAS las posiciones (recién autorizada, nadie la ha tocado)
-    // Liberada → tiene cobertura parcial — alguien avanzó y la dejó
+    // Modelo colaborativo (RR-15): una requisición autorizada solo tiene dos
+    // contextos posibles en la bandeja —
+    //   En colaboración → ya tiene otros reclutadores participando (r.takers)
+    //   Autorizadas     → libre para recibir colaboradores (con o sin avance)
+    // Ya NO existe "Liberada": nadie "libera" una requisición, los reclutadores
+    // entran (RF-39) y salen (RF-03) sin bloquearla ni perderla.
     function reqContext(r){
       const t = totals(r);
       const otros = r.takers ? r.takers.filter(x=>x.id!=='me').length : 0;
       if(otros) return {key:'colab', lbl:'En colaboración', sub:`${otros} reclutador${otros>1?'es':''} trabajándola`, ic:'groups'};
-      if(t.cub === 0) return {key:'nueva', lbl:'Autorizadas', sub:'Ya puede recibir colaboradores', ic:'fiber_new'};
       if(t.cub >= t.total) return null; // ya completa
-      return {key:'liberada', lbl:'Liberada', sub:'Otro reclutador la dejó con avances', ic:'volunteer_activism'};
+      return {key:'nueva', lbl:'Autorizadas', sub:'Ya puede recibir colaboradores', ic:'fiber_new'};
     }
 
     // ===== CARD (recl-card adaptada) =====
-    function cardHTML(r){
+    function cardHTML(r, opts){
+      const hideRibbon = !!(opts && opts.hideRibbon);
       const t = totals(r);
       const sub = SUBSTATES[r.state];
       const stColor = URG_COLOR[r.urg];
@@ -3281,14 +3494,18 @@
           <button class="req-auto-asg-help" onclick="event.stopPropagation();window.__requiAutoAsgInfo()" aria-label="Más información"><span class="mi">help</span></button>
         </div>` : '';
 
-      return `<div class="recl-card requi${ctx?' has-ctx':''}" data-ctx="${ctx?ctx.key:''}" data-req-id="${r.id}" style="--card-st:${stColor}" onclick="window.__requiOpen('${r.id}')">
-        ${ctx?`<div class="req-ctx-ribbon" data-ctx="${ctx.key}"><span class="mi">${ctx.ic}</span><span class="ctx-lbl">${ctx.lbl}</span><span class="ctx-sub">· ${ctx.sub}</span></div>`:''}
+      const showRibbon = ctx && !hideRibbon;
+      const colabMini = (ctx && ctx.key==='colab')
+        ? ` <span class="req-colab-mini" title="${othersN} reclutador${othersN>1?'es':''} trabajándola"><span class="mi">groups</span>${othersN}</span>`
+        : '';
+      return `<div class="recl-card requi${showRibbon?' has-ctx':''}" data-ctx="${ctx?ctx.key:''}" data-req-id="${r.id}" style="--card-st:${stColor}" onclick="window.__requiOpen('${r.id}')">
+        ${showRibbon?`<div class="req-ctx-ribbon" data-ctx="${ctx.key}"><span class="mi">${ctx.ic}</span><span class="ctx-lbl">${ctx.lbl}</span><span class="ctx-sub">· ${ctx.sub}</span></div>`:''}
         ${autoBadge}
         <div class="recl-card-top">
           <div class="recl-avatar req-avatar"><span class="mi">apartment</span><span class="recl-st-ring"></span></div>
           <div class="nm">
             <div class="name">${escR(r.hotel)}</div>
-            <div class="doc">${escR(r.id)}</div>
+            <div class="doc">${escR(r.id)}${colabMini}</div>
           </div>
           <span class="req-urg-pill ${r.urg}"><span class="dot"></span>${URG_LABELS[r.urg]}</span>
         </div>
@@ -3365,7 +3582,34 @@
     }
 
     function renderCards(arr){
-      return `<div class="req-grid">${arr.map(cardHTML).join('')}</div>`;
+      return `<div class="req-grid">${arr.map(r=>cardHTML(r)).join('')}</div>`;
+    }
+
+    // Cuerpo de una columna del tablero: en vez de repetir la franja de estado
+    // en CADA card (se veían "montadas"), agrupa las requisiciones por contexto
+    // (Autorizadas / En colaboración) bajo UN solo encabezado por grupo. Las
+    // cards se renderizan limpias (sin franja). El conteo por requisición de
+    // "En colaboración" se conserva en el chip mini junto al ID.
+    function renderColBody(items){
+      if(!items.length) return `<div class="recl-col-empty"><span class="mi">inbox</span><div class="e-txt">Sin requisiciones</div></div>`;
+      const order = ['nueva','colab'];
+      const buckets = {nueva:[], colab:[]};
+      const noCtx = [];
+      items.forEach(r=>{
+        const c = !r.mine ? reqContext(r) : null;
+        if(c && buckets[c.key]) buckets[c.key].push(r); else noCtx.push(r);
+      });
+      const subFor = {nueva:'Listas para recibir colaboradores', colab:'Compartidas entre reclutadores'};
+      let html = '';
+      order.forEach(k=>{
+        const g = buckets[k];
+        if(!g.length) return;
+        const meta = reqContext(g[0]);
+        html += `<div class="req-col-group-head" data-ctx="${k}"><span class="mi">${meta.ic}</span><span class="g-lbl">${meta.lbl}</span><span class="g-sub">· ${subFor[k]}</span><span class="g-count">${g.length.toString().padStart(2,'0')}</span></div>`;
+        html += g.map(r=>cardHTML(r,{hideRibbon:true})).join('');
+      });
+      html += noCtx.map(r=>cardHTML(r,{hideRibbon:true})).join('');
+      return html;
     }
 
     // ===== BOARD (estilo recl-board / recl-col) =====
@@ -3389,13 +3633,15 @@
       const eyebrow = state.tab==='autorizadas' ? 'Estado de urgencia' : 'Estado de la requisición';
       return `<div class="recl-board requi-board" data-tab="${state.tab}">${cols.map(col=>`
         <div class="recl-col" style="background:${col.bg}">
-          <div class="recl-col-eyebrow">${eyebrow}</div>
-          <div class="recl-col-head">
-            <span class="recl-col-dot" style="background:${col.dot}"></span>
-            <div class="recl-col-name">${escR(col.nm)}<span class="sub-st">${escR(col.sub)}</span></div>
-            <span class="recl-col-count">${col.items.length.toString().padStart(2,'0')}</span>
+          <div class="recl-col-head" style="background:${col.bg}">
+            <div class="recl-col-eyebrow">${eyebrow}</div>
+            <div class="recl-col-head-row">
+              <span class="recl-col-dot" style="background:${col.dot}"></span>
+              <div class="recl-col-name">${escR(col.nm)}<span class="sub-st">${escR(col.sub)}</span></div>
+              <span class="recl-col-count">${col.items.length.toString().padStart(2,'0')}</span>
+            </div>
           </div>
-          ${col.items.length ? col.items.map(cardHTML).join('') : `<div class="recl-col-empty"><span class="mi">inbox</span><div class="e-txt">Sin requisiciones</div></div>`}
+          ${renderColBody(col.items)}
         </div>
       `).join('')}</div>`;
     }
@@ -4438,9 +4684,7 @@
       const conLabel = _conSet.length > 1 ? 'Mixto · Fijo y Temporal' : _conSet[0];
       let stLbl = sub.lbl, stCls = r.state;
       if(r.state==='autorizada'){
-        const ctx = reqContext(r);
-        if(ctx?.key==='liberada'){ stLbl = 'Liberada'; stCls = 'liberada'; }
-        else { stLbl = 'Autorizada'; stCls = 'autorizada'; }
+        stLbl = 'Autorizada'; stCls = 'autorizada';
       }
       const stPill = `<span class="req-drawer-pill state-${stCls}"><span class="dot"></span>${stLbl}</span>`;
       const urgPill = `<span class="req-drawer-pill urg-${r.urg}"><span class="dot"></span>${URG_LABELS[r.urg]}</span>`;
@@ -4803,6 +5047,27 @@
       // Historial / Timeline
       const tl = renderTimeline(r, t);
 
+      // RF-40 — Reclutadores activos (modelo colaborativo): quiénes la trabajan AHORA.
+      const _takers = r.takers || [];
+      const recActivos = _takers.length ? `
+        <div class="req-pane-sec" style="padding-bottom:14px">
+          <div class="req-pane-h"><span class="mi">groups</span>Reclutadores activos<span class="count">${_takers.length}</span></div>
+          <div style="display:flex;flex-direction:column;gap:9px;padding:8px 12px 0">
+            ${_takers.map(tk=>{
+              const me = tk.id==='me';
+              const ini = (tk.nm||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+              return `<div style="display:flex;align-items:center;gap:10px">
+                <div style="width:32px;height:32px;border-radius:50%;background:${me?'var(--o-500)':'var(--o-100)'};color:${me?'#fff':'var(--o-700)'};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex:0 0 auto">${ini}</div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-weight:600;color:var(--ink);font-size:13px">${escR(tk.nm)}${me?' <span style="color:var(--o-700);font-weight:500">(tú)</span>':''}</div>
+                  <div style="font-size:11.5px;color:var(--ink-3)">${escR(tk.rol||'Reclutadora')}${tk.ts?' · se unió '+fmtAgo(tk.ts).toLowerCase():''}</div>
+                </div>
+                <span class="lg-chip g" style="font-size:10.5px">activo</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>` : '';
+
       // Para parciales — añade un bloque de asignados (detalles + schedule)
       // Para parciales, cubiertas y para requis "En proceso" que ya tienen
       // avance (liberadas heredadas o asignaciones del recruiter en sesión),
@@ -4853,6 +5118,7 @@
       return `<div class="req-drawer-pane ${isActive?'active':''}" data-pane="detalles">
         ${hint}
         ${resumen}
+        ${recActivos}
         ${insights}
         ${asigMerged}
         ${vacMerged}
@@ -7113,7 +7379,7 @@
     sel = id;
     const d = document.getElementById('mgDetail'); if(!d) return;
     const aprob = r.aprob
-      ? `<div class="lg-note" style="margin-bottom:18px"><span class="mi">verified</span><div><strong>1 cierre pendiente de tu aprobación</strong> — Req ${r.aprob.req} · ${r.aprob.pos}, marcada como cubierta por ${r.nm}. <span class="lg-link" onclick="toast('Abriendo aprobación de cierre…','verified')">Revisar y aprobar (RF-05) →</span></div></div>`
+      ? `<div class="lg-note" style="margin-bottom:18px"><span class="mi">verified</span><div><strong>1 cierre pendiente de tu aprobación</strong> — Req ${r.aprob.req} · ${r.aprob.pos}, marcada como cubierta por ${r.nm}. <span class="lg-link" onclick="window.__grupoAprobar('${r.aprob.req}','${r.aprob.pos}','${r.nm}')">Revisar y aprobar (RF-05) →</span></div></div>`
       : `<div class="lg-note" style="margin-bottom:18px;background:var(--surface-2);border-color:var(--line)"><span class="mi" style="color:var(--ink-3)">check_circle</span><div>Sin cierres pendientes de aprobación.</div></div>`;
     const dispLabel = r.estado === 'Activa' ? 'Marcar vacaciones' : 'Marcar disponible';
     const dispIcon = r.estado === 'Activa' ? 'beach_access' : 'event_available';
@@ -7271,5 +7537,58 @@
         </div>`;
     }
     if(typeof toast === 'function') toast('Reporte individual de ' + r.nm, 'insert_chart');
+  };
+
+  // ---------- RF-05 — Aprobar / rechazar cierre de cobertura del grupo ----------
+  window.__grupoAprobar = function(req, pos, recNm){
+    open('Aprobar cierre de cobertura', 'verified',
+      `<div style="font-size:12.5px;color:var(--ink-2);margin-bottom:14px"><strong>${recNm}</strong> marcó la requisición <strong>${req}</strong> como cubierta. Revisa la cobertura antes de aprobar el cierre.</div>
+       <div class="lg-mini" style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center">
+         <div><div style="font-weight:600;color:var(--ink)">${req} · ${pos}</div><div class="l" style="margin-top:2px">Hotel Marbella · Centro · Schedule verificado</div></div>
+         <span class="lg-chip g">100% cubierta</span>
+       </div></div>
+       <div style="font-size:11.5px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Posiciones</div>
+       <table class="lg-tbl" style="border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;margin-bottom:14px">
+         <thead><tr><th>Posición</th><th>Cobertura</th><th>Estado</th></tr></thead>
+         <tbody><tr><td>${pos}</td><td><span class="lg-chip g">6/6</span></td><td>Asignados y validados</td></tr></tbody>
+       </table>
+       <div class="lg-field"><label>Comentario (opcional)</label><textarea id="apComent" class="lg-select" rows="2" style="resize:vertical" placeholder="Comentario para la reclutadora…"></textarea></div>
+       <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px">
+         <button class="lg-btn" onclick="window.__grupoRechazar('${req}','${recNm}')"><span class="mi">close</span>Rechazar</button>
+         <button class="lg-btn-pri" onclick="window.__grupoAprobarOk('${req}','${recNm}')"><span class="mi">check</span>Aprobar cierre</button>
+       </div>`);
+  };
+  window.__grupoAprobarOk = function(req, recNm){
+    close();
+    if(typeof toast==='function') toast(`Cierre de ${req} aprobado · semáforo Azul claro · ${recNm} notificada`, 'verified');
+  };
+  window.__grupoRechazar = function(req, recNm){
+    open('Rechazar cierre · ' + req, 'undo',
+      `<div class="lg-field"><label>Motivo del rechazo (obligatorio)</label><textarea id="rzMot" class="lg-select" rows="3" style="resize:vertical" placeholder="Explica por qué la cobertura no es válida (faltan posiciones, mismatch de modalidad, etc.)…"></textarea></div>
+       <div style="display:flex;gap:10px;justify-content:flex-end">
+         <button class="lg-btn" onclick="window.__lgModalClose()">Cancelar</button>
+         <button class="lg-btn-pri" onclick="window.__grupoRechazarOk('${req}','${recNm}')"><span class="mi">undo</span>Rechazar y devolver</button>
+       </div>`);
+  };
+  window.__grupoRechazarOk = function(req, recNm){
+    const el = document.getElementById('rzMot');
+    if(!el || !el.value.trim()){ if(el){ el.style.borderColor='var(--red)'; el.focus(); } return; }
+    close();
+    if(typeof toast==='function') toast(`Cierre de ${req} rechazado · vuelve a En proceso (Amarillo) · ${recNm} notificada`, 'undo');
+  };
+
+  // ---------- Reportes: segmentos interactivos + programar + reutilizar ----------
+  window.__lgModalOpen = open;
+  window.__lgSeg = function(el){ const p = el.parentElement; if(p) Array.prototype.forEach.call(p.children, c=>c.classList.remove('on')); el.classList.add('on'); };
+  window.__rpRango = function(el, custom){ window.__lgSeg(el); const c = document.getElementById('rpCustom'); if(c) c.style.display = custom ? 'block' : 'none'; };
+  window.__rpProgramar = function(){
+    open('Programar envío recurrente', 'schedule_send',
+      `<div class="lg-field"><label>Frecuencia</label><select class="lg-select"><option>Semanal (cada lunes)</option><option>Quincenal</option><option>Mensual (día 1)</option></select></div>
+       <div class="lg-field"><label>Tipo de reporte</label><select class="lg-select"><option>Cobertura del grupo</option><option>Desempeño individual</option><option>Casos escalados</option></select></div>
+       <div class="lg-field"><label>Destinatario</label><select class="lg-select" disabled style="opacity:.65"><option>Manager de Reclutamiento (automático)</option></select></div>
+       <div style="display:flex;gap:10px;justify-content:flex-end"><button class="lg-btn" onclick="window.__lgModalClose()">Cancelar</button><button class="lg-btn-pri" onclick="window.__lgModalClose();toast('Envío recurrente programado','schedule_send')"><span class="mi">check</span>Programar</button></div>`);
+  };
+  window.__rpReutilizar = function(){
+    if(typeof toast==='function') toast('Reporte recargado en el generador · ajusta filtros y vuelve a generar', 'content_copy');
   };
 })();

@@ -1260,6 +1260,65 @@
   .tray-table tbody tr{transition:background var(--ease);cursor:pointer}
   .tray-table tbody tr:hover{background:var(--surface-2)}
   .tray-table tbody tr:last-child td{border-bottom:none}
+  /* Placeholder de bandeja (Blacklist en definición / sin pendientes) */
+  .lg-tray-note{
+    display:flex;align-items:center;gap:14px;
+    padding:20px 8px;justify-content:center;text-align:left;cursor:default;
+  }
+  .lg-tray-note > .mi{
+    font-size:30px;color:var(--ink-4);
+    background:var(--surface-2);border-radius:12px;
+    width:50px;height:50px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .lg-tray-note .t{display:flex;flex-direction:column;gap:3px;max-width:520px}
+  .lg-tray-note .t strong{font-size:13.5px;color:var(--ink);font-weight:700}
+  .lg-tray-note .t span{font-size:12px;color:var(--ink-3);line-height:1.45}
+  /* Botón de acción "recordatorio enviado" */
+  .row-action-btn.sent{background:#e7f7ee !important;border-color:#bfe6cf !important;cursor:default}
+  .row-action-btn.sent .mi{color:#1FA84A !important}
+
+  /* ===== Modal de perfil del candidato (bandeja de acción) ===== */
+  .lg-cand-overlay{
+    position:fixed;inset:0;z-index:9999;
+    background:rgba(26,17,8,.42);backdrop-filter:blur(2px);
+    display:flex;align-items:center;justify-content:center;padding:24px;
+    animation:lgCandFade .14s ease;
+  }
+  @keyframes lgCandFade{from{opacity:0}to{opacity:1}}
+  .lg-cand-modal{
+    background:#fff;border:1px solid var(--line);border-radius:18px;
+    width:min(560px,100%);max-height:90vh;overflow-y:auto;
+    box-shadow:0 24px 60px -12px rgba(26,17,8,.4);
+    animation:lgCandPop .16s ease;
+  }
+  @keyframes lgCandPop{from{transform:translateY(8px) scale(.985);opacity:0}to{transform:none;opacity:1}}
+  .lg-cand-head{display:flex;align-items:center;gap:14px;padding:18px 20px;border-bottom:1px solid var(--line)}
+  .lg-cand-head .avatar.lg{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:17px;flex-shrink:0}
+  .lg-cand-id{flex:1;min-width:0}
+  .lg-cand-id .nm{font-size:16px;font-weight:700;color:var(--ink);line-height:1.2}
+  .lg-cand-id .ps{font-size:12.5px;color:var(--ink-3);margin-top:2px}
+  .lg-cand-x{width:32px;height:32px;border-radius:9px;border:1px solid var(--line-2);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-3);flex-shrink:0}
+  .lg-cand-x:hover{background:var(--surface-2);color:var(--ink)}
+  .lg-cand-x .mi{font-size:18px}
+  .lg-cand-body{padding:18px 20px;display:flex;flex-direction:column;gap:18px}
+  .lg-cand-sec-t{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3);margin-bottom:8px}
+  .lg-cand-warn{color:#E1731A;font-weight:700}
+  .lg-cand-ok{color:#1FA84A;font-weight:700}
+  .lg-cand-applied{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .lg-cand-applied .mi{font-size:17px;color:#FF8E00}
+  .lg-cand-applied strong{color:var(--ink)}
+  .lg-cand-applied .dot-sep{color:var(--ink-4)}
+  .lg-cand-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px 18px}
+  .lg-cand-field .k{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-4);margin-bottom:2px}
+  .lg-cand-field .v{font-size:13px;color:var(--ink);font-weight:500}
+  .lg-cand-exp{font-size:13px;color:var(--ink-2);line-height:1.5}
+  .lg-cand-docs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+  .lg-cand-docs li{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ink-2)}
+  .lg-cand-docs li .mi{font-size:18px}
+  .lg-cand-docs li.ok .mi{color:#1FA84A}
+  .lg-cand-docs li.no{color:var(--ink-3)}
+  .lg-cand-docs li.no .mi{color:#E1731A}
+  .lg-cand-foot{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;padding:15px 20px;border-top:1px solid var(--line);background:var(--surface-2)}
 
   .cand-cell{display:flex;align-items:center;gap:10px}
   .cand-cell .nm{font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.2}
@@ -1769,7 +1828,7 @@
     flex:0 0 calc((100% - 60px) / 5.5);min-width:200px;
     background:rgb(246,241,235);
     border-radius:14px;
-    padding:12px;
+    padding:0 12px 12px;
     display:flex;flex-direction:column;gap:8px;
     border:1px solid var(--line);
     min-height:400px;
@@ -1788,12 +1847,12 @@
   }
   .recl-col-head{
     display:flex;align-items:center;gap:10px;
-    padding:6px 8px 10px;
     border-bottom:1px solid var(--line);
-    margin-bottom:4px;
-    position:sticky;top:-12px;z-index:2;
+    position:sticky;top:0;z-index:5;
     background:rgb(246,241,235);
-    margin:-12px -12px 4px;padding:18px 12px 10px;
+    margin:0 -12px;padding:14px 12px 11px;
+    border-radius:13px 13px 0 0;
+    box-shadow:0 7px 9px -8px rgba(26,17,8,.16);
   }
   .recl-col-dot{
     width:11px;height:11px;border-radius:50%;
@@ -4393,14 +4452,48 @@
     background:linear-gradient(90deg, rgba(255,142,0,.2), rgba(255,142,0,.05));
     color:#B85A00; border-bottom-color:rgba(255,142,0,.24);
   }
-  .req-ctx-ribbon[data-ctx="liberada"]{
-    background:linear-gradient(90deg, rgba(139,92,246,.18), rgba(139,92,246,.04));
-    color:#6D28D9; border-bottom-color:rgba(139,92,246,.22);
+  .req-ctx-ribbon[data-ctx="colab"]{
+    background:linear-gradient(90deg, rgba(13,148,136,.16), rgba(13,148,136,.04));
+    color:#0F766E; border-bottom-color:rgba(13,148,136,.2);
   }
   .req-ctx-ribbon[data-ctx="abandonada"]{
     background:linear-gradient(90deg, rgba(225,25,25,.14), rgba(225,25,25,.04));
     color:#B81515; border-bottom-color:rgba(225,25,25,.18);
   }
+
+  /* ===== Encabezado de grupo dentro de columna del tablero =====
+     Reemplaza la franja repetida en cada card: aparece UNA vez por estado. */
+  .req-col-group-head{
+    display:flex; align-items:center; gap:7px;
+    padding:7px 11px; margin:4px 0 -1px;
+    border-radius:9px;
+    font-size:11px; font-weight:700; letter-spacing:.03em; text-transform:uppercase;
+  }
+  .req-col-group-head:first-child{margin-top:0}
+  .req-col-group-head .mi{font-size:16px}
+  .req-col-group-head .g-sub{
+    font-weight:500; text-transform:none; letter-spacing:0; font-size:11px; opacity:.82;
+  }
+  .req-col-group-head .g-count{
+    margin-left:auto; background:#fff; border:1px solid var(--line);
+    border-radius:999px; padding:1px 8px; font-size:10.5px; font-weight:700; color:var(--ink-2);
+  }
+  .req-col-group-head[data-ctx="nueva"]{
+    background:linear-gradient(90deg, rgba(255,142,0,.16), rgba(255,142,0,.04));
+    color:#B85A00; box-shadow:inset 0 0 0 1px rgba(255,142,0,.18);
+  }
+  .req-col-group-head[data-ctx="colab"]{
+    background:linear-gradient(90deg, rgba(13,148,136,.14), rgba(13,148,136,.03));
+    color:#0F766E; box-shadow:inset 0 0 0 1px rgba(13,148,136,.18);
+  }
+  /* Chip mini de "En colaboración" junto al ID de la requisición */
+  .req-colab-mini{
+    display:inline-flex; align-items:center; gap:2px;
+    margin-left:6px; padding:0 6px; height:15px;
+    border-radius:999px; font-size:10px; font-weight:700;
+    background:rgba(13,148,136,.12); color:#0F766E; vertical-align:middle;
+  }
+  .req-colab-mini .mi{font-size:12px}
 
   .recl-card.requi .req-hotel{
     font-size:14px;font-weight:700;color:rgb(83,59,23);
@@ -4618,13 +4711,18 @@
   }
   .req-cols-eyebrow .mi{font-size:15px;color:var(--o-700)}
 
-  /* Eyebrow dentro de cada columna del tablero */
+  /* Eyebrow "ESTADO DE URGENCIA" — ahora vive DENTRO del header sticky */
   .recl-col-eyebrow{
-    font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
     color:var(--ink-3);
-    margin:0 0 -2px;padding:0 2px;line-height:1.2;
+    margin:0;padding:0;line-height:1;
   }
-  .recl-board.requi-board .recl-col-head{padding:2px 8px 8px}
+  /* En el tablero de requisiciones el header apila: eyebrow arriba + fila debajo */
+  .recl-board.requi-board .recl-col-head{
+    flex-direction:column;align-items:stretch;gap:7px;
+    padding:12px 12px 11px;
+  }
+  .recl-col-head-row{display:flex;align-items:center;gap:10px}
 
   .req-pos-list{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
   .req-pos-row{
