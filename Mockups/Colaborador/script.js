@@ -75,6 +75,181 @@ function toast(msg,ic){const t=document.getElementById('toast');document.getElem
 function openModal(html){const b=document.getElementById('modalBg');b.innerHTML=`<div class="modal">${html}</div>`;b.classList.add('show');}
 function closeModal(){document.getElementById('modalBg').classList.remove('show');}
 
+/* ============================ i18n (ES / EN) ============================ */
+let LANG='es';
+const _i18nOrig=new WeakMap(), _i18nPh=new WeakMap();
+const I18N={
+  // Sidebar / nav
+  'Mi trabajo':'My work','Inicio':'Home','Mi Schedule':'My Schedule','Ponche':'Clock-in','Mi Timesheet':'My Timesheet',
+  'Mi Pago':'My Pay','Gestión':'Management','Disponibilidad':'Availability','Reportar accidente':'Report accident','Cerrar sesión':'Log out',
+  // Header / perfil
+  'Mi Perfil':'My Profile','Mi perfil y datos':'My profile & data','Mi estado':'My status','Configuración':'Settings','Idioma':'Language',
+  'Notificaciones':'Notifications','Marcar todas como leídas':'Mark all as read','Ver todas las notificaciones':'See all notifications',
+  'Ya en Oranje':'Already in Oranje','Colaborador nuevo':'New collaborator','Salir del demo':'Exit demo',
+  // Inicio
+  'TU ESTADO':'YOUR STATUS','Completaste una semana. Eres colaborador fijo del hotel.':'You completed a week. You are a permanent collaborator at the hotel.',
+  'Horas esta semana':'Hours this week','Meta semanal':'Weekly goal','Turnos asignados':'Shifts assigned','completados esta semana':'completed this week',
+  'Último pago recibido':'Last payment received','Pagado el':'Paid on','Días completados':'Days completed','turnos restantes':'shifts remaining',
+  'Tu próximo turno':'Your next shift','Ver semana':'See week','Descanso':'Day off',
+  'El':'The','ponche':'clock-in','se hace desde la':'is done from the','app móvil':'mobile app','escaneando el QR del hotel.':'by scanning the hotel QR.','Ver estado de hoy':"See today's status",
+  'Accesos rápidos':'Quick actions','ASISTENCIA DEL MES':'ATTENDANCE THIS MONTH','Sin faltas registradas · ¡sigue así!':'No absences recorded · keep it up!',
+  'Disponibilidad para turnos extra':'Availability for extra shifts','Actívate como disponible voluntario':'Set yourself as voluntarily available',
+  'Mi historial de pagos':'My payment history','Consulta tus pagos recibidos':'Check your received payments','Ver mi schedule':'See my schedule',
+  'Tus turnos de la semana':'Your shifts this week','Reportar un accidente':'Report an accident','Notifica de inmediato al Inspector':'Notifies the Inspector immediately',
+  // Schedule
+  'Tus turnos asignados de la semana. Solo lectura — lo define el hotel.':'Your assigned shifts this week. Read-only — set by the hotel.',
+  'Si necesitas un cambio en tu schedule, contacta a tu reclutadora o al hotel. Como colaborador no puedes editarlo directamente.':'If you need a change to your schedule, contact your recruiter or the hotel. As a collaborator you cannot edit it directly.',
+  'Lun':'Mon','Mar':'Tue','Mié':'Wed','Jue':'Thu','Vie':'Fri','Sáb':'Sat','Dom':'Sun',
+  // Ponche
+  'Ponche del día':"Today's clock-in",'Registro de tu jornada de hoy · Miércoles 18 Jun.':"Record of today's shift · Wednesday Jun 18.",
+  'El ponche se realiza en la app móvil':'Clock-in is done in the mobile app','El ponche es una acción móvil.':'Clock-in is a mobile action.',
+  'Escaneas el QR físico del hotel con la cámara de tu teléfono. Aquí en web solo ves el estado de tus ponches; el registro lo haces desde la app.':"You scan the hotel's physical QR with your phone camera. Here on web you only see the status of your clock-ins; you record them from the app.",
+  'Tus ponches de hoy':"Today's clock-ins",'Entrada':'Clock in','Salida Lunch':'Out to lunch','Entrada Lunch':'Back from lunch',
+  'Salida Break':'Out to break','Entrada Break':'Back from break','Salida':'Clock out','Pendiente':'Pending',
+  'Simular ponche desde la app':'Simulate clock-in from the app','Demostración — en producción se hace escaneando el QR.':"Demo — in production it's done by scanning the QR.",
+  // Timesheet
+  'Tus horas registradas esta semana. La deducción de lunch se aplica automáticamente.':'Your hours recorded this week. The lunch deduction is applied automatically.',
+  'Día':'Day','Horas brutas':'Gross hours','Horas netas':'Net hours','Hoy':'Today','Horas netas acumuladas':'Accumulated net hours','Lunch deducido':'Lunch deducted',
+  'Regla de lunch: si tu lunch dura menos de 30 min, se deducen 30 min mínimo. Después de 6 horas continuas debes tomar tu lunch.':'Lunch rule: if your lunch is under 30 min, a minimum of 30 min is deducted. After 6 continuous hours you must take your lunch.',
+  'Tiempo de lunch':'Lunch time','Deducción lunch':'Lunch deduction','Aún no hay ponches registrados para este día.':'No clock-ins recorded for this day yet.',
+  // Pago
+  'Tu historial de pagos recibidos. El monto del próximo pago lo calcula y confirma Contabilidad.':'Your history of received payments. The amount of your next payment is calculated and confirmed by Accounting.',
+  'El pago de la':'The payment for the','semana en curso':'current week',
+  'aún no está disponible: Contabilidad lo calcula y aprueba al cierre. No verás el monto hasta que el pago se libere.':"is not available yet: Accounting calculates and approves it at closing. You won't see the amount until the payment is released.",
+  'Total pagado (últimos 30 días)':'Total paid (last 30 days)','Pagos recibidos este año':'Payments received this year','Historial de pagos':'Payment history',
+  'Semana':'Week','Hotel(es)':'Hotel(s)','Horas':'Hours','Monto':'Amount','Fecha de pago':'Payment date','Estado':'Status',
+  'Semana en curso':'Current week','En cálculo':'Calculating','Pagado':'Paid',
+  'No puedes ver el monto de tu':"You can't see the amount of your",'próximo pago':'next payment',
+  'hasta que Contabilidad lo libere. El historial muestra solo pagos ya realizados; no incluye pay rate interno ni deducciones detalladas.':'until Accounting releases it. The history shows only payments already made; it does not include internal pay rate or detailed deductions.',
+  // Disponibilidad
+  'Decláralo tú mismo cuando estés en descanso y quieras cubrir turnos extra.':'Declare it yourself when you are off and want to cover extra shifts.',
+  'Disponible para turnos extra':'Available for extra shifts','Activa el estado':'Activate the status','Amarillo (Disponible voluntario)':'Yellow (Voluntarily available)',
+  '. Es la única acción que puedes activar tú mismo, sin aprobación.':'. It is the only action you can activate yourself, without approval.',
+  'Inactivo':'Inactive','Activo':'Active','No estás declarado como disponible voluntario en este momento.':'You are not declared as voluntarily available at this moment.',
+  'Estás visible para asignaciones temporales. Te avisaremos si una reclutadora te asigna.':"You are visible for temporary assignments. We'll notify you if a recruiter assigns you.",
+  '¿Cómo funciona?':'How does it work?','Te declaras disponible':'You declare yourself available','Una reclutadora te asigna':'A recruiter assigns you',
+  'Trabajas y ponchas':'You work and clock in','Se genera tu Timesheet':'Your Timesheet is generated','Al terminar, regresas':'When you finish, you go back',
+  'Estar disponible':'Being available','no es':'is not','una asignación: no tienes schedule ni ponche hasta que una reclutadora te asigne (estado Café).':'an assignment: you have no schedule or clock-in until a recruiter assigns you (Café status).',
+  'Turnos extra recientes':'Recent extra shifts','Fecha':'Date','Hotel':'Hotel','Completado':'Completed',
+  'Cubriste':'You covered','en los últimos 30 días.':'in the last 30 days.','Cuándo activarla':'When to activate it',
+  'Estás en tu':'You are on your','día de descanso':'day off','y quieres ganar horas extra.':'and want to earn extra hours.',
+  'Tu hotel principal no tiene turno para ti hoy.':'Your main hotel has no shift for you today.',
+  'No la actives si ya tienes turno asignado:':"Don't activate it if you already have an assigned shift:",'no reemplaza':'does not replace','tu schedule fijo.':'your fixed schedule.',
+  'Los turnos extra se pagan aparte y suman a tu cobro semanal.':'Extra shifts are paid separately and add to your weekly pay.',
+  'Ahora estás disponible para turnos extra (Amarillo)':'You are now available for extra shifts (Yellow)','Disponibilidad desactivada':'Availability turned off',
+  // Accidente
+  'Reportar accidente laboral':'Report work accident','Si sufriste un accidente en el trabajo, repórtalo aquí. Se notifica de inmediato al Inspector.':'If you had an accident at work, report it here. The Inspector is notified immediately.',
+  'Al enviar este reporte: se crea una':'When you submit this report: a','tarjeta de accidente':'accident card',', tu estado pasa a':' is created, your status changes to',
+  'Gris (accidentado)':'Gray (injured)','y quedas':'and you become','protegido':'protected','de la regla de 3 inasistencias mientras dure tu incapacidad.':'from the 3-absence rule for as long as your leave lasts.',
+  'Tipo de accidente':'Type of accident','Selecciona…':'Select…','Caída / resbalón':'Fall / slip','Corte / herida':'Cut / wound','Quemadura':'Burn',
+  'Esfuerzo / lesión muscular':'Strain / muscle injury','Golpe / contusión':'Blow / bruise','Otro':'Other','Fecha y hora':'Date and time',
+  'Lugar dentro del hotel':'Location within the hotel','¿Qué ocurrió?':'What happened?','Mínimo 15 caracteres. Sé claro: esta descripción la revisa el Inspector.':'Minimum 15 characters. Be clear: the Inspector reviews this description.',
+  '¿Requiere atención médica?':'Requires medical attention?','Sí — ya recibí atención':'Yes — I already got care','Sí — la necesito':'Yes — I need it','No por ahora':'Not for now',
+  'Testigos (opcional)':'Witnesses (optional)','Evidencia (opcional)':'Evidence (optional)','Adjunta una foto del lugar o la lesión':'Attach a photo of the place or the injury',
+  'JPG, PNG · La geolocalización se adjunta automáticamente desde la app móvil':'JPG, PNG · Geolocation is attached automatically from the mobile app',
+  'Cancelar':'Cancel','Enviar reporte':'Submit report','Reporte enviado':'Report submitted','Tarjeta de accidente':'Accident card','Creada · ACC-0428':'Created · ACC-0428',
+  'Tu estado ahora':'Your status now','Notificado a':'Notified to','Inspector de zona':'Zone Inspector','Protección':'Protection','Activa (3 inasistencias)':'Active (3 absences)',
+  'El Inspector dará seguimiento. Tu estado volverá a':'The Inspector will follow up. Your status will return to','cuando recibas el alta médica y se cierre la tarjeta.':'when you receive medical clearance and the card is closed.',
+  'Entendido':'Got it','Completa los campos obligatorios (descripción ≥ 15 caracteres)':'Complete the required fields (description ≥ 15 characters)',
+  // Perfil
+  'Tu información personal. Algunos datos solo los puede cambiar tu reclutadora.':'Your personal information. Some data can only be changed by your recruiter.',
+  'Datos':'Data','Emergencia':'Emergency','Datos personales':'Personal data','Nombre completo':'Full name','Edad':'Age','Género':'Gender','Masculino':'Male',
+  'Domicilio':'Address','Teléfono':'Phone','Correo':'Email','Datos laborales (Fase 2)':'Work data (Phase 2)','Posición':'Position','Modalidad':'Modality',
+  'Nivel de inglés':'English level','Experiencia':'Experience','Transporte':'Transport','Por horas':'Hourly','Básico':'Basic',
+  'Tu onboarding está completo (Fase 1, 2 y 3). Tu reclutadora validó tus datos.':'Your onboarding is complete (Phase 1, 2 and 3). Your recruiter validated your data.',
+  'Contacto de emergencia (Fase 3)':'Emergency contact (Phase 3)','Nombre':'Name','Parentesco':'Relationship','Hermano':'Brother','Datos médicos':'Medical data',
+  'Tipo de sangre':'Blood type','Alergias o condiciones':'Allergies or conditions','Ninguna':'None','Actualizar contacto de emergencia':'Update emergency contact',
+  'Los 12 estados del semáforo':'The 12 status colors',
+  // Semáforo (labels + desc)
+  'Pre-asignación':'Pre-assignment','Día 1-2':'Day 1-2','Día 3+':'Day 3+','Fijo':'Fixed','Disponible':'Available','Disponible voluntario':'Voluntarily available',
+  'Asignación temporal':'Temporary assignment','Stand-by':'Stand-by','No regresó':"Didn't return",'Reportado':'Reported','Accidentado':'Injured','Blacklist':'Blacklist',
+  'Subiste tus datos en la app; falta que tu reclutadora los valide.':'You uploaded your data in the app; your recruiter still needs to validate it.',
+  'Primeros días en el hotel. El Inspector verifica tu llegada.':'First days at the hotel. The Inspector verifies your arrival.',
+  'Ponchaste al tercer día. El Inspector te entregó tu uniforme.':'You clocked in on the third day. The Inspector gave you your uniform.',
+  'Disponible para asignación.':'Available for assignment.','Te declaraste disponible para turnos extra durante tu descanso.':'You declared yourself available for extra shifts during your time off.',
+  'Asignado temporalmente a cubrir una jornada.':'Temporarily assigned to cover a shift.','El hotel te mandó a descansar (vacaciones / temporada baja).':'The hotel sent you to rest (vacation / low season).',
+  'Inasistencia registrada.':'Absence recorded.','El hotel te reportó; el Inspector revisa el caso.':'The hotel reported you; the Inspector reviews the case.',
+  'En incapacidad médica por accidente laboral. Protegido de la regla de 3 inasistencias.':'On medical leave due to a work accident. Protected from the 3-absence rule.','Bloqueado de la plataforma.':'Blocked from the platform.',
+  // editContacto
+  'Actualizar contacto':'Update contact','Como colaborador solo puedes editar tus':'As a collaborator you can only edit your','datos de contacto':'contact data',
+  '. El resto lo gestiona tu reclutadora.':'. The rest is managed by your recruiter.','Contacto de emergencia — teléfono':'Emergency contact — phone','Guardar':'Save',
+  'Datos de contacto actualizados':'Contact data updated',
+  // Notificaciones (items)
+  'Schedule actualizado':'Schedule updated','Tu schedule de la semana 16–22 Jun fue confirmado por el hotel.':'Your schedule for the week of Jun 16–22 was confirmed by the hotel.',
+  'Validación aprobada':'Validation approved','Tu reclutadora validó tu alta. Ya perteneces a Oranje (estado Disponible).':'Your recruiter validated your sign-up. You now belong to Oranje (Available status).',
+  'Recordatorio de ponche':'Clock-in reminder','No olvides ponchar tu salida al terminar tu turno de hoy.':"Don't forget to clock out when you finish today's shift.",
+  'Pago liberado':'Payment released','Tu pago de la semana 09–15 Jun fue procesado por Contabilidad.':'Your payment for the week of Jun 09–15 was processed by Accounting.',
+  'Uniforme entregado':'Uniform delivered','El Inspector registró la entrega de tu uniforme (Día 3).':'The Inspector recorded the delivery of your uniform (Day 3).',
+  'Ayer':'Yesterday','Todas marcadas como leídas':'All marked as read','sin leer.':'unread.',
+  // Onboarding
+  'Datos laborales':'Work data','Cuéntanos sobre tu perfil de trabajo. Esta es tu Fase 2.':'Tell us about your work profile. This is your Phase 2.','Revisar':'Review',
+  'NOMBRE (FASE 1)':'NAME (PHASE 1)','TELÉFONO':'PHONE','CAPTURADO POR':'CAPTURED BY','Tu reclutadora':'Your recruiter',
+  'Nivel de experiencia':'Experience level','Tipo de transporte':'Transport type','Documento de SSN / ITIN':'SSN / ITIN document','Adjunta tu documento (SSN / ITIN)':'Attach your document (SSN / ITIN)',
+  'Disponible al ingresar tu SSN o ITIN':'Available once you enter your SSN or ITIN','Recomendado: adjunta tu documento · JPG, PNG o PDF':'Recommended: attach your document · JPG, PNG or PDF',
+  'Documento adjuntado · toca para cambiar':'Document attached · tap to change',
+  'Sin SSN ni ITIN':'Without SSN or ITIN','se te aplicará una':'a','retención del 16%':'16% retention','sobre tu pago. Es':'will be applied to your pay. It is','reembolsable':'refundable',
+  ': se te devuelve cuando entregues tus documentos fiscales a Contabilidad.':': it is returned when you submit your tax documents to Accounting.',
+  'Continuar':'Continue','Datos de emergencia':'Emergency data','Por tu seguridad. Esta es tu Fase 3.':'For your safety. This is your Phase 3.',
+  'Contacto de emergencia — nombre':'Emergency contact — name','Teléfono del contacto':'Contact phone','Alergias o condiciones médicas':'Allergies or medical conditions',
+  'Atrás':'Back','Revisa y envía':'Review and submit','Verifica tu información antes de enviarla a validación.':'Check your information before sending it for validation.',
+  'Fase 2 · Datos laborales':'Phase 2 · Work data','Documento':'Document','Retención 16%':'16% retention','No aplica':'Not applicable','Sí — sin SSN/ITIN (reembolsable)':'Yes — without SSN/ITIN (refundable)',
+  'Fase 3 · Emergencia':'Phase 3 · Emergency','Contacto':'Contact','Alergias':'Allergies',
+  'Al enviar, tu cuenta pasa a':'On submit, your account goes to','revisión':'review','(estado Blanco). Tu reclutadora validará tus datos para habilitarte el acceso.':'(White status). Your recruiter will validate your data to enable your access.',
+  'Enviar para validación':'Submit for validation','¡Información enviada!':'Information submitted!',
+  'Completaste tu registro (Fase 2 y Fase 3). Tu cuenta está en':'You completed your registration (Phase 2 and Phase 3). Your account is in',
+  '; tu reclutadora validará tus datos para habilitarte el acceso a la plataforma.':'; your recruiter will validate your data to enable your access to the platform.',
+  'Mientras estés en':'While you are in','Pre-asignación (Blanco)':'Pre-assignment (White)','aún no tienes acceso a los módulos ni puedes ser asignado a un hotel.':'you still have no access to the modules and cannot be assigned to a hotel.',
+  'Simular validación de reclutadora':'Simulate recruiter validation','Tu reclutadora validó tu alta — acceso habilitado':'Your recruiter validated your sign-up — access enabled',
+  'Documento adjuntado (demo)':'Document attached (demo)','Primero ingresa tu SSN o ITIN':'First enter your SSN or ITIN','Completa los campos obligatorios (*)':'Complete the required fields (*)',
+  // Catálogos
+  'Intermedio':'Intermediate','Avanzado':'Advanced','Conversacional':'Conversational','Sin experiencia':'No experience','Menos de 1 año':'Less than 1 year',
+  '1–2 años':'1–2 years','3–5 años':'3–5 years','Más de 5 años':'More than 5 years','Propio (auto)':'Own (car)','Transporte público':'Public transport',
+  'Bicicleta':'Bicycle','A pie':'On foot','Tiempo completo':'Full time','Medio tiempo':'Part time','Temporal':'Temporary','Según solicitud':'On request',
+  'Madre':'Mother','Padre':'Father','Esposo/a':'Spouse','Hermano/a':'Sibling','Hijo/a':'Child','Amigo/a':'Friend',
+  // Toasts varios
+  'Ya registraste todos tus ponches de hoy':'You already registered all your clock-ins for today','Abriendo ayuda…':'Opening help…',
+  'Abriendo configuración…':'Opening settings…','Cerrando sesión…':'Logging out…','Selector de archivos (demo)':'File picker (demo)'
+};
+const I18N_PAT=[
+  [/Hola, /g,'Hi, '],
+  [/\+(\d+) días/g,'+$1 days'],[/\+(\d+) día\b/g,'+$1 day'],
+  [/(\d+) años/g,'$1 years'],[/(\d+) año\b/g,'$1 year'],
+  [/(\d+)\/6 registrados/g,'$1/6 recorded'],
+  [/Semana (\d+)/g,'Week $1'],
+  [/\bLun (\d+)/g,'Mon $1'],[/\bMar (\d+)/g,'Tue $1'],[/\bMié (\d+)/g,'Wed $1'],[/\bJue (\d+)/g,'Thu $1'],[/\bVie (\d+)/g,'Fri $1'],[/\bSáb (\d+)/g,'Sat $1'],[/\bDom (\d+)/g,'Sun $1'],
+  [/Detalle · /g,'Detail · '],
+  [/Hace (\d+) h\b/g,'$1 h ago'],[/Hace (\d+) días/g,'$1 days ago'],[/Hace (\d+) día\b/g,'$1 day ago'],[/Hace (\d+) min/g,'$1 min ago'],
+  [/Zona Centro/g,'Centro Zone'],
+  [/Ponche registrado: /g,'Clock-in recorded: '],
+];
+const _i18nSkip=node=>{const p=node.parentElement;return !p||p.closest('.mi,.mio,script,style,svg,.lang-seg');};
+function _i18nTxtEN(node){
+  if(_i18nSkip(node))return;
+  const raw=node.nodeValue,key=raw.trim();
+  if(!key)return;
+  let en=(I18N[key]!==undefined)?I18N[key]:I18N[key.replace(/\s+/g,' ')];
+  if(en===undefined){let out=key;for(let i=0;i<I18N_PAT.length;i++){out=out.replace(I18N_PAT[i][0],I18N_PAT[i][1]);}if(out!==key)en=out;}
+  if(en!==undefined&&en!==key){if(!_i18nOrig.has(node))_i18nOrig.set(node,raw);const v=en;node.nodeValue=raw.replace(key,function(){return v;});}
+}
+function _i18nTxtES(node){if(_i18nOrig.has(node)){node.nodeValue=_i18nOrig.get(node);_i18nOrig.delete(node);}}
+function _i18nWalk(root,toEN){
+  if(root.nodeType===3){toEN?_i18nTxtEN(root):_i18nTxtES(root);return;}
+  if(root.nodeType!==1)return;
+  const tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const list=[];let n;while(n=tw.nextNode())list.push(n);
+  list.forEach(toEN?_i18nTxtEN:_i18nTxtES);
+  (root.querySelectorAll?root.querySelectorAll('input[placeholder],textarea[placeholder]'):[]).forEach(inp=>{
+    if(toEN){const en=I18N[(inp.placeholder||'').trim()];if(en!==undefined){if(!_i18nPh.has(inp))_i18nPh.set(inp,inp.placeholder);inp.placeholder=en;}}
+    else if(_i18nPh.has(inp)){inp.placeholder=_i18nPh.get(inp);_i18nPh.delete(inp);}
+  });
+}
+window.setLang=function(lang){
+  LANG=(lang==='en')?'en':'es';
+  _i18nWalk(document.body,LANG==='en');
+  document.querySelectorAll('.lang-opt').forEach(b=>b.classList.toggle('active',b.dataset.lang===LANG));
+  document.documentElement.setAttribute('lang',LANG);
+};
+try{const _o=new MutationObserver(muts=>{if(LANG!=='en')return;muts.forEach(m=>m.addedNodes&&m.addedNodes.forEach(node=>_i18nWalk(node,true)));});if(document.body)_o.observe(document.body,{childList:true,subtree:true});}catch(e){}
+
 /* ============================ NAVIGATION ============================ */
 function navigate(el,name){
   document.querySelectorAll('.sb-item').forEach(i=>i.classList.toggle('active',i.dataset.page===name));
@@ -334,7 +509,7 @@ RENDER.Disponibilidad=function(){
         <div class="flow-arrow"><span class="mi">arrow_forward</span></div>
         <div class="flow-step"><div class="flow-ic"><span class="mi">replay</span></div><div class="flow-t">Al terminar, regresas</div>${stChip('verde')}</div>
       </div>
-      <div class="banner info" style="margin-top:18px"><span class="mi">info</span><div>Estar disponible <b>no</b> es una asignación: no tienes schedule ni ponche hasta que una reclutadora te asigne (estado Café).</div></div>
+      <div class="banner info" style="margin-top:18px"><span class="mi">info</span><div>Estar disponible <b>no es</b> una asignación: no tienes schedule ni ponche hasta que una reclutadora te asigne (estado Café).</div></div>
     </div>
   </div>
 
@@ -354,7 +529,7 @@ RENDER.Disponibilidad=function(){
       <div class="card-b" style="display:flex;flex-direction:column;gap:12px">
         <div style="display:flex;gap:10px"><span class="mi" style="color:var(--green)">check_circle</span><div style="font-size:13px;color:var(--ink-2)">Estás en tu <b>día de descanso</b> y quieres ganar horas extra.</div></div>
         <div style="display:flex;gap:10px"><span class="mi" style="color:var(--green)">check_circle</span><div style="font-size:13px;color:var(--ink-2)">Tu hotel principal no tiene turno para ti hoy.</div></div>
-        <div style="display:flex;gap:10px"><span class="mi" style="color:var(--ink-4)">cancel</span><div style="font-size:13px;color:var(--ink-2)">No la actives si ya tienes turno asignado: <b>no</b> reemplaza tu schedule fijo.</div></div>
+        <div style="display:flex;gap:10px"><span class="mi" style="color:var(--ink-4)">cancel</span><div style="font-size:13px;color:var(--ink-2)">No la actives si ya tienes turno asignado: <b>no reemplaza</b> tu schedule fijo.</div></div>
         <div class="banner ok" style="margin-top:2px"><span class="mi">savings</span><div>Los turnos extra se pagan aparte y suman a tu cobro semanal.</div></div>
       </div>
     </div>
@@ -451,7 +626,7 @@ function renderNotifDd(){
     <div class="dd-scroll">
       ${COL.notifs.map(n=>`<div class="notif-item ${n.unread?'unread':''}" onclick="readNotif(${n.id});renderNotifDd()">
         <div class="ni-ic ${n.cl}"><span class="mi">${n.ic}</span></div>
-        <div class="txt"><div><strong>${n.t}</strong> — ${n.x}</div><div class="tm">${n.tm}</div></div>
+        <div class="txt"><div><strong>${n.t}</strong> — <span>${n.x}</span></div><div class="tm">${n.tm}</div></div>
         ${n.unread?'<div class="dot-unread"></div>':''}
       </div>`).join('')}
     </div>
@@ -469,6 +644,7 @@ function renderProfDd(){
       <div class="mi-item" onclick="closeDd();openPerfil('datos')"><span class="mi">person</span>Mi perfil y datos</div>
       <div class="mi-item" onclick="closeDd();openPerfil('estado')"><span class="mi">monitor_heart</span>Mi estado</div>
       <div class="mi-item" onclick="closeDd();toast('Abriendo configuración…','settings')"><span class="mi">settings</span>Configuración</div>
+      <div class="mi-item lang-item"><span class="mi">translate</span>Idioma<div class="lang-seg"><button class="lang-opt ${LANG==='es'?'active':''}" data-lang="es" onclick="event.stopPropagation();setLang('es')">ES</button><button class="lang-opt ${LANG==='en'?'active':''}" data-lang="en" onclick="event.stopPropagation();setLang('en')">EN</button></div></div>
       <div class="dd-divider"></div>
       <div class="mi-item danger" onclick="closeDd();toast('Cerrando sesión…','logout')"><span class="mi">logout</span>Cerrar sesión</div>
     </div>`;

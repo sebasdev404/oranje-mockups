@@ -330,6 +330,12 @@ input,select,textarea{font-family:inherit}
 .prof-menu .mi-item.danger{color:var(--red)}
 .prof-menu .mi-item.danger .mi{color:var(--red)}
 .prof-menu .dd-divider{height:1px;background:var(--line);margin:6px 0}
+.prof-menu .mi-item.lang-item{cursor:default}
+.prof-menu .mi-item.lang-item:hover{background:transparent;color:var(--ink-2)}
+.lang-seg{margin-left:auto;display:inline-flex;gap:2px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:2px}
+.lang-opt{border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:11px;font-weight:700;color:var(--ink-3);letter-spacing:.03em;padding:4px 10px;border-radius:6px;transition:all var(--ease)}
+.lang-opt:hover{color:var(--ink)}
+.lang-opt.active{background:#fff;color:var(--o-700);box-shadow:0 1px 3px rgba(26,17,8,.14)}
 
 /* ===== Page-view router ===== */
 .page-view{display:none;animation:seedFade .3s var(--ease)}
