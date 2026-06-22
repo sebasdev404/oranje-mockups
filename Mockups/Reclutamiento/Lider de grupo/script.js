@@ -16,6 +16,7 @@
     });
     if(name==='Reclutamiento' && window.__renderRecl) window.__renderRecl();
     if(name==='Requisiciones' && window.__renderRequi) window.__renderRequi();
+    if(name==='Blacklist' && window.__renderBl) window.__renderBl();
     // scroll content to top
     const c = document.querySelector('.content'); if(c) c.scrollTop=0;
   }
@@ -236,6 +237,438 @@
   }
   // Render inicial de la bandeja (el DOM ya está parseado: script va al final del body)
   try { lgRenderTray('candidatos'); } catch(e){}
+
+  // ===================================================================
+  // i18n — Toggle de idioma ES / EN (demo)
+  // Traduce por nodo de texto usando un diccionario. Un MutationObserver
+  // re-traduce el contenido renderizado dinámicamente (cards, drawers, modales).
+  // Los íconos (.mi/.mio), <svg>, <script> y <style> se omiten.
+  // ===================================================================
+  let LANG = 'es';
+  const _i18nOrig = new WeakMap();     // textNode -> texto original (ES)
+  const _i18nPh = new WeakMap();       // input -> placeholder original (ES)
+  const I18N = {
+    // Sidebar
+    'Principal':'Main', 'Reclutamiento':'Recruitment', 'Requisiciones':'Requisitions',
+    'Supervisión':'Supervision', 'Mi Grupo':'My Group', 'Reportes':'Reports', 'Soporte':'Support',
+    // Header / perfil
+    'Líder de Grupo · Zona Centro':'Group Leader · Centro Zone',
+    'Zona Centro · Líder de Grupo':'Centro Zone · Group Leader',
+    'Cuenta':'Account', 'Mi información':'My information', 'Mi zona asignada':'My assigned zone',
+    'Mis métricas':'My metrics', 'Mi grupo':'My group', 'Grupo Centro-Sur':'Centro-Sur Group',
+    '6 reclutadoras a cargo · Zonas Centro y Sur':'6 recruiters managed · Centro and Sur zones',
+    'Cobertura 87%':'Coverage 87%', '32 distribuidas':'32 placed', '2 escalados':'2 escalated',
+    'T. prom. 2.4d':'Avg. time 2.4d', 'Ver Mi Grupo':'View My Group', 'Configuración':'Settings',
+    'Cambiar contraseña':'Change password', 'Preferencias de notificación':'Notification preferences',
+    'Cerrar sesión':'Log out', 'Idioma':'Language',
+    'Buscar requisiciones, colaboradores, hoteles, blacklist…':'Search requisitions, collaborators, hotels, blacklist…',
+    'Buscar por nombre, documento, teléfono o ID…':'Search by name, document, phone or ID…',
+    'Buscar por ID, hotel, posición o zona…':'Search by ID, hotel, position or zone…',
+    'Notificaciones':'Notifications', 'Marcar todas como leídas':'Mark all as read',
+    // Dashboard
+    'Bienvenida a Oranje, Juanita López':'Welcome to Oranje, Juanita López',
+    'Esto es lo que está pasando hoy, 24 de abril con tu naranjitas.':"Here's what's happening today, April 24, with your naranjitas.",
+    'Abril 2026':'April 2026', 'Exportar':'Export',
+    'Requisiciones abiertas':'Open requisitions', '3 propiedades':'3 properties', 'activas':'active',
+    'Requisiciones urgentes':'Urgent requisitions', 'antes de 24 hrs':'within 24 hrs', 'Atiende':'Attend',
+    'Candidatos pendientes validar':'Candidates pending validation', 'aplicaciones completas':'complete applications',
+    'Alertas críticas':'Critical alerts', 'Alta':'High', 'Vencidas':'Overdue',
+    'Acciones rápidas':'Quick actions', 'Atajos más usados':'Most used shortcuts',
+    'Eficiencia esta semana':'Efficiency this week', 'más que la semana pasada':'more than last week',
+    'Nuevo colaborador':'New collaborator', 'Crear perfil manualmente':'Create profile manually',
+    'Buscar en pool':'Search in pool', '47 candidatos disponibles':'47 available candidates',
+    'Consultar blacklist':'Check blacklist', 'Verificar historial':'Check history',
+    'Tomar requisición':'Take requisition', '08 en la bandeja de autorizadas':'08 in the authorized inbox',
+    'Generar reporte':'Generate report', 'Cobertura del grupo':'Group coverage',
+    'Resumen del grupo':'Group summary', '6 reclutadoras · Zonas Centro y Sur':'6 recruiters · Centro and Sur zones',
+    'Meta mensual':'Monthly goal', 'Cubiertas · pendientes':'Covered · pending',
+    'requisiciones en proceso':'requisitions in progress', 'Reclutadoras activas':'Active recruiters',
+    'en vacaciones':'on vacation', 'Casos escalados':'Escalated cases', 'Pendientes de atención':'Pending attention',
+    'Pool de candidatos':'Candidate pool', 'Disponibilidad por posición · en tiempo real':'Availability by position · real-time',
+    'Ver pool completo':'View full pool', 'Candidatos totales disponibles':'Total available candidates',
+    'Mis requisiciones':'My requisitions', '5 activas · ordenadas por prioridad':'5 active · sorted by priority',
+    'Filtrar':'Filter', 'Ver todas las requisiciones (08)':'View all requisitions (08)',
+    'Bandejas de acción':'Action trays', 'Requieren tu revisión ahora':'Require your review now',
+    'Candidatos listos':'Ready candidates', 'Actualizaciones':'Updates', 'Aprobaciones':'Approvals',
+    'Candidato':'Candidate', 'Requisición':'Requisition', 'Estado app':'App status', 'Aplicó':'Applied', 'Acciones':'Actions',
+    'Completa':'Complete', 'Pendiente docs':'Pending docs', 'En revisión':'Under review', 'Hoy':'Today', 'Ayer':'Yesterday',
+    'Comodín':'Wildcard', 'Stand by':'Stand by',
+    // Reclutamiento (Pool)
+    'Pool de colaboradores · Vivo':'Collaborator pool · Live',
+    'Da de alta nuevos colaboradores, mantén su semáforo actualizado y consulta su historial. Las asignaciones se registran automáticamente en el Schedule del hotel.':'Add new collaborators, keep their status updated and check their history. Assignments are recorded automatically in the hotel Schedule.',
+    'Colaboradores en pool':'Collaborators in pool', 'Disponibles ahora':'Available now',
+    'En onboarding / pre-asignación':'In onboarding / pre-assignment', 'Casos críticos / blacklist':'Critical cases / blacklist',
+    'Pool de colaboradores':'Collaborator pool', 'Posición':'Position', 'Zona':'Zone', 'Modalidad':'Modality',
+    'Inglés':'English', 'Estado':'Status', 'Hotel':'Hotel', 'Todas':'All', 'Todos':'All',
+    'Tablero':'Board', 'Tarjetas':'Cards', 'Tabla':'Table', 'Lista':'List', 'Ver detalle':'View detail',
+    'Disponible':'Available', 'Disp. voluntario':'Voluntary avail.', 'Fijo':'Fixed', 'Asignación temp.':'Temp. assignment',
+    'Onboarding D1-2':'Onboarding D1-2', 'Día 3+ uniforme':'Day 3+ uniform', 'Pre-asignación':'Pre-assignment',
+    'No regresó':'Did not return', 'Reportado':'Reported', 'Vetado':'Banned',
+    'Listo para asignar':'Ready to assign', 'Por horas / fin de semana':'Hourly / weekend',
+    'En requisición permanente':'Permanent requisition', 'Cobertura corta':'Short coverage',
+    'Inducción inicial':'Initial induction', 'En entrega de uniforme':'Uniform handout', 'Captura sin asignar':'Captured, unassigned',
+    'Pausa temporal':'Temporary pause', 'Falta sin aviso':'No-show', 'Incidencia abierta':'Open incident',
+    'Asignar temporalmente':'Assign temporarily', 'Cancelar asignación temporal':'Cancel temporary assignment',
+    'Asignación temporal':'Temporary assignment', 'Hotel destino':'Destination hotel', 'Duración (días)':'Duration (days)',
+    'Confirmar asignación':'Confirm assignment', 'Cancelar':'Cancel', 'Cerrar':'Close',
+    'Entrevistas':'Interviews', 'Mis Entrevistas':'My Interviews', 'Historial del Grupo':'Group History',
+    'Validar y enviar al Pool':'Validate and send to Pool', 'Rechazar candidato':'Reject candidate',
+    'Datos del candidato':'Candidate data', 'Editar':'Edit', 'Reclutadora responsable':'Responsible recruiter',
+    // Requisiciones
+    'Bandeja de Autorizadas':'Authorized Inbox', 'Estado de urgencia':'Urgency status',
+    'Urgentes':'Urgent', 'Pronto':'Soon', 'Normales':'Normal', 'Menos de 72 horas':'Less than 72 hours',
+    'Entre 72 y 120 horas':'Between 72 and 120 hours', 'Más de 120 horas':'More than 120 hours',
+    'Autorizadas':'Authorized', 'En colaboración':'In collaboration', 'Listas para recibir colaboradores':'Ready to receive collaborators',
+    'Compartidas entre reclutadores':'Shared between recruiters', 'Cobertura de vacantes':'Vacancy coverage',
+    'Tomar requisición':'Take requisition', 'Unirme':'Join', 'Ver requisición':'View requisition',
+    'Ver detalles':'View details', 'Asignar colaboradores':'Assign collaborators',
+    'Tipo de requisicion':'Requisition type', 'Tipo de contrato':'Contract type', 'Filtros':'Filters',
+    // Niveles de inglés y modalidades (valores de card)
+    'Básico':'Basic', 'Intermedio':'Intermediate', 'Avanzado':'Advanced', 'Conversacional':'Conversational',
+    'Tiempo completo':'Full time', 'Medio tiempo':'Part time', 'Por hora':'Hourly', 'Por horas':'Hourly', 'Según solicitud':'On request',
+    // Hero de Reclutamiento (fragmentos del h1)
+    'Captura y mantén el':'Capture and keep the', 'pool de colaboradores':'collaborator pool', 'al día.':'up to date.',
+    // ===== Expansión i18n (cobertura completa) =====
+    // Header / dropdowns
+    'Hoteles':'Hotels','Búsquedas recientes':'Recent searches','Reclutadoras del grupo':'Group recruiters',
+    'Ver todas las notificaciones':'View all notifications','Grupo':'Group',
+    'Nueva requisición asignada':'New requisition assigned','Candidato completó la App':'Candidate completed the App',
+    'Requisición con urgencia Red':'Requisition with Red urgency','Caso escalado por QA':'Case escalated by QA',
+    'Reclutadora cubrió al 100%':'Recruiter reached 100% coverage','Reclutadora reportó un problema':'Recruiter reported a problem',
+    'Solicitud de reporte del Manager':'Report request from the Manager','Requiere atención inmediata':'Requires immediate attention',
+    // Reclutamiento pool
+    'Pool de colaboradores · Vivo':'Collaborator pool · Live','Pool de colaboradores':'Collaborator pool',
+    'En onboarding / pre-asignación':'In onboarding / pre-assignment','Casos críticos / blacklist':'Critical cases / blacklist',
+    'Por zona':'By zone','hoy':'today',
+    'Disponible':'Available','Listo para asignar':'Ready to assign','Por horas / fin de semana':'Hourly / weekend',
+    'En requisición permanente':'Permanent requisition','Asignación temp.':'Temp. assignment','Cobertura corta':'Short coverage',
+    'Inducción inicial':'Initial induction','Día 3+ uniforme':'Day 3+ uniform','En entrega de uniforme':'Uniform handout',
+    'Pre-asignación':'Pre-assignment','Captura sin asignar':'Captured, unassigned','No regresó':'Did not return',
+    'Disp. voluntario':'Voluntary avail.','Fijo':'Fixed','Onboarding D1-2':'Onboarding D1-2','Stand by':'Stand by',
+    'Reportado':'Reported','Recepción':'Reception','Mantenimiento':'Maintenance','Mesero':'Waiter','Cocinero':'Cook','Chef / Cocinero':'Chef / Cook',
+    // Ficha colaborador (drawer)
+    'Datos':'Data','Laboral':'Work','Historial de asignaciones':'Assignment history','Documentos':'Documents','Identificación':'ID',
+    'Estado en blacklist':'Blacklist status','Sin registro de blacklist':'No blacklist record','Apto para ser asignado a hotel.':'Eligible to be assigned to a hotel.',
+    'Asignar temporalmente':'Assign temporarily','Cancelar asignación temporal':'Cancel temporary assignment',
+    'Asignación temporal':'Temporary assignment','Hotel destino':'Destination hotel','Duración (días)':'Duration (days)','Confirmar asignación':'Confirm assignment',
+    'Nombre completo':'Full name','Documentos del colaborador':'Collaborator documents','Identificación oficial':'Official ID','Currículum / Hoja de vida':'Résumé / CV',
+    // Candidate modal (bandeja de acción)
+    'Aplicó a':'Applied to','Teléfono':'Phone','Correo':'Email','Experiencia':'Experience',
+    'Cédula':'ID card','Hoja de vida':'Résumé','Certificado EPS':'Health certificate','Antecedentes':'Background check',
+    'Cerrar':'Close','Rechazar':'Reject','Validar candidato':'Validate candidate','Cancelar':'Cancel',
+    '· completos':'· complete','Posición':'Position','Modalidad':'Modality',
+    // Requisiciones — hero / kpis / filtros / tabs
+    'BANDEJA DE HOY · SELF-PICK ACTIVO':'TODAY INBOX · SELF-PICK ACTIVE',
+    'Toma requisiciones autorizadas y cubre la posición.':'Take authorized requisitions and cover the position.',
+    'Las urgentes (rojo) entran primero. Toma las que puedas cubrir, asigna colaboradores del pool y cierra cuando estén completas.':'Urgent ones (red) come first. Take the ones you can cover, assign collaborators from the pool and close them when complete.',
+    'Bandeja autorizadas':'Authorized inbox','Urgentes (24h)':'Urgent (24h)','Tasa cobertura (mes)':'Coverage rate (month)',
+    'Estados de urgencias':'Urgency states','Estado de la requisición':'Requisition status','Tipo de requisicion':'Requisition type','Tipo de contrato':'Contract type',
+    'Bandeja de Autorizadas':'Authorized Inbox','Mis requisiciones':'My requisitions','Todas':'All','Todos':'All',
+    'Tablero':'Board','Tarjetas':'Cards','Tabla':'Table',
+    // Requisiciones — board columnas
+    'ESTADO DE URGENCIA':'URGENCY STATUS','ESTADO DE LA REQUISICIÓN':'REQUISITION STATUS','Estado de urgencia':'Urgency status',
+    'Urgentes':'Urgent','Menos de 72 horas':'Less than 72 hours','Pronto':'Soon','Entre 72 y 120 horas':'Between 72 and 120 hours','Normales':'Normal','Más de 120 horas':'More than 120 hours',
+    'En proceso':'In progress','Asignando colaboradores':'Assigning collaborators','Parciales':'Partial','Cerradas con faltantes de puestos':'Closed with missing positions','Cubiertas':'Covered','100% completas':'100% complete',
+    'Autorizadas':'Authorized','En colaboración':'In collaboration','Listas para recibir colaboradores':'Ready to receive collaborators','Compartidas entre reclutadores':'Shared between recruiters','Ya puede recibir colaboradores':'Can now receive collaborators',
+    // Requisiciones — card
+    'Mixto · Fijo y Temporal':'Mixed · Fixed and Temporary','Varias modalidades':'Various modalities','Temporal':'Temporary',
+    'URGENTE':'URGENT','PRONTO':'SOON','Cobertura de vacantes':'Vacancy coverage',
+    'Tomar requisición':'Take requisition','Unirme':'Join','Ver requisición':'View requisition','Ver detalles':'View details','Ver detalle':'View detail','Asignar colaboradores':'Assign collaborators',
+    'Auto-asignada por el sistema':'Auto-assigned by the system',
+    // Dashboard — group summary
+    'Resumen del grupo':'Group summary','Cobertura del grupo':'Group coverage','Meta mensual':'Monthly goal','Cubiertas · pendientes':'Covered · pending','requisiciones en proceso':'requisitions in progress','Reclutadoras activas':'Active recruiters','en vacaciones':'on vacation','Casos escalados':'Escalated cases','Pendientes de atención':'Pending attention',
+    'más que la semana pasada':'more than last week',
+    // Mi información panels
+    'Mi información de perfil':'My profile information','Consulta los datos de tu perfil o cambia tu foto de perfil.':'View your profile data or change your profile photo.',
+    'Correo electrónico':'Email','Zona geográfica y propiedades que tienes a tu cargo.':'Geographic zone and properties under your charge.',
+    'Indicadores de desempeño de tu gestión como reclutadora.':'Performance indicators of your work as a recruiter.','Tasa de cobertura':'Coverage rate','Tiempo promedio de asignación':'Average assignment time',
+    'Administra tu contraseña y la seguridad de tu cuenta.':'Manage your password and account security.','Contraseña':'Password','Autenticación de dos factores':'Two-factor authentication',
+    'Personaliza tu experiencia en la plataforma.':'Customize your platform experience.','Email, push y en la app':'Email, push and in-app','Español (México)':'Spanish (Mexico)','Tono del logo':'Logo tone','Saludo del dashboard':'Dashboard greeting',
+    'Líder de Grupo de Reclutadoras':'Recruiters Group Leader',
+    // Modales (rechazar / recordatorio / nuevo colaborador / cobertura)
+    'Enviar recordatorio al candidato':'Send reminder to candidate','descargue la app de Oranje':'download the Oranje app','al número registrado':'to the registered number','con link directo de descarga':'with a direct download link','con instrucciones paso a paso':'with step-by-step instructions','Aceptar y enviar':'Accept and send','Rechazar candidato':'Reject candidate',
+    'Motivo del rechazo':'Reason for rejection','Documentos incompletos o inválidos':'Incomplete or invalid documents','Inconsistencias entre datos y documentos':'Inconsistencies between data and documents','No cumple con el perfil de la posición':'Does not meet the position profile','Experiencia insuficiente':'Insufficient experience','Zona geográfica no cubierta':'Geographic zone not covered','Explicación / detalles':'Explanation / details',
+    'Registro creado y enviado con éxito':'Record created and sent successfully','Correo con liga al colaborador':'Email with link to the collaborator','Pendiente: completa su información':'Pending: complete their information','El colaborador debe llenar su perfil en la app':'The collaborator must fill out their profile in the app',
+    'Cobertura de vacantes':'Vacancy coverage','Gris · Sin asignar':'Gray · Unassigned','Verde · Puestos autorizados cubierto':'Green · Authorized positions covered',
+    // Hero requisiciones (fragmentos) + pills + posiciones
+    'Bandeja de hoy · Self-pick activo':'Today inbox · Self-pick active',
+    'Toma':'Take','requisiciones autorizadas':'authorized requisitions','y cubre la posición.':'and cover the position.',
+    'Urgente':'Urgent','Normal':'Normal','Electricista':'Electrician',
+    // Experiencias del modal de candidato
+    '3 años en housekeeping (Hotel Andino, Hotel Real).':'3 years in housekeeping (Hotel Andino, Hotel Real).',
+    '5 años como chef de línea (Hotel Marina, Restaurante Sal).':'5 years as line chef (Hotel Marina, Restaurante Sal).',
+    '2 años en steward / hoseman (Hotel Aurora).':'2 years in steward / hoseman (Hotel Aurora).',
+    '4 años en housekeeping (Hotel Bahía, Hotel Sol).':'4 years in housekeeping (Hotel Bahía, Hotel Sol).',
+    '3 años como cocinero (Hotel Las Brisas).':'3 years as cook (Hotel Las Brisas).',
+    // Reportes
+    'Reportes del grupo':'Group reports','Genera y envía reportes formales al Manager de Reclutamiento':'Generate and send formal reports to the Recruitment Manager',
+    'Programar envío':'Schedule send','Generar reporte':'Generate report','Tipo de reporte':'Report type','Rango de fechas':'Date range',
+    'Esta semana':'This week','Este mes':'This month','Personalizado':'Custom','Todo el grupo':'Whole group','Destinatario':'Recipient',
+    'Manager de Reclutamiento (automático)':'Recruitment Manager (automatic)','Generar vista previa':'Generate preview','Vista previa':'Preview',
+    'Desglose por reclutadora':'Breakdown by recruiter','Enviar al Manager':'Send to Manager','Borrador':'Draft',
+    'Histórico de reportes enviados':'History of sent reports','Desempeño individual':'Individual performance','Tiempo promedio de cobertura':'Average coverage time','Distribución de requisiciones':'Requisition distribution',
+    'Reutilizar':'Reuse','Enviado':'Sent','Leído':'Read','Cobertura':'Coverage','Requisiciones':'Requisitions','Tiempo prom.':'Avg. time','Escalados':'Escalated','Reclutadora':'Recruiter','Cubiertas':'Covered',
+    'Fecha':'Date','Tipo':'Type',
+    // Ribbons de grupo del tablero
+    '· Listas para recibir colaboradores':'· Ready to receive collaborators',
+    '· Compartidas entre reclutadores':'· Shared between recruiters',
+    // Dropdown de notificaciones (meta + cuerpos)
+    'Atajo para abrir rápido:':'Quick-open shortcut:',
+    'Hace 22 min · Ir a Nuevo Candidato ▸ Validar':'22 min ago · Go to New Candidate ▸ Validate',
+    'Hace 1 hr · Requiere atención inmediata':'1 hr ago · Requires immediate attention',
+    'Hace 3 hrs · Ver detalle':'3 hrs ago · View detail',
+    'Hace 35 min · Cobertura del grupo +1':'35 min ago · Group coverage +1',
+    'Hace 1 hr · Mi Grupo ▸ Carlos Mena':'1 hr ago · My Group ▸ Carlos Mena',
+    'Hace 2 hrs · Reportes ▸ Generar':'2 hrs ago · Reports ▸ Generate',
+    'Hace 4 min · Hotel Costa del Sol':'4 min ago · Hotel Costa del Sol',
+    'Ayer · 17:40':'Yesterday · 17:40',
+    '— El Manager de Reclutamiento te distribuyó':'— The Recruitment Manager distributed to you',
+    '— María López terminó Fase 2, listo para validar en Fase 3':'— María López finished Phase 2, ready to validate in Phase 3',
+    '— REQ #001 pasó al umbral crítico (<72h)':'— REQ #001 crossed the critical threshold (<72h)',
+    '— Nuevo colaborador vetado agregado por QA':'— New banned collaborator added by QA',
+    '— Investigación de Rojo cerrada para Carlos Ruiz':'— Red investigation closed for Carlos Ruiz',
+    '— Fátima Soto cubrió REQ #0418 (Housekeeper) · ¡felicítala!':'— Fátima Soto covered REQ #0418 (Housekeeper) · congratulate her!',
+    '— Carlos Mena escaló un caso · requiere tu atención de 1er nivel':'— Carlos Mena escalated a case · needs your 1st-level attention',
+    '— Te pidió el reporte de cobertura del grupo':'— Requested the group coverage report from you',
+    // Modales de ayuda / nuevo colaborador / rechazar / auto-asignada / cobertura
+    'Se envió el acceso al colaborador por correo electrónico.':'The collaborator was sent access by email.',
+    'Queda pendiente que complete su información en la app para continuar con la validación.':'It remains pending for them to complete their information in the app to continue with validation.',
+    'Se notificará al candidato para que':'The candidate will be notified to',
+    'y complete su registro (Fase 2: datos personales y Fase 3: carga de documentos).':'and complete their registration (Phase 2: personal data and Phase 3: document upload).',
+    'Esta acción marca al candidato como':'This action marks the candidate as',
+    'y lo retira del proceso. El motivo y la explicación quedarán registrados en su historial.':'and removes them from the process. The reason and explanation will be recorded in their history.',
+    'Mínimo 15 caracteres — sé específico para futuras referencias.':'Minimum 15 characters — be specific for future reference.',
+    'Cuando una requisición lleva':'When a requisition has been',
+    'más de 24 horas':'more than 24 hours',
+    'en la bandeja sin que ningún reclutador la tome, el sistema la asigna automáticamente a la reclutadora con':'in the inbox without any recruiter taking it, the system automatically assigns it to the recruiter with',
+    'Meta KPI · Tasa de auto-asignación':'KPI goal · Auto-assignment rate',
+    '1 de 3 requisiciones auto-asignadas — supera la meta. Toma requisiciones de la bandeja antes de las 24h para mantener la tasa baja.':'1 of 3 requisitions auto-assigned — beats the goal. Take requisitions from the inbox before 24h to keep the rate low.',
+    'Cada puesto vacante se colorea según su estado de cobertura.':'Each vacant position is colored according to its coverage status.',
+    'Puesto autorizado y aún no se le ha asignado ningún colaborador. Típico en requisiciones nuevas recién autorizadas.':'Authorized position with no collaborator assigned yet. Typical in newly authorized requisitions.',
+    'Rojo · Faltan puestos  autorizados por cubrir':'Red · Authorized positions still to cover',
+    'También está autorizada, pero todavía hay puestos pendientes para asignar colaboradores.':'It is also authorized, but there are still positions pending to assign collaborators.',
+    'Puesto ya asignado — listo para arrancar.':'Position already assigned — ready to start.',
+    'Cómoda':'Comfortable',
+    // ===== Módulo Blacklist =====
+    'Control de calidad · Vetados':'Quality control · Banned','Control de calidad':'Quality control',
+    'Colaboradores vetados de la plataforma.':'Collaborators banned from the platform.','de la plataforma.':'from the platform.','Colaboradores vetados':'Banned collaborators',
+    'Consulta el listado completo de blacklist, su motivo y quién lo propuso. Cualquier reclutador puede agregar a un colaborador con la justificación correspondiente.':'Check the full blacklist, its reason and who proposed it. Any recruiter can add a collaborator with the corresponding justification.',
+    'Falta grave':'Serious offense','Hoteles con reportes':'Hotels with reports','crít.':'crit.',
+    'Agregar a blacklist':'Add to blacklist','Zona':'Zone','Motivo':'Reason','Vetado por':'Banned by','Todos los vetados':'All banned',
+    'Colaborador':'Collaborator','Motivo del veto':'Ban reason','Fecha de ingreso':'Entry date','Propuesto por':'Proposed by',
+    'Todas las zonas':'All zones','Todos los motivos':'All reasons','3 faltas':'3 absences','QA · Operaciones':'QA · Operations',
+    'Escalamiento automático · 3ª inasistencia':'Automatic escalation · 3rd absence','Sistema Oranje':'Oranje System',
+    'Vetado · Blacklist':'Banned · Blacklist','Veto':'Ban','Blacklist actualizado':'Blacklist updated',
+    'Buscar por teléfono, nombre o documento (SSN)…':'Search by phone, name or document (SSN)…',
+    // Drawer del veto
+    'Género':'Gender','Datos de emergencia':'Emergency data','Contacto de emergencia':'Emergency contact','Tipo de sangre':'Blood type','Alergias o condiciones':'Allergies or conditions',
+    'El colaborador proporcionó estos datos en su app durante el onboarding. La información es':'The collaborator provided this data in their app during onboarding. The information is','de solo lectura':'read-only',
+    '7 días completados (Fijo)':'7 days completed (Fixed)','Fecha:':'Date:','Inasistencia 1 de 3':'Absence 1 of 3','Inasistencia 2 de 3':'Absence 2 of 3','Inasistencia 3 de 3':'Absence 3 of 3','Ingreso a Blacklist':'Entry to Blacklist',
+    // Modal agregar veto
+    'El colaborador quedará vetado de la plataforma. Esta acción se registra con tu nombre y requiere una justificación.':'The collaborator will be banned from the platform. This action is recorded under your name and requires a justification.',
+    'Alemán':'German','Francés':'French','Portugués':'Portuguese',
+    'Inglés Intermedio':'English Intermediate','Inglés Avanzado':'English Advanced','Inglés Básico':'English Basic','Alemán Avanzado':'German Advanced','Alemán Básico':'German Basic','Francés Avanzado':'French Advanced','Portugués Avanzado':'Portuguese Advanced',
+    'Conducta grave · baja inmediata. El veto manual aplica solo a faltas graves; las 3 inasistencias las escala el sistema automáticamente.':'Serious misconduct · immediate removal. Manual ban applies only to serious offenses; the 3 absences are escalated automatically by the system.',
+    'Tipo de falta grave':'Type of serious offense','Selecciona el tipo de falta grave…':'Select the type of serious offense…',
+    'Agresión / violencia':'Assault / violence','Abandono de puesto':'Job abandonment','Falta a la seguridad':'Safety violation','Consumo de sustancias':'Substance use',
+    'Justificación':'Justification','Describe brevemente lo ocurrido (mínimo 8 caracteres). Quedará en el historial del colaborador.':'Briefly describe what happened (minimum 8 characters). It will stay in the collaborator history.',
+    'Pruebas / evidencia':'Evidence / proof','Adjunta fotos, reportes o documentos que respalden el veto. Quedarán en el expediente del colaborador.':'Attach photos, reports or documents supporting the ban. They will stay in the collaborator file.',
+    'Adjunta pruebas o documentos de soporte':'Attach evidence or supporting documents','Capturas, correos, comprobantes · PDF, JPG, PNG · máx. 10 MB c/u':'Screenshots, emails, receipts · PDF, JPG, PNG · max. 10 MB each',
+    'Confirmar veto':'Confirm ban','Ver perfil':'View profile','Selecciona un motivo…':'Select a reason…','Datos del candidato':'Candidate data',
+    'Seguridad':'Security','Otro motivo (especificar abajo)':'Other reason (specify below)',
+    '"Transición automática. Ramón Gutiérrez se convierte en colaborador fijo del Las Palmas."':'"Automatic transition. Ramón Gutiérrez becomes a permanent collaborator at Las Palmas."',
+    '"No se presentó al turno matutino · Costa del Sol"':'"Did not show up for the morning shift · Costa del Sol"',
+    '"Inasistencia sin aviso · Costa del Sol"':'"Absence without notice · Costa del Sol"',
+    '"3ª inasistencia — escalado automático"':'"3rd absence — automatic escalation"',
+    '"3ª inasistencia sin justificar — escalamiento automático a Blacklist (estado Negro)."':'"3rd unjustified absence — automatic escalation to Blacklist (Black status)."',
+    // ----- Blacklist: motivos / falta grave -----
+    'Abandono del puesto durante el turno':'Job abandonment during the shift','Agresión física o verbal':'Physical or verbal assault',
+    'Violación grave de los protocolos de seguridad':'Serious violation of safety protocols','Especifica el motivo de la falta grave…':'Specify the reason for the serious offense…',
+    '3 inasistencias sin justificación':'3 unjustified absences','Falta grave reportada en la operación.':'Serious offense reported in the operation.',
+    'Caso investigado y validado a favor del hotel.':'Case investigated and validated in favor of the hotel.',
+    // ----- Blacklist: estados / semáforo -----
+    'Crítico · baja inmediata':'Critical · immediate removal','Estado Negro · veto permanente':'Black status · permanent ban',
+    'Veto permanente · estado Negro · sin apelación.':'Permanent ban · Black status · no appeal.','Reportado · en revisión':'Reported · under review',
+    'Investigación · Inspector':'Investigation · Inspector','Búsqueda activa':'Active search','Disponible para cobertura':'Available for coverage',
+    'En stand by':'On stand by','Sin asignación':'No assignment','Difusión':'Outreach','Como está':'As is','Básico+':'Basic+',
+    // ----- Blacklist: vistas / cabeceras -----
+    'Colaboradores':'Collaborators','Colaborador fijo':'Permanent collaborator','Asignación actual':'Current assignment',
+    'Asignación actual e historial':'Current assignment & history','Asignación actual reportada':'Reported current assignment',
+    'Asignación actual · vigente':'Current assignment · active','Asignación anterior · finalizada':'Previous assignment · finished',
+    'Situación actual':'Current situation','Origen del registro':'Record origin','Hoteles donde ha trabajado':'Hotels where they have worked',
+    'Sin hoteles previos':'No previous hotels','Hotel del reporte':'Reporting hotel','Hotel donde ocurrió':'Hotel where it occurred',
+    'Hotel al momento del reporte':'Hotel at the time of the report','Hotel al momento de las inasistencias':'Hotel at the time of the absences',
+    'Reporte del hotel':'Hotel report','Schedule asignado · por':'Assigned schedule · by','Inspector de zona':'Zone Inspector',
+    // ----- Blacklist: proponente / origen -----
+    'Investigado y resuelto por':'Investigated and resolved by','Investigado y vetado por':'Investigated and banned by',
+    'Veto registrado manualmente por el reclutador':'Ban registered manually by the recruiter','Escalamiento automático del sistema':'Automatic system escalation',
+    'Automático · sistema · 3ª inasistencia':'Automatic · system · 3rd absence','Registrado por':'Registered by','Reportado por':'Reported by','Sistema':'System',
+    // ----- Blacklist: schedule / datos -----
+    'Día':'Day','Días':'Days','Horario':'Schedule','Horario fijo':'Fixed schedule','Horario fijo inamovible':'Fixed unmovable schedule',
+    'Horario flexible':'Flexible schedule','Horario y modalidad':'Schedule and modality','Flexibilidad':'Flexibility',
+    'Días por ley · al año':'Statutory days · per year','Próximo periodo vacacional':'Next vacation period','vacaciones de ley':'statutory vacation',
+    'Tipo de transporte':'Transport type','Transporte público':'Public transport','Nivel de inglés':'English level','Nivel mínimo':'Minimum level',
+    'Comprobante de domicilio':'Proof of address','Foto del colaborador':'Collaborator photo','Periodo':'Period',
+    'Documento opcional subido por el colaborador · 860 KB':'Optional document uploaded by the collaborator · 860 KB',
+    'Precargado automáticamente desde el alta del reclutador · PDF · 420 KB':'Preloaded automatically from the recruiter registration · PDF · 420 KB',
+    'Aún no registra plazas anteriores en la plataforma.':'No previous positions registered on the platform yet.',
+    // ----- Blacklist: filtros de periodo -----
+    'Última asignación':'Last assignment','Último año':'Last year','Último mes':'Last month','Últimos 3 meses':'Last 3 months',
+    'Últimos 6 meses':'Last 6 months','Cualquier fecha':'Any date','Selecciona la fecha de inicio':'Select the start date','Personalizado':'Custom',
+    'Lun':'Mon','Mar':'Tue','Mié':'Wed','Jue':'Thu','Vie':'Fri','Sáb':'Sat','Dom':'Sun',
+    // ----- Blacklist: pool de colaboradores (modal agregar) -----
+    'Seleccionar para vetar':'Select to ban','Ver más pestañas':'See more tabs','Ver más':'See more','ver más':'see more',
+    'Buscar en el pool por nombre, DOC o zona…':'Search the pool by name, DOC or zone…','Limpiar todos los filtros':'Clear all filters',
+    'Sin coincidencias en el pool de colaboradores':'No matches in the collaborator pool','Sin colaboradores':'No collaborators',
+    'Sin colaboradores para los filtros aplicados':'No collaborators for the applied filters',
+    'colaboradores en el pool':'collaborators in the pool',
+    // ----- Blacklist: situación del colaborador (narrativa) -----
+    'Activó su disponibilidad voluntaria desde su app. Puede cubrir según solicitud del hotel.':'They activated their voluntary availability from their app. They can cover upon hotel request.',
+    'Pausó temporalmente su disponibilidad desde su app. No tiene asignación activa.':'They temporarily paused their availability from their app. They have no active assignment.',
+    'Completó su onboarding y está listo para ser asignado, pero aún no tiene una plaza activa.':'They completed onboarding and are ready to be assigned, but do not have an active position yet.',
+    'Día 3+ con uniforme. Ya está operando en el hotel asignado.':'Day 3+ in uniform. Already operating at the assigned hotel.',
+    'Colaborador fijo del hotel — su horario quedó bloqueado tras 7 días consecutivos.':'Permanent collaborator at the hotel — their schedule was locked after 7 consecutive days.',
+    'Cubre una plaza de forma temporal, según solicitud del hotel.':'Covers a position temporarily, upon hotel request.',
+    'En incapacidad médica por un accidente laboral. Conserva su plaza y queda protegido de la regla de 3 inasistencias.':'On medical leave due to a workplace accident. They keep their position and are protected from the 3-absence rule.',
+    'Tiene un reporte abierto del hotel, en revisión por el Inspector de zona. Aún NO está vetado.':'Has an open hotel report, under review by the Zone Inspector. NOT banned yet.',
+    'Está disponible en el pool. No tiene una asignación activa en este momento.':'Available in the pool. Has no active assignment at this moment.',
+    // ----- Blacklist: narrativa de schedule (fragmentos) -----
+    'Este es el horario que el colaborador eligió como':'This is the schedule the collaborator chose as','Este colaborador':'This collaborator',
+    'El hotel ajustó el schedule de la cobertura.':'The hotel adjusted the coverage schedule.','El hotel respetó el schedule del colaborador.':'The hotel respected the collaborator schedule.',
+    'Como su horario es':'Since their schedule is','Flexible dentro de los días y modalidad':'Flexible within the days and modality',
+    'Se ofreció como disponible':'Offered as available','abierto a flexibilidad':'open to flexibility',
+    ', calculadas desde su fecha de ingreso a la operación.':', calculated from their entry date into the operation.',
+    ', la cobertura mantuvo exactamente los mismos días y horas que indicó en su app.':', the coverage kept exactly the same days and hours they indicated in their app.',
+    ', la operación movió días u horas — manteniéndose dentro de la misma modalidad':', the operation moved days or hours — staying within the same modality',
+    ': el hotel podía ajustarlo a otros días u horarios dentro de la misma modalidad según la operación.':': the hotel could adjust it to other days or schedules within the same modality as per the operation.',
+    'No existe proceso de rehabilitación ni instancia de apelación. El registro se conserva íntegro para consulta interna y':'There is no rehabilitation process or appeal instance. The record is kept intact for internal reference and',
+    'de reclutamiento.':'of recruitment.',
+    // ----- Blacklist: segundo barrido -----
+    'Ingreso a blacklist':'Entry to blacklist','Comentario:':'Comment:','Líder de Grupo':'Group Leader','Manager de Reclutamiento':'Recruitment Manager',
+    '3ª inasistencia — escalado automático':'3rd absence — automatic escalation',
+    'Ej. Reincidencia en inasistencias sin aviso durante el turno asignado en Costa del Sol…':'E.g. Repeated absences without notice during the assigned shift at Costa del Sol…',
+    'consumir alcohol o sustancias prohibidas':'consuming alcohol or prohibited substances','pertenencias de huéspedes o bienes del hotel':'guests belongings or hotel property',
+    'fue quitado de blacklist':'was removed from blacklist','fue su única plaza en la plataforma.':'was their only position on the platform.',
+    'en este hotel, lo que disparó su ingreso':'at this hotel, which triggered their entry','no aparece en búsquedas activas':'does not appear in active searches',
+    ', pero indicó estar':', but indicated being','. Activó su':'. Activated their',
+    'para cubrir turnos extra en otros hoteles durante su tiempo libre, bajo el horario que mismo propuso — puede ser flexible dentro de los días y la modalidad acordados.':'to cover extra shifts at other hotels during their free time, under the schedule they proposed themselves — can be flexible within the agreed days and modality.',
+    'para cubrir turnos extra en otros hoteles durante su tiempo libre, bajo el horario que misma propuso — puede ser flexible dentro de los días y la modalidad acordados.':'to cover extra shifts at other hotels during their free time, under the schedule they proposed themselves — can be flexible within the agreed days and modality.',
+    // ----- Blacklist: tercer barrido (frase escalamiento + acumulado) -----
+    'El colaborador acumuló':'The collaborator accumulated',
+    '. El sistema lo escala a Blacklist (estado Negro) de forma':'. The system escalates them to Blacklist (Black status)',
+    'automática':'automatically','tras la tercera falta, sin intervención manual.':'after the third absence, with no manual intervention.',
+    'a Blacklist.':'to Blacklist.'
+  };
+  // Patrones para textos con partes variables (números, zonas, fechas)
+  const I18N_PAT = [
+    [/(\d+) colaboradores en pool · (\d+) estados/,'$1 collaborators in pool · $2 statuses'],
+    [/(\d+) colaboradores en pool/,'$1 collaborators in pool'],
+    [/(\d+) colaboradores en pool · (\d+) estados/,'$1 collaborators in pool · $2 statuses'],
+    [/Promedio ([\d.]+)★ · (\d+) verificados/,'Average $1★ · $2 verified'],
+    [/(\d+) verificados/,'$1 verified'],
+    [/(\d+) hoteles/,'$1 hotels'],
+    [/(\d+) colaboradores · Zonas/,'$1 collaborators · Zones'],
+    [/abierta hace (\d+) días/,'opened $1 days ago'],
+    [/abierta hace (\d+) día/,'opened $1 day ago'],
+    [/abierta hoy/,'opened today'],
+    [/Tomada hace (\d+)d (\d+)h/,'Taken $1d $2h ago'],
+    [/Tomada hace (\d+)\s*d\b/,'Taken $1d ago'],
+    [/Tomada hace (\d+)\s*h\b/,'Taken $1h ago'],
+    [/Tomada hace (\d+)\s*min/,'Taken $1 min ago'],
+    [/Cerrada hoy/,'Closed today'],[/Cerrada ayer/,'Closed yesterday'],[/Cerrada parcial/,'Closed partial'],
+    [/(\d+) puestos · esperando/,'$1 positions · waiting'],
+    [/(\d+) puesto · esperando/,'$1 position · waiting'],
+    [/faltan (\d+) \((\d+)%\)/,'$1 missing ($2%)'],
+    [/(\d+) en proceso/,'$1 in progress'],
+    [/(\d+) reclutadores trabajándola/,'$1 recruiters working on it'],
+    [/(\d+) reclutador trabajándola/,'$1 recruiter working on it'],
+    [/Zona (Centro|Sur|Este|Oeste|Noroeste|Sureste)/g,'Zone $1'],
+    [/(\d+) requisiciones · ordenadas por urgencia/,'$1 requisitions · sorted by urgency'],
+    [/(\d+) requisición · ordenadas por urgencia/,'$1 requisition · sorted by urgency'],
+    [/(\d+) requisiciones · tomadas por ti/,'$1 requisitions · taken by you'],
+    [/(\d+) requisición · tomadas por ti/,'$1 requisition · taken by you'],
+    [/(\d+) req\. activas · (\d+)% cobertura/,'$1 active req. · $2% coverage'],
+    [/(\d+) requisiciones activas/,'$1 active requisitions'],
+    [/(\d+) requisiciones/,'$1 requisitions'],
+    [/Has validado/,'You have validated'],
+    [/(\d+) candidatos/,'$1 candidates'],
+    [/Hace (\d+) min/,'$1 min ago'],
+    [/Hace (\d+) hrs/,'$1 hrs ago'],
+    [/Hace (\d+) hr\b/,'$1 hr ago'],
+    [/Hace (\d+) días/,'$1 days ago'],
+    [/\bHoy\b/g,'Today'],[/\bAyer\b/g,'Yesterday'],
+    [/· faltan (\d+)/,'· $1 missing'],
+    [/faltan (\d+)/,'$1 missing'],
+    [/(\d+) reclutadoras · Zonas Centro y Sur/,'$1 recruiters · Centro and Sur zones'],
+    [/(\d+) años/,'$1 years'],
+    [/\bDic\b/g,'Dec'],[/\bEne\b/g,'Jan'],[/\bAbr\b/g,'Apr'],[/\bAgo\b/g,'Aug'],
+    [/(\d+) reclutadora(s?) trabajándola/,'$1 recruiter$2 working on it'],
+    [/Hace (\d+)d (\d+)h/,'$1d $2h ago'],
+    [/Hace (\d+)h\b/,'$1h ago'],
+    [/Hace (\d+)d\b/,'$1d ago'],
+    [/Zona Norte/g,'Zone Norte'],
+    [/\bUrgente\b/g,'Urgent'],
+    [/(\d+) años exp\./,'$1 years exp.'],[/1 año exp\./,'1 year exp.'],
+    [/Manager de Área/g,'Area Manager'],[/Manager General/g,'General Manager'],
+    [/Vetado · Motivo: /,'Banned · Reason: '],
+    [/Por (\d+) faltas/,'For $1 absences'],
+    // Blacklist: títulos de evento con hotel variable (hotel queda igual)
+    [/No se presentó al turno matutino/g,'Did not show up for the morning shift'],
+    [/No se presentó/g,'Did not show up'],
+    [/Inasistencia sin aviso/g,'Absence without notice'],
+    [/Reclutadora · Zona/g,'Recruiter · Zone'],
+    [/Inspector de zona · Zona/g,'Zone Inspector · Zone'],
+    [/(\d+) días a la semana/g,'$1 days per week'],[/(\d+) día a la semana/g,'$1 day per week'],
+    [/(\d+) h totales/g,'$1 total h'],
+    [/asignad[oa] de forma fija/g,'assigned on a fixed basis'],
+    [/fij[oa] en\b/g,'fixed at'],
+    [/Sistema · /g,'System · '],
+    [/Botones · Zona/g,'Bellboy · Zone'],[/Mantenimiento · Zona/g,'Maintenance · Zone'],
+    [/Mesero · Zona/g,'Waiter · Zone'],[/Recepción · Zona/g,'Reception · Zone'],
+    [/Zona Costera/g,'Zone Costera'],[/Zona Poniente/g,'Zone Poniente'],[/Zona Oriente/g,'Zone Oriente'],
+    // Blacklist: parentesco del contacto de emergencia
+    [/\(esposo\)/g,'(husband)'],[/\(esposa\)/g,'(wife)'],[/\(madre\)/g,'(mother)'],[/\(padre\)/g,'(father)'],
+    [/\(hermano\)/g,'(brother)'],[/\(hermana\)/g,'(sister)'],[/\(hijo\)/g,'(son)'],[/\(hija\)/g,'(daughter)'],
+    [/\(amigo\)/g,'(friend)'],[/\(amiga\)/g,'(friend)'],[/\(hermano[ao]?\)/g,'(sibling)'],
+  ];
+  const _i18nSkip = node => { const p = node.parentElement; return !p || p.closest('.mi,.mio,script,style,svg,.wave,.lang-seg'); };
+  function _i18nTxtEN(node){
+    if(_i18nSkip(node)) return;
+    const raw = node.nodeValue, key = raw.trim();
+    if(!key) return;
+    let en = (I18N[key] !== undefined) ? I18N[key] : I18N[key.replace(/\s+/g,' ')];
+    if(en === undefined){
+      let out = key;
+      for(let i=0;i<I18N_PAT.length;i++){ out = out.replace(I18N_PAT[i][0], I18N_PAT[i][1]); }
+      if(out !== key) en = out;
+    }
+    if(en !== undefined && en !== key){ if(!_i18nOrig.has(node)) _i18nOrig.set(node, raw); const v = en; node.nodeValue = raw.replace(key, function(){ return v; }); }
+  }
+  function _i18nTxtES(node){ if(_i18nOrig.has(node)){ node.nodeValue = _i18nOrig.get(node); _i18nOrig.delete(node); } }
+  function _i18nWalk(root, toEN){
+    if(root.nodeType === 3){ toEN ? _i18nTxtEN(root) : _i18nTxtES(root); return; }
+    if(root.nodeType !== 1) return;
+    const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const list = []; let n; while(n = tw.nextNode()) list.push(n);
+    list.forEach(toEN ? _i18nTxtEN : _i18nTxtES);
+    (root.querySelectorAll ? root.querySelectorAll('input[placeholder],textarea[placeholder]') : []).forEach(inp=>{
+      if(toEN){ const en = I18N[(inp.placeholder||'').trim()]; if(en!==undefined){ if(!_i18nPh.has(inp)) _i18nPh.set(inp, inp.placeholder); inp.placeholder = en; } }
+      else if(_i18nPh.has(inp)){ inp.placeholder = _i18nPh.get(inp); _i18nPh.delete(inp); }
+    });
+  }
+  window.setLang = function(lang){
+    LANG = (lang === 'en') ? 'en' : 'es';
+    _i18nWalk(document.body, LANG === 'en');
+    document.querySelectorAll('.lang-opt').forEach(b=> b.classList.toggle('active', b.dataset.lang === LANG));
+    document.documentElement.setAttribute('lang', LANG);
+  };
+  try {
+    const _i18nObs = new MutationObserver(muts=>{
+      if(LANG !== 'en') return;
+      muts.forEach(m=> m.addedNodes && m.addedNodes.forEach(node=> _i18nWalk(node, true)));
+    });
+    if(document.body) _i18nObs.observe(document.body, {childList:true, subtree:true});
+  } catch(e){}
 
   // MI INFORMACION
   const MI_LABELS={
@@ -1190,6 +1623,11 @@
           `).join('')}
         </div>
         <div class="recl-drawer-body">${bodyHTML}</div>
+        ${(p.st==='verdef'||p.st==='amarillo')
+          ? `<div class="recl-drawer-foot"><button class="btn primary" style="flex:1;justify-content:center" onclick="window.__reclAsignarTemp('${p.id}')"><span class="mi">swap_horiz</span>Asignar temporalmente</button></div>`
+          : p.st==='cafe'
+            ? `<div class="recl-drawer-foot"><button class="btn ghost danger" style="flex:1;justify-content:center" onclick="window.__reclCancelTemp('${p.id}')"><span class="mi">undo</span>Cancelar asignación temporal</button></div>`
+            : ''}
       `;
       drw.classList.add('open');
       const root = document.getElementById('recl-root');
@@ -1199,6 +1637,68 @@
     // (Se eliminó la lógica de asignar a requisición — ese flujo no corresponde al rol Reclutador.
     //  La acción principal queda registrada automáticamente en el Schedule del hotel cuando el
     //  Manager mueve el semáforo desde su módulo. Aquí sólo se captura y consulta.)
+
+    // ---- Asignación temporal (Café) — transición Verde fuerte / Amarillo → Café ----
+    // El colaborador disponible se asigna a un hotel por una cantidad de días.
+    // Al vencer regresa automáticamente a su estado previo (regla del Semáforo
+    // del Colaborador). También puede cancelarse manualmente antes de vencer.
+    const HOTELES_TEMP = ['Hotel Costa del Sol','Hotel Marina Bay','Hotel Punta Vista','Hotel Vista Mar','Hotel Sol & Mar','Hotel Las Brisas'];
+    const MESES_ABR = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    const fmtFecha = d => `${d.getDate()} ${MESES_ABR[d.getMonth()]} ${d.getFullYear()}`;
+    function __reclCloseTempModal(){ const o=document.getElementById('recl-temp-ov'); if(o) o.remove(); }
+    window.__reclAsignarTemp = (id)=>{
+      const p = PEOPLE.find(x=>x.id===id); if(!p) return;
+      __reclCloseTempModal();
+      const prevLbl = stLabel(p.st);
+      const ov = document.createElement('div');
+      ov.id = 'recl-temp-ov'; ov.className = 'lg-cand-overlay';
+      ov.onclick = (e)=>{ if(e.target===ov) __reclCloseTempModal(); };
+      ov.innerHTML = `<div class="lg-cand-modal" style="width:min(460px,100%)">
+        <div class="lg-cand-head">
+          <div class="avatar lg" style="background:#8B5A2B"><span class="mi" style="color:#fff">swap_horiz</span></div>
+          <div class="lg-cand-id"><div class="nm">Asignación temporal</div><div class="ps">${esc(p.nm)} · ${esc(prevLbl)}</div></div>
+          <button class="lg-cand-x" onclick="__reclCloseTempModal()"><span class="mi">close</span></button>
+        </div>
+        <div class="lg-cand-body">
+          <div class="recl-temp-field"><label>Hotel destino</label>
+            <select id="recl-temp-hotel" class="recl-temp-input">${HOTELES_TEMP.map(h=>`<option>${h}</option>`).join('')}</select>
+          </div>
+          <div class="recl-temp-field"><label>Duración (días)</label>
+            <input id="recl-temp-dias" class="recl-temp-input" type="number" min="1" max="180" value="30">
+          </div>
+          <div class="recl-temp-note"><span class="mi">info</span><span>Al confirmar, <strong>${esc(p.nm.split(' ')[0])}</strong> pasa a <strong>Café · Asignación temporal</strong>. Al vencer los días regresa automáticamente a <strong>${esc(prevLbl)}</strong>.</span></div>
+        </div>
+        <div class="lg-cand-foot">
+          <button class="btn ghost" onclick="__reclCloseTempModal()">Cancelar</button>
+          <button class="btn primary" onclick="window.__reclConfirmTemp('${p.id}')"><span class="mi">check</span>Confirmar asignación</button>
+        </div>
+      </div>`;
+      document.body.appendChild(ov);
+    };
+    window.__reclConfirmTemp = (id)=>{
+      const p = PEOPLE.find(x=>x.id===id); if(!p) return;
+      const hotel = document.getElementById('recl-temp-hotel')?.value || HOTELES_TEMP[0];
+      let dias = parseInt(document.getElementById('recl-temp-dias')?.value, 10); if(!dias || dias<1) dias = 30;
+      const today = new Date(2026,3,24), end = new Date(2026,3,24+dias);
+      const months = Math.max(1, Math.round(dias/30));
+      p._tempPrev = p.st;
+      p.st = 'cafe';
+      p.hist = p.hist || [];
+      p.hist.unshift({h:hotel, role:p.pos, from:fmtFecha(today), to:fmtFecha(end), curr:true, asg:'temporal', contractFrom:fmtFecha(today), contractTo:fmtFecha(end), months});
+      __reclCloseTempModal();
+      window.__reclCloseDrawer && window.__reclCloseDrawer();
+      window.__renderRecl && window.__renderRecl();
+      if(typeof toast==='function') toast(`✓ ${p.nm.split(' ')[0]} asignada temporalmente a ${hotel} · ${dias} días`, 'swap_horiz');
+    };
+    window.__reclCancelTemp = (id)=>{
+      const p = PEOPLE.find(x=>x.id===id); if(!p) return;
+      p.st = p._tempPrev || 'verdef';
+      delete p._tempPrev;
+      if(p.hist && p.hist.length){ const t = p.hist.find(h=>h.curr && h.asg==='temporal'); if(t) t.curr = false; }
+      window.__reclCloseDrawer && window.__reclCloseDrawer();
+      window.__renderRecl && window.__renderRecl();
+      if(typeof toast==='function') toast(`Asignación temporal cancelada · ${p.nm.split(' ')[0]} regresó a ${stLabel(p.st)}`, 'undo');
+    };
 
     // ---- Modal Nuevo Colaborador (form simple, sin pasos) ----
     window.__reclOpenNew = ()=>{
@@ -7588,7 +8088,94 @@
        <div class="lg-field"><label>Destinatario</label><select class="lg-select" disabled style="opacity:.65"><option>Manager de Reclutamiento (automático)</option></select></div>
        <div style="display:flex;gap:10px;justify-content:flex-end"><button class="lg-btn" onclick="window.__lgModalClose()">Cancelar</button><button class="lg-btn-pri" onclick="window.__lgModalClose();toast('Envío recurrente programado','schedule_send')"><span class="mi">check</span>Programar</button></div>`);
   };
-  window.__rpReutilizar = function(){
+  window.__rpReutilizar = function(btn){
+    const tr = (btn && btn.closest) ? btn.closest('tr') : null;
+    const tipo = (tr && tr.children[1]) ? tr.children[1].textContent.trim() : null;
+    if(tipo){
+      // 1) Activar el tipo en el generador (segmento que coincida con el del histórico)
+      let matched = null;
+      document.querySelectorAll('#rpTipoSegs .lg-seg').forEach(s=>{ if(s.textContent.trim() === tipo) matched = s; });
+      if(matched && window.__lgSeg) window.__lgSeg(matched);
+      // 2) Reflejarlo en el chip de la vista previa
+      const tag = document.getElementById('rpTag');
+      const rEl = document.querySelector('#rpRangoSegs .lg-seg.on');
+      const rango = rEl ? rEl.textContent.trim() : '';
+      if(tag) tag.textContent = rango ? (tipo + ' · ' + rango) : tipo;
+      // 3) Llevar el foco al generador + destello para indicar que se cargó
+      const gen = document.getElementById('rpTipoSegs');
+      const card = gen ? gen.closest('.lg-card') : null;
+      if(gen) gen.scrollIntoView({behavior:'smooth', block:'center'});
+      if(card){ card.style.transition='box-shadow .3s ease'; card.style.boxShadow='0 0 0 2px var(--o-600, #FF8E00)'; setTimeout(function(){ card.style.boxShadow=''; }, 1200); }
+    }
     if(typeof toast==='function') toast('Reporte recargado en el generador · ajusta filtros y vuelve a generar', 'content_copy');
+  };
+
+  // ===== Vista previa tipo PDF de reportes (RF-24) =====
+  window.__rpPreviewClose = function(){ const o = document.getElementById('rpPdfOverlay'); if(o) o.remove(); };
+  window.__rpDownload = function(name){
+    if(typeof toast==='function') toast('Descargando '+name+'.pdf…', 'file_download');
+    setTimeout(function(){ if(typeof toast==='function') toast('✓ '+name+'.pdf descargado', 'check_circle'); }, 1100);
+  };
+  window.__rpPreview = function(){
+    const tipo  = (document.querySelector('#rpTipoSegs .lg-seg.on') || {}).textContent || 'Cobertura del grupo';
+    const rEl   = document.querySelector('#rpRangoSegs .lg-seg.on');
+    const rango = rEl ? rEl.textContent.trim() : 'Este mes';
+    const recl  = (document.getElementById('rpRecl') || {}).value || 'Todo el grupo';
+    const slug  = ('Reporte-' + tipo + '-' + rango).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    window.__rpPreviewClose();
+    const rows = [
+      ['Ana López','85%','g','17','2.1 d','0',''],
+      ['Beatriz Cruz','92%','g','21','1.8 d','1','r'],
+      ['Carlos Mena','70%','a','9','3.4 d','1','r'],
+      ['Diana Ríos','88%','g','24','2.0 d','0',''],
+      ['Esteban Vargas','79%','a','12','2.6 d','0',''],
+      ['Fátima Soto','95%','g','28','1.6 d','0',''],
+    ];
+    const tbody = rows.map(r=>`<tr><td>${r[0]}</td><td><span class="rp-pdf-chip ${r[2]}">${r[1]}</span></td><td>${r[3]}</td><td>${r[4]}</td><td>${r[6]?`<span class="rp-pdf-chip r">${r[5]}</span>`:r[5]}</td></tr>`).join('');
+    const ov = document.createElement('div');
+    ov.id = 'rpPdfOverlay'; ov.className = 'rp-pdf-overlay';
+    ov.onclick = function(e){ if(e.target === ov) window.__rpPreviewClose(); };
+    ov.innerHTML = `
+      <div class="rp-pdf-toolbar">
+        <span class="rp-pdf-fname"><span class="mi">picture_as_pdf</span>${slug}.pdf</span>
+        <div class="rp-pdf-tb-actions">
+          <button class="lg-btn" onclick="window.print()"><span class="mi">print</span>Imprimir</button>
+          <button class="lg-btn-pri" onclick="window.__rpDownload('${slug}')"><span class="mi">file_download</span>Descargar PDF</button>
+          <button class="rp-pdf-x" title="Cerrar" onclick="window.__rpPreviewClose()"><span class="mi">close</span></button>
+        </div>
+      </div>
+      <div class="rp-pdf-scroll">
+        <div class="rp-pdf-page">
+          <div class="rp-pdf-head">
+            <div class="rp-pdf-brand"><span class="rp-pdf-logo">O</span><div><div class="rp-pdf-org">Oranje</div><div class="rp-pdf-org-sub">Reclutamiento · Reporte de grupo</div></div></div>
+            <div class="rp-pdf-doc-meta"><div>Generado: 16 jun 2026</div><div>Folio: RPT-2026-0616</div></div>
+          </div>
+          <div class="rp-pdf-title">${tipo}</div>
+          <div class="rp-pdf-sub">Periodo: ${rango} · Grupo Centro-Sur · ${recl}</div>
+          <div class="rp-pdf-meta-row">
+            <div><span class="k">Líder</span><span class="v">Juanita López</span></div>
+            <div><span class="k">Reclutadoras</span><span class="v">6</span></div>
+            <div><span class="k">Zonas</span><span class="v">Centro y Sur</span></div>
+          </div>
+          <div class="rp-pdf-kpis">
+            <div class="rp-pdf-kpi"><span class="n" style="color:#1FA84A">87%</span><span class="l">Cobertura</span></div>
+            <div class="rp-pdf-kpi"><span class="n">38</span><span class="l">Requisiciones</span></div>
+            <div class="rp-pdf-kpi"><span class="n">2.4 d</span><span class="l">Tiempo prom.</span></div>
+            <div class="rp-pdf-kpi"><span class="n" style="color:#E11919">2</span><span class="l">Escalados</span></div>
+          </div>
+          <div class="rp-pdf-sec">Evolución semanal de cobertura</div>
+          <div class="rp-pdf-chart">
+            <div class="b" style="height:62%"><span>72%</span><small>Sem 1</small></div>
+            <div class="b" style="height:78%"><span>81%</span><small>Sem 2</small></div>
+            <div class="b" style="height:70%"><span>76%</span><small>Sem 3</small></div>
+            <div class="b on" style="height:92%"><span>87%</span><small>Sem 4</small></div>
+          </div>
+          <div class="rp-pdf-sec">Desglose por reclutadora</div>
+          <table class="rp-pdf-tbl"><thead><tr><th>Reclutadora</th><th>Cobertura</th><th>Cubiertas</th><th>T. prom.</th><th>Escalados</th></tr></thead><tbody>${tbody}</tbody></table>
+          <div class="rp-pdf-note"><strong>Resumen.</strong> El grupo alcanzó <strong>87% de cobertura</strong> en ${rango.toLowerCase()} (+4% vs. periodo anterior). Fátima Soto (95%) y Beatriz Cruz (92%) lideran; Carlos Mena requiere apoyo (70%, 2 casos escalados).</div>
+          <div class="rp-pdf-foot"><span>Confidencial · Uso interno Oranje</span><span>Página 1 de 1</span></div>
+        </div>
+      </div>`;
+    document.body.appendChild(ov);
   };
 })();

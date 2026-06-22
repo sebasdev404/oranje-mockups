@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oranje — Colaborador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round|Material+Icons+Outlined" rel="stylesheet">
+<!-- Semilla de diseño compartida (reutilizada en todo el proyecto) -->
+<link rel="stylesheet" href="../oranje-seed.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-logo"><div class="dot"></div><span class="mark">ORANJE</span></div>
+    <nav class="sb-nav">
+      <div class="sb-label">Mi trabajo</div>
+      <div class="sb-item active" data-page="Inicio" onclick="navigate(this,'Inicio')"><span class="mi">home</span><span class="lbl">Inicio</span></div>
+      <div class="sb-item" data-page="Schedule" onclick="navigate(this,'Schedule')"><span class="mi">calendar_month</span><span class="lbl">Mi Schedule</span></div>
+      <div class="sb-item" data-page="Ponche" onclick="navigate(this,'Ponche')"><span class="mi">qr_code_scanner</span><span class="lbl">Ponche</span></div>
+      <div class="sb-item" data-page="Timesheet" onclick="navigate(this,'Timesheet')"><span class="mi">schedule</span><span class="lbl">Mi Timesheet</span></div>
+      <div class="sb-item" data-page="Pago" onclick="navigate(this,'Pago')"><span class="mi">payments</span><span class="lbl">Mi Pago</span></div>
+      <div class="sb-label">Gestión</div>
+      <div class="sb-item" data-page="Disponibilidad" onclick="navigate(this,'Disponibilidad')"><span class="mi">event_available</span><span class="lbl">Disponibilidad</span></div>
+      <div class="sb-item" data-page="Accidente" onclick="navigate(this,'Accidente')"><span class="mi">health_and_safety</span><span class="lbl">Reportar accidente</span></div>
+    </nav>
+    <div class="sb-foot">
+      <div class="sb-support" onclick="toast('Cerrando sesión…','logout')"><span class="mi">logout</span>Cerrar sesión</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="header">
+      <div class="hd-crumbs"><span class="crumb">Oranje</span><span class="mi sep">chevron_right</span><span class="current" id="crumb">Inicio</span></div>
+      <div class="hd-right">
+        <div class="ic-btn" title="Ayuda" onclick="toast('Abriendo ayuda…','support_agent')"><span class="mio">help_outline</span></div>
+        <div style="position:relative" id="notifWrap">
+          <div class="ic-btn" title="Notificaciones" onclick="toggleDd('notifDd')"><span class="mio">notifications_none</span><span class="badge" id="hdBadge">3</span></div>
+          <div class="dd" id="notifDd"></div>
+        </div>
+        <div style="position:relative" id="profWrap">
+          <div class="hd-profile" onclick="toggleDd('profDd')">
+            <div class="avatar">CR</div>
+            <div class="who"><div class="n">Carlos Ruiz</div><div class="r">Housekeeper</div></div>
+            <span class="mi chev">expand_more</span>
+          </div>
+          <div class="dd prof-dd" id="profDd"></div>
+        </div>
+      </div>
+    </header>
+    <div class="content" id="content"><!-- render --></div>
+  </div>
+</div>
+
+<div id="onboarding"></div>
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()"></div>
+<div id="toast"><span class="mi">check_circle</span><span id="toastMsg"></span></div>
+
+<!-- Switch de demo: alternar entre colaborador nuevo (onboarding) y activo -->
+<div id="demoSwitch">
+  <span class="dl">Demo</span>
+  <div class="seg">
+    <button data-m="activo" class="active" onclick="setDemoMode('activo')"><span class="mi">badge</span><span>Ya en Oranje</span></button>
+    <button data-m="nuevo" onclick="setDemoMode('nuevo')"><span class="mi">person_add</span><span>Colaborador nuevo</span></button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body></html>

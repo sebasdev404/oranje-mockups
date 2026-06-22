@@ -13,6 +13,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round|Material+Icons+Outlined" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="schedule-blacklist.css">
 
 
 </head>
@@ -353,6 +354,13 @@
               <div class="prof-sect">Configuración</div>
               <div class="mi-item" onclick="openMyInfo('seguridad')"><span class="mio">lock</span>Cambiar contraseña</div>
               <div class="mi-item" onclick="openMyInfo('preferencias')"><span class="mio">notifications</span>Preferencias de notificación</div>
+              <div class="mi-item lang-item" onclick="event.stopPropagation()">
+                <span class="mio">language</span>Idioma
+                <div class="lang-seg">
+                  <button type="button" class="lang-opt active" data-lang="es" onclick="event.stopPropagation();setLang('es')">ES</button>
+                  <button type="button" class="lang-opt" data-lang="en" onclick="event.stopPropagation();setLang('en')">EN</button>
+                </div>
+              </div>
 
               <div class="divider"></div>
               <div class="mi-item danger" onclick="toast('Sesión cerrada','logout')"><span class="mi">logout</span>Cerrar sesión</div>
@@ -997,7 +1005,7 @@
               </div>
               <div class="lg-field">
                 <label>Rango de fechas</label>
-                <div class="lg-segs">
+                <div class="lg-segs" id="rpRangoSegs">
                   <span class="lg-seg" onclick="window.__rpRango&&window.__rpRango(this,false)">Hoy</span><span class="lg-seg" onclick="window.__rpRango&&window.__rpRango(this,false)">Esta semana</span><span class="lg-seg on" onclick="window.__rpRango&&window.__rpRango(this,false)">Este mes</span><span class="lg-seg" onclick="window.__rpRango&&window.__rpRango(this,true)">Personalizado</span>
                 </div>
               </div>
@@ -1009,7 +1017,7 @@
               <div class="lg-field" id="rpCustom" style="display:none"><label>Rango personalizado</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><input type="date" class="lg-select"><input type="date" class="lg-select"></div></div>
               <div class="lg-field"><label>Reclutadora</label><select class="lg-select" id="rpRecl"><option>Todo el grupo</option><option>Ana López</option><option>Beatriz Cruz</option><option>Carlos Mena</option><option>Diana Ríos</option><option>Esteban Vargas</option><option>Fátima Soto</option></select></div>
               <div class="lg-field"><label>Destinatario</label><select class="lg-select" disabled style="opacity:.65"><option>Manager de Reclutamiento (automático)</option></select></div>
-              <button class="lg-btn-pri" style="width:100%;justify-content:center" onclick="toast('Generando vista previa…','insert_chart')"><span class="mi">visibility</span>Generar vista previa</button>
+              <button class="lg-btn-pri" style="width:100%;justify-content:center" onclick="window.__rpPreview&&window.__rpPreview()"><span class="mi">visibility</span>Generar vista previa</button>
             </div>
           </div>
 
@@ -1047,7 +1055,7 @@
               <div style="display:flex;gap:10px;flex-wrap:wrap;padding-top:16px">
                 <button class="lg-btn-pri" onclick="toast('Reporte enviado al Manager','send')"><span class="mi">send</span>Enviar al Manager</button>
                 <button class="lg-btn" onclick="toast('Exportando CSV…','file_download')"><span class="mi">file_download</span>CSV</button>
-                <button class="lg-btn" onclick="toast('Exportando PDF…','picture_as_pdf')"><span class="mi">picture_as_pdf</span>PDF</button>
+                <button class="lg-btn" onclick="window.__rpPreview&&window.__rpPreview()"><span class="mi">picture_as_pdf</span>PDF</button>
                 <button class="lg-btn" onclick="toast('Borrador guardado','save')"><span class="mi">save</span>Borrador</button>
               </div>
             </div>
@@ -1060,12 +1068,17 @@
           <table class="lg-tbl">
             <thead><tr><th>Fecha</th><th>Tipo</th><th>Destinatario</th><th>Estado</th><th></th></tr></thead>
             <tbody>
-              <tr><td>02 Jun 2026</td><td>Cobertura del grupo</td><td>Manager de Reclutamiento</td><td><span class="lg-chip g">Leído</span></td><td style="text-align:right"><button class="lg-btn" style="padding:6px 11px" onclick="window.__rpReutilizar&&window.__rpReutilizar()"><span class="mi" style="font-size:16px">content_copy</span>Reutilizar</button></td></tr>
-              <tr><td>26 May 2026</td><td>Desempeño individual</td><td>Manager de Reclutamiento</td><td><span class="lg-chip a">Enviado</span></td><td style="text-align:right"><button class="lg-btn" style="padding:6px 11px" onclick="window.__rpReutilizar&&window.__rpReutilizar()"><span class="mi" style="font-size:16px">content_copy</span>Reutilizar</button></td></tr>
-              <tr><td>19 May 2026</td><td>Casos escalados</td><td>Manager de Reclutamiento</td><td><span class="lg-chip g">Leído</span></td><td style="text-align:right"><button class="lg-btn" style="padding:6px 11px" onclick="window.__rpReutilizar&&window.__rpReutilizar()"><span class="mi" style="font-size:16px">content_copy</span>Reutilizar</button></td></tr>
+              <tr><td>02 Jun 2026</td><td>Cobertura del grupo</td><td>Manager de Reclutamiento</td><td><span class="lg-chip g">Leído</span></td><td style="text-align:right"><button class="lg-btn" style="padding:6px 11px" onclick="window.__rpReutilizar&&window.__rpReutilizar(this)"><span class="mi" style="font-size:16px">content_copy</span>Reutilizar</button></td></tr>
+              <tr><td>26 May 2026</td><td>Desempeño individual</td><td>Manager de Reclutamiento</td><td><span class="lg-chip a">Enviado</span></td><td style="text-align:right"><button class="lg-btn" style="padding:6px 11px" onclick="window.__rpReutilizar&&window.__rpReutilizar(this)"><span class="mi" style="font-size:16px">content_copy</span>Reutilizar</button></td></tr>
+              <tr><td>19 May 2026</td><td>Casos escalados</td><td>Manager de Reclutamiento</td><td><span class="lg-chip g">Leído</span></td><td style="text-align:right"><button class="lg-btn" style="padding:6px 11px" onclick="window.__rpReutilizar&&window.__rpReutilizar(this)"><span class="mi" style="font-size:16px">content_copy</span>Reutilizar</button></td></tr>
             </tbody>
           </table>
         </div>
+      </div>
+
+      <!-- ============= BLACKLIST PAGE (módulo integrado · Líder: RF-11 consultar + RF-12 agregar) ============= -->
+      <div class="page-view" data-page-view="Blacklist" data-screen-label="Blacklist" style="display:none">
+        <div id="bl-root"></div>
       </div>
 
       <!-- ============= RECLUTAMIENTO PAGE ============= -->
@@ -2195,6 +2208,7 @@
 <div class="toast" id="toast"><span class="mi" id="toastIcon">check_circle</span><span id="toastMsg">OK</span><button class="toast-action" id="toastAction" style="display:none"></button></div>
 
 <script src="script.js"></script>
+<script src="blacklist.js"></script>
 
 
 
