@@ -248,6 +248,8 @@
   const _i18nOrig = new WeakMap();     // textNode -> texto original (ES)
   const _i18nPh = new WeakMap();       // input -> placeholder original (ES)
   const I18N = {
+    // Tema (modo claro/oscuro)
+    'Tema':'Theme','Claro':'Light','Oscuro':'Dark',
     // Sidebar
     'Principal':'Main', 'Reclutamiento':'Recruitment', 'Requisiciones':'Requisitions',
     'Supervisión':'Supervision', 'Mi Grupo':'My Group', 'Reportes':'Reports', 'Soporte':'Support',
@@ -662,6 +664,42 @@
     document.querySelectorAll('.lang-opt').forEach(b=> b.classList.toggle('active', b.dataset.lang === LANG));
     document.documentElement.setAttribute('lang', LANG);
   };
+
+  // ===================================================================
+  // TEMA — claro / oscuro (clase .dark-mode en <html>; override de tokens)
+  // Portado del redesign (Oranje Platform). Persiste en localStorage.
+  // ===================================================================
+  const THEME_KEY = 'oranje-theme';
+  const _prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+  function _applyTheme(theme, notify){
+    const dark = theme === 'dark';
+    document.documentElement.classList.toggle('dark-mode', dark);
+    document.querySelectorAll('[data-theme-seg] .theme-opt, [data-theme-seg-pref] .theme-opt')
+      .forEach(b=> b.classList.toggle('active', b.dataset.themeOpt === theme));
+    const lbl = document.getElementById('themeLabel');
+    if(lbl) lbl.textContent = dark ? (LANG==='en'?'Dark':'Oscuro') : (LANG==='en'?'Light':'Claro');
+    if(notify && typeof toast === 'function'){
+      const m = dark ? (LANG==='en'?'Dark theme on':'Tema oscuro activado')
+                     : (LANG==='en'?'Light theme on':'Tema claro activado');
+      toast(m, 'brightness_4');
+    }
+  }
+  window.setTheme = function(theme){
+    if(theme !== 'light' && theme !== 'dark') return;
+    try{ localStorage.setItem(THEME_KEY, theme); }catch(e){}
+    _applyTheme(theme, true);
+  };
+  (function _initTheme(){
+    let saved = null; try{ saved = localStorage.getItem(THEME_KEY); }catch(e){}
+    const theme = saved || (_prefersDark.matches ? 'dark' : 'light');
+    document.documentElement.classList.toggle('dark-mode', theme === 'dark'); // aplica ya (evita parpadeo)
+    if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ()=> _applyTheme(theme, false));
+    else _applyTheme(theme, false);
+    if(_prefersDark.addEventListener) _prefersDark.addEventListener('change', e=>{
+      let s = null; try{ s = localStorage.getItem(THEME_KEY); }catch(err){}
+      if(!s) _applyTheme(e.matches ? 'dark' : 'light', false);
+    });
+  })();
   try {
     const _i18nObs = new MutationObserver(muts=>{
       if(LANG !== 'en') return;

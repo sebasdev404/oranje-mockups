@@ -361,6 +361,13 @@
                   <button type="button" class="lang-opt" data-lang="en" onclick="event.stopPropagation();setLang('en')">EN</button>
                 </div>
               </div>
+              <div class="mi-item theme-item" onclick="event.stopPropagation()">
+                <span class="mio">brightness_4</span><span class="theme-item-lbl">Tema</span>
+                <div class="theme-seg" data-theme-seg>
+                  <button type="button" class="theme-opt active" data-theme-opt="light" onclick="event.stopPropagation();setTheme('light')"><span class="mio">light_mode</span></button>
+                  <button type="button" class="theme-opt" data-theme-opt="dark" onclick="event.stopPropagation();setTheme('dark')"><span class="mio">dark_mode</span></button>
+                </div>
+              </div>
 
               <div class="divider"></div>
               <div class="mi-item danger" onclick="toast('Sesión cerrada','logout')"><span class="mi">logout</span>Cerrar sesión</div>
@@ -2145,13 +2152,16 @@
                     </div>
                     <span class="mi fi-lock">chevron_right</span>
                   </div>
-                  <div class="mi-field wide">
-                    <div class="fi-ic"><span class="mi">palette</span></div>
+                  <div class="mi-field wide theme-pref">
+                    <div class="fi-ic"><span class="mi">brightness_4</span></div>
                     <div class="fi-txt">
                       <div class="fi-label">Tema</div>
-                      <div class="fi-val">Claro</div>
+                      <div class="fi-val" id="themeLabel">Claro</div>
                     </div>
-                    <span class="mi fi-lock">chevron_right</span>
+                    <div class="theme-seg theme-seg-lg" data-theme-seg-pref>
+                      <button type="button" class="theme-opt active" data-theme-opt="light" onclick="setTheme('light')"><span class="mio">light_mode</span>Claro</button>
+                      <button type="button" class="theme-opt" data-theme-opt="dark" onclick="setTheme('dark')"><span class="mio">dark_mode</span>Oscuro</button>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oranje — Manager de Reclutamiento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round|Material+Icons+Outlined" rel="stylesheet">
+<!-- Componentes del depto Reclutamiento (del Líder de Grupo: recl-*/requi-*/req-*/entrev-*/bl-*) -->
+<link rel="stylesheet" href="recl-components.css">
+<link rel="stylesheet" href="schedule-blacklist.css">
+<!-- Semilla de diseño compartida (gobierna base + demás módulos, gana sobre lo anterior) -->
+<link rel="stylesheet" href="../../oranje-seed.css">
+<!-- Estilos del rol Manager (overrides finales) -->
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-logo"><div class="dot"></div><span class="mark">ORANJE</span></div>
+    <nav class="sb-nav">
+      <div class="sb-label">Principal</div>
+      <div class="sb-item active" data-page="Dashboard" onclick="navigate(this,'Dashboard')"><span class="mi">dashboard</span><span class="lbl">Dashboard</span></div>
+      <div class="sb-item" data-page="Requisiciones" onclick="navigate(this,'Requisiciones')"><span class="mi">assignment</span><span class="lbl">Requisiciones</span><span class="count">05</span></div>
+      <div class="sb-item" data-page="Reclutamiento" onclick="navigate(this,'Reclutamiento')"><span class="mi">person_search</span><span class="lbl">Reclutamiento</span><span class="count">142</span></div>
+      <div class="sb-item" data-page="Blacklist" onclick="navigate(this,'Blacklist')"><span class="mi">block</span><span class="lbl">Blacklist</span><span class="count">03</span></div>
+      <div class="sb-label">Supervisión</div>
+      <div class="sb-item" data-page="Equipo" onclick="navigate(this,'Equipo')"><span class="mi">groups</span><span class="lbl">Mi Equipo</span><span class="count">04</span></div>
+      <div class="sb-item" data-page="Incidencias" onclick="navigate(this,'Incidencias')"><span class="mi">report_problem</span><span class="lbl">Incidencias</span><span class="count">06</span></div>
+      <div class="sb-item" data-page="Reportes" onclick="navigate(this,'Reportes')"><span class="mi">insert_chart</span><span class="lbl">Reportes</span></div>
+    </nav>
+    <div class="sb-foot">
+      <div class="sb-support" onclick="toast('Cerrando sesión…','logout')"><span class="mi">logout</span>Cerrar sesión</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="header">
+      <div class="hd-crumbs"><span class="crumb">Oranje</span><span class="mi sep">chevron_right</span><span class="current" id="crumb">Dashboard</span></div>
+      <div class="hd-search">
+        <span class="mi si">search</span>
+        <input type="text" class="hd-search-input" placeholder="Buscar requisiciones, líderes, reclutadoras, zonas, blacklist…" onfocus="openSearch()" id="gsearch">
+        <span class="kb">⌘K</span>
+        <div class="dd" id="searchDd"></div>
+      </div>
+      <div class="hd-right">
+        <div class="ic-btn" title="Ayuda" onclick="toast('Abriendo ayuda…','support_agent')"><span class="mio">help_outline</span></div>
+        <div style="position:relative" id="notifWrap">
+          <div class="ic-btn" title="Notificaciones" onclick="toggleDd('notifDd')"><span class="mio">notifications_none</span><span class="badge" id="hdBadge">6</span></div>
+          <div class="dd" id="notifDd"></div>
+        </div>
+        <div style="position:relative" id="profWrap">
+          <div class="hd-profile" onclick="toggleDd('profDd')">
+            <div class="avatar">HM</div>
+            <div class="who"><div class="n">Hugo Marín</div><div class="r">Manager de Reclutamiento</div></div>
+            <span class="mi chev">expand_more</span>
+          </div>
+          <div class="dd prof-dd" id="profDd"></div>
+        </div>
+      </div>
+    </header>
+    <div class="content" id="content"><!-- render --></div>
+
+    <!-- ==================== MI INFORMACIÓN (perfil del Manager) ==================== -->
+    <div class="mi-page" id="miPage">
+      <div class="mi-page-inner">
+        <aside class="mi-side">
+          <div class="mi-back" onclick="closeMyInfo()"><span class="mi">arrow_back</span>Volver</div>
+          <div class="mi-side-title">Mi cuenta</div>
+          <div class="mi-nav active" data-pane="info" onclick="miNav(this,'info')"><span class="mi">person</span>Mi información</div>
+          <div class="mi-nav" data-pane="alcance" onclick="miNav(this,'alcance')"><span class="mi">public</span>Mi alcance</div>
+          <div class="mi-nav" data-pane="metricas" onclick="miNav(this,'metricas')"><span class="mi">insights</span>Mis métricas</div>
+          <div class="mi-nav" data-pane="seguridad" onclick="miNav(this,'seguridad')"><span class="mi">lock</span>Seguridad</div>
+          <div class="mi-nav" data-pane="preferencias" onclick="miNav(this,'preferencias')"><span class="mi">tune</span>Preferencias</div>
+        </aside>
+        <div class="mi-content">
+          <!-- PANE: MI INFORMACIÓN -->
+          <div class="mi-pane active" id="miPane-info">
+            <div class="mi-avatar-row">
+              <div class="mi-avatar">HM<div class="mi-avatar-edit" onclick="toast('Subir nueva foto…','photo_camera')" title="Cambiar foto"><span class="mi">photo_camera</span></div></div>
+              <div class="mi-name-block"><h3 style="font-size:24px">Hugo Marín</h3><div class="role" style="font-size:16px">Manager de Reclutamiento</div></div>
+            </div>
+            <div class="mi-hero"><h2>Mi información</h2><div class="sub">Consulta los datos de tu perfil o cambia tu foto de perfil.</div></div>
+            <div class="mi-body"><div class="mi-section"><h4>Mi información de perfil</h4><div class="mi-grid">
+              <div class="mi-field wide"><div class="fi-ic"><span class="mi">person</span></div><div class="fi-txt"><div class="fi-label">Nombre completo</div><div class="fi-val">Hugo Marín</div></div><span class="mi fi-lock">lock</span></div>
+              <div class="mi-field wide"><div class="fi-ic"><span class="mi">mail</span></div><div class="fi-txt"><div class="fi-label">Correo electrónico</div><div class="fi-val">hugo.marin@oranje.com</div></div><span class="mi fi-lock">lock</span></div>
+              <div class="mi-field wide"><div class="fi-ic"><span class="mi">phone</span></div><div class="fi-txt"><div class="fi-label">Teléfono</div><div class="fi-val">+52 55 1820 4471</div></div><span class="mi fi-lock">lock</span></div>
+              <div class="mi-field wide"><div class="fi-ic"><span class="mi">work</span></div><div class="fi-txt"><div class="fi-label">Rol</div><div class="fi-val">Manager de Reclutamiento</div></div><span class="mi fi-lock">lock</span></div>
+            </div></div></div>
+          </div>
+          <!-- PANE: MI ALCANCE -->
+          <div class="mi-pane" id="miPane-alcance">
+            <div class="mi-hero"><h2>Mi alcance</h2><div class="sub">Tu ámbito de supervisión: todo el departamento de Reclutamiento.</div></div>
+            <div class="mi-body">
+              <div class="mi-section"><div class="mi-zone-card"><div class="zc-ic"><span class="mi">public</span></div><div><div class="zc-lbl">Alcance</div><div class="zc-val">Departamento de Reclutamiento</div><div class="zc-meta">Todas las zonas · 4 Líderes · 6 Reclutadoras</div></div></div></div>
+              <div class="mi-section"><h4 style="font-weight:500;font-size:12px">Líderes de Grupo a cargo</h4><div class="mi-grid">
+                <div class="mi-field wide"><div class="fi-ic"><span class="mi">badge</span></div><div class="fi-txt"><div class="fi-label">Grupo Centro-Sur</div><div class="fi-val">Juanita López · Centro</div></div></div>
+                <div class="mi-field wide"><div class="fi-ic"><span class="mi">badge</span></div><div class="fi-txt"><div class="fi-label">Grupo Litoral Sur</div><div class="fi-val">Marco Díaz · Sur</div></div></div>
+                <div class="mi-field wide"><div class="fi-ic"><span class="mi">badge</span></div><div class="fi-txt"><div class="fi-label">Grupo Pacífico</div><div class="fi-val">Elena Ruiz · Oeste</div></div></div>
+                <div class="mi-field wide"><div class="fi-ic"><span class="mi">badge</span></div><div class="fi-txt"><div class="fi-label">Grupo Frontera</div><div class="fi-val">Tomás Vela · Noroeste</div></div></div>
+              </div></div>
+            </div>
+          </div>
+          <!-- PANE: MÉTRICAS -->
+          <div class="mi-pane" id="miPane-metricas">
+            <div class="mi-hero"><h2>Mis métricas</h2><div class="sub">Indicadores globales de tu gestión como Manager del departamento.</div></div>
+            <div class="mi-body"><div class="mi-metrics-grid">
+              <div class="mi-metric"><div class="mm-ic"><span class="mi">donut_small</span></div><div class="mm-lbl">Cobertura global</div><div class="mm-val">84<span class="mm-u">%</span></div><div class="mm-trend up"><span class="mi">trending_up</span>+3pp vs. mes anterior</div></div>
+              <div class="mi-metric"><div class="mm-ic"><span class="mi">badge</span></div><div class="mm-lbl">Líderes activos</div><div class="mm-val">4</div><div class="mm-trend"><span class="mi">groups</span>6 reclutadoras</div></div>
+              <div class="mi-metric"><div class="mm-ic"><span class="mi">report_problem</span></div><div class="mm-lbl">Casos escalados abiertos</div><div class="mm-val">6</div><div class="mm-trend down"><span class="mi">trending_down</span>-2 vs. mes anterior</div></div>
+              <div class="mi-metric"><div class="mm-ic"><span class="mi">assignment_turned_in</span></div><div class="mm-lbl">Requisiciones activas</div><div class="mm-val">142</div><div class="mm-trend up"><span class="mi">trending_up</span>+12 vs. mes anterior</div></div>
+            </div></div>
+          </div>
+          <!-- PANE: SEGURIDAD -->
+          <div class="mi-pane" id="miPane-seguridad">
+            <div class="mi-hero"><h2>Seguridad</h2><div class="sub">Administra tu contraseña y la seguridad de tu cuenta.</div></div>
+            <div class="mi-body"><div class="mi-section"><div class="mi-grid">
+              <div class="mi-field wide" style="cursor:pointer" onclick="toast('Próximamente','lock')"><div class="fi-ic"><span class="mi">lock_reset</span></div><div class="fi-txt"><div class="fi-label">Contraseña</div><div class="fi-val">Cambiar contraseña</div></div><span class="mi fi-lock">chevron_right</span></div>
+              <div class="mi-field wide" style="cursor:pointer" onclick="toast('Próximamente','shield')"><div class="fi-ic"><span class="mi">verified_user</span></div><div class="fi-txt"><div class="fi-label">Autenticación de dos factores</div><div class="fi-val">Configurar 2FA</div></div><span class="mi fi-lock">chevron_right</span></div>
+              <div class="mi-field wide" style="cursor:pointer" onclick="toast('Próximamente','devices')"><div class="fi-ic"><span class="mi">devices</span></div><div class="fi-txt"><div class="fi-label">Sesiones activas</div><div class="fi-val">Ver dispositivos conectados</div></div><span class="mi fi-lock">chevron_right</span></div>
+            </div></div></div>
+          </div>
+          <!-- PANE: PREFERENCIAS -->
+          <div class="mi-pane" id="miPane-preferencias">
+            <div class="mi-hero"><h2>Preferencias</h2><div class="sub">Personaliza tu experiencia en la plataforma.</div></div>
+            <div class="mi-body"><div class="mi-section"><div class="mi-grid">
+              <div class="mi-field wide"><div class="fi-ic"><span class="mi">notifications</span></div><div class="fi-txt"><div class="fi-label">Notificaciones</div><div class="fi-val">Email, push y en la app</div></div><span class="mi fi-lock">chevron_right</span></div>
+              <div class="mi-field wide"><div class="fi-ic"><span class="mi">language</span></div><div class="fi-txt"><div class="fi-label">Idioma</div><div class="fi-val">Español (México)</div></div><span class="mi fi-lock">chevron_right</span></div>
+              <div class="mi-field wide theme-pref"><div class="fi-ic"><span class="mi">brightness_4</span></div><div class="fi-txt"><div class="fi-label">Tema</div><div class="fi-val" id="themeLabel">Claro</div></div><div class="theme-seg theme-seg-lg" data-theme-seg-pref><button type="button" class="theme-opt active" data-theme-opt="light" onclick="setTheme('light')"><span class="mio">light_mode</span>Claro</button><button type="button" class="theme-opt" data-theme-opt="dark" onclick="setTheme('dark')"><span class="mio">dark_mode</span>Oscuro</button></div></div>
+            </div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()"></div>
+<div id="toast"><span class="mi">check_circle</span><span id="toastMsg"></span></div>
+
+<script src="script.js"></script>
+<!-- Blacklist: módulo portado del Líder de Grupo (vistas, filtros+calendario, drawer 5 tabs, alta multipaso). Consulta + agregar (igual que cualquier rol); veto permanente; disputas las resuelve el Inspector -->
+<script src="blacklist.js"></script>
+</body></html>

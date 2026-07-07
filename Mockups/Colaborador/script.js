@@ -417,7 +417,7 @@ RENDER.Timesheet=function(){
         ${COL.timesheet.map(d=>`<tr class="click" onclick="dayDetail('${d.dia}')" style="${d.hoy?'background:var(--o-50)':''}">
           <td><b>${d.dia}</b>${d.hoy?' <span class="meta-pill" style="background:var(--o-200);color:var(--o-700)">Hoy</span>':''}</td>
           <td class="num">${d.ent}</td><td class="num">${d.sal}</td><td>${d.lunch}</td>
-          <td class="num">${d.bruto}</td><td class="num" style="color:var(--green)">${d.neto}</td></tr>`).join('')}
+          <td class="num">${d.bruto}</td><td class="num" ${d.neto!=='—'?'style="color:var(--green)"':''}>${d.neto}</td></tr>`).join('')}
       </tbody>
     </table>
   </div>

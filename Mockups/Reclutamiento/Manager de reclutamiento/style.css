@@ -1,0 +1,1012 @@
+/* =====================================================================
+   Oranje — Manager de Reclutamiento · estilos específicos del rol
+   (sobre la semilla compartida ../../oranje-seed.css — no reimplementar)
+   ===================================================================== */
+
+/* (Tema glass retirado: el Manager usa la base de la semilla + los componentes
+   del depto del Líder, sin recubrimiento de vidrio, para igualar al Líder.) */
+
+/* Buscador global del header */
+.hd-search{flex:1;max-width:520px;margin-left:18px;position:relative;display:flex;align-items:center}
+.hd-search .si{position:absolute;left:13px;color:var(--ink-3);font-size:20px;pointer-events:none}
+.hd-search-input{width:100%;height:40px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:0 44px 0 40px;font-size:13.5px;color:var(--ink);outline:none;transition:var(--ease)}
+.hd-search-input:focus{border-color:var(--o-400);background:var(--surface);box-shadow:0 0 0 4px rgba(255,142,0,.1)}
+.hd-search .kb{position:absolute;right:10px;background:var(--surface);border:1px solid var(--line-2);border-radius:6px;padding:2px 8px;font-size:11px;font-weight:600;color:var(--ink-3)}
+#searchDd{left:0;right:auto;width:520px;max-height:460px;overflow-y:auto}
+.sdd-sec{padding:8px 6px}
+.sdd-sec+.sdd-sec{border-top:1px solid var(--line)}
+.sdd-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:6px 14px}
+.sdd-row{display:flex;align-items:center;gap:11px;padding:8px 14px;border-radius:8px;margin:0 4px;cursor:pointer;transition:var(--ease)}
+.sdd-row:hover{background:var(--o-50)}
+.sdd-ic{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--surface-2);color:var(--ink-2);flex:none}
+.sdd-ic .mi{font-size:16px}
+.sdd-name{font-size:13px;font-weight:600;line-height:1.2}
+.sdd-meta{font-size:11.5px;color:var(--ink-3)}
+.sdd-kind{margin-left:auto;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);background:var(--surface-2);padding:2px 7px;border-radius:5px}
+
+/* Bandeja de acción (Dashboard) */
+.tray-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.tray-tab{padding:9px 14px;font-size:13px;font-weight:600;color:var(--ink-3);cursor:pointer;border-bottom:2px solid transparent;transition:var(--ease)}
+.tray-tab.active{color:var(--o-700);border-bottom-color:var(--o-500)}
+.tray-tab .n{font-size:11px;background:var(--surface-3);color:var(--ink-2);padding:0 7px;border-radius:20px;margin-left:6px;font-weight:700}
+.tray-tab.active .n{background:var(--o-200);color:var(--o-700)}
+.tray-item{display:flex;align-items:center;gap:13px;padding:13px 4px;border-bottom:1px solid var(--line)}
+.tray-item:last-child{border-bottom:none}
+.tray-item .ic{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none}
+.tray-item .t{font-weight:600;font-size:13.5px}
+.tray-item .s{font-size:12px;color:var(--ink-3);margin-top:1px}
+.tray-item .act{margin-left:auto;flex:none}
+
+/* Sub-filas anidadas (Mi Equipo: reclutadoras bajo líder) */
+.subrow{display:flex;align-items:center;gap:12px;padding:10px 14px 10px 26px;border-bottom:1px solid var(--line);font-size:13px;background:var(--surface-2)}
+.subrow:last-child{border-bottom:none}
+.subrow .av{width:30px;height:30px;border-radius:8px;background:var(--grad-warm);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+
+/* Barra de progreso (cobertura) */
+.bar{height:7px;border-radius:7px;background:var(--surface-3);overflow:hidden;min-width:80px}
+.bar > i{display:block;height:100%;border-radius:7px}
+
+/* Pills de prioridad / estado de caso */
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px}
+.pill.crit{background:rgba(225,25,25,.12);color:var(--red)}
+.pill.alta{background:var(--o-50);color:var(--o-700)}
+.pill.media{background:rgba(255,142,0,.10);color:#8A5A00}
+.pill.baja{background:var(--surface-3);color:var(--ink-2)}
+.pill.green{background:rgba(31,168,74,.1);color:var(--green)}
+.pill.blue{background:rgba(63,125,221,.12);color:var(--blue)}
+.pill.purple{background:rgba(63,125,221,.12);color:var(--purple)}
+
+/* Drawer lateral (requisición / incidencia / colaborador) */
+.drawer-bg{position:fixed;inset:0;background:rgba(26,17,8,.42);backdrop-filter:blur(3px);z-index:55;display:none}
+.drawer-bg.show{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,46vw);background:var(--surface);box-shadow:var(--sh-lg);z-index:56;transform:translateX(100%);transition:transform .3s var(--ease);display:flex;flex-direction:column}
+.drawer.show{transform:translateX(0)}
+.drawer-h{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.drawer-h h3{font-size:16px;font-weight:700}
+.drawer-h .x{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:var(--ink-3);cursor:pointer;flex:none}
+.drawer-h .x:hover{background:var(--surface-2);color:var(--ink)}
+.drawer-tabs{display:flex;gap:2px;padding:0 16px;border-bottom:1px solid var(--line);overflow-x:auto}
+.drawer-tab{padding:11px 13px;font-size:12.5px;font-weight:600;color:var(--ink-3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.drawer-tab.active{color:var(--o-700);border-bottom-color:var(--o-500)}
+.drawer-b{flex:1;overflow-y:auto;padding:20px 22px}
+.drawer-f{padding:14px 22px;border-top:1px solid var(--line);display:flex;gap:10px;flex-wrap:wrap}
+/* El wrapper .req-drawer (estilo Líder) es position:fixed con su propio slide-in (.open).
+   Cuando se monta DENTRO del panel .drawer del Manager hay que neutralizar ese posicionamiento
+   para que llene el panel (si no, queda fuera de pantalla). Afecta a reqDrawer/poolDrawer/incDrawer. */
+.drawer>.req-drawer{position:static;transform:none;inset:auto;width:auto;height:100%;border:0;border-radius:0;box-shadow:none;z-index:auto;overflow:visible;flex:1;min-height:0;display:flex;flex-direction:column}
+
+/* Timeline simple */
+.tl{position:relative;padding-left:20px}
+.tl::before{content:'';position:absolute;left:5px;top:4px;bottom:4px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:0 0 16px}
+.tl-item::before{content:'';position:absolute;left:-18px;top:3px;width:10px;height:10px;border-radius:50%;background:var(--o-400);border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line)}
+.tl-item .tt{font-weight:600;font-size:13px}
+.tl-item .ts{font-size:11.5px;color:var(--ink-3)}
+
+/* Radios de modo (asignar/reasignar) */
+.radio-row{display:flex;gap:10px;flex-wrap:wrap}
+.radio-opt{flex:1;min-width:160px;border:1px solid var(--line-2);border-radius:10px;padding:12px;cursor:pointer;transition:var(--ease)}
+.radio-opt:hover{border-color:var(--o-300)}
+.radio-opt.sel{border-color:var(--o-500);background:var(--o-50)}
+.radio-opt .rt{font-weight:700;font-size:13px}
+.radio-opt .rs{font-size:11.5px;color:var(--ink-3);margin-top:2px}
+
+/* Toggle idioma en menú perfil (igual al Líder/Colaborador) */
+.prof-menu .mi-item.lang-item{cursor:default}
+.prof-menu .mi-item.lang-item:hover{background:transparent;color:var(--ink-2)}
+
+/* Sub-vista Entrevistas (Reclutamiento) */
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.filter-bar .sel,.filter-bar .inp{height:38px;width:auto;min-width:160px;margin:0}
+.filter-bar .inp.search{flex:1;min-width:220px}
+.ent-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.ent-flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:4px 0 18px}
+.ent-step{display:flex;align-items:center;gap:7px}
+.ent-step .dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:var(--surface-3);color:var(--ink-3);border:2px solid var(--line-2)}
+.ent-step .lb{font-size:12px;font-weight:600;color:var(--ink-3)}
+.ent-step.done .dot{background:var(--green);color:#fff;border-color:var(--green)}
+.ent-step.done .lb{color:var(--ink-2)}
+.ent-step.cur .dot{background:var(--o-500);color:#fff;border-color:var(--o-500)}
+.ent-step.cur .lb{color:var(--o-700)}
+.ent-sep{flex:1;height:2px;background:var(--line);min-width:12px;max-width:38px}
+.dias-chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:2px 9px;border-radius:20px}
+.dias-chip .pip{width:7px;height:7px;border-radius:50%}
+.trace{border:1px solid var(--line);border-radius:12px;padding:4px 4px;margin:6px 0 14px;background:var(--surface-2)}
+.ent-seg{display:inline-flex;gap:2px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:3px}
+.ent-seg-opt{border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--ink-3);padding:7px 14px;border-radius:8px;transition:all var(--ease)}
+.ent-seg-opt:hover{color:var(--ink)}
+.ent-seg-opt.active{background:var(--surface);color:var(--o-700);box-shadow:0 1px 3px rgba(26,17,8,.14)}
+
+/* Dashboard — widgets enriquecidos (refinados sobre la semilla) */
+/* Tendencia de cobertura (gráfico de área + línea) */
+.lchart-wrap{position:relative;height:178px;margin-top:2px}
+.lchart{position:absolute;inset:0;width:100%;height:100%;display:block}
+.lpt{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--surface);border:2px solid var(--o-400);transform:translate(-50%,-50%);box-shadow:var(--sh-sm);z-index:2}
+.lpt.cur{width:14px;height:14px;border-color:var(--o-600);box-shadow:0 0 0 5px rgba(255,142,0,.15),var(--sh-sm)}
+.lval{position:absolute;transform:translateX(-50%);font-size:11px;font-weight:700;color:var(--ink-3);white-space:nowrap;z-index:3}
+.lval.cur{color:var(--o-700);font-weight:800;font-size:13px}
+.lx-lab{position:absolute;bottom:0;transform:translateX(-50%);font-size:11px;color:var(--ink-3);font-weight:500;z-index:2}
+.lx-lab.cur{color:var(--ink-2);font-weight:700}
+/* Distribución por urgencia */
+.urow{display:flex;align-items:center;gap:13px;padding:12px 8px;cursor:pointer;border-radius:var(--r-md);transition:var(--ease)}
+.urow+.urow{border-top:1px solid var(--line)}
+.urow:hover{background:var(--o-50)}
+.urow:hover .uch{color:var(--o-500);transform:translateX(3px)}
+.urow .dotc{width:11px;height:11px;border-radius:50%;flex:none;box-shadow:0 0 0 3px rgba(0,0,0,.045)}
+.urow .ul{flex:1;font-size:13.5px;font-weight:600;color:var(--ink)}
+.urow .ubar{flex:0 0 118px}
+.urow .uc{font-weight:800;font-size:15px;min-width:30px;text-align:right;letter-spacing:-.01em}
+.urow .uch{color:var(--ink-4);transition:var(--ease)}
+/* Pipeline de Entrevistas */
+.pipe{display:flex;align-items:stretch;gap:5px}
+.pipe .stage{flex:1;min-width:0;border:1px solid var(--line);border-radius:var(--r-md);padding:16px 15px;cursor:pointer;transition:var(--ease);position:relative;overflow:hidden}
+.pipe .stage:hover{box-shadow:var(--sh-md);transform:translateY(-3px)}
+.pipe .stage .pi{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;background:var(--surface);box-shadow:var(--sh-sm)}
+.pipe .stage .pi .mi{font-size:20px}
+.pipe .stage .pv{font-size:28px;font-weight:800;line-height:1;letter-spacing:-.02em}
+.pipe .stage .pl{font-size:12px;color:var(--ink-3);margin-top:5px;font-weight:600}
+.pipe .arrow{display:flex;align-items:center;justify-content:center;color:var(--ink-4);flex:0 0 26px}
+.pipe .arrow .mi{font-size:20px}
+
+/* ============================ BLACKLIST · Manager ============================
+   Piezas exclusivas del Manager sobre el módulo blacklist.js (portado del Líder):
+   pill de Disputado, banner de control y footer de acciones del drawer. */
+.bl-disp-pill{display:inline-flex;align-items:center;gap:4px;margin-left:6px;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;background:rgba(123,44,191,.12);color:#7B2CBF;vertical-align:middle}
+.bl-disp-pill .mi{font-size:13px}
+/* banner de control dentro del drawer (disputa / sin disputa) */
+.bl-ctrl-banner{display:flex;gap:11px;align-items:flex-start;margin:0 0 16px;padding:13px 14px;border-radius:12px;border:1px solid var(--line)}
+.bl-ctrl-banner .mi{font-size:20px;flex:none;margin-top:1px}
+.bl-ctrl-banner .bl-ctrl-ttl{font-size:13px;font-weight:700;line-height:1.3}
+.bl-ctrl-banner .bl-ctrl-sub{font-size:12px;color:var(--ink-2);margin-top:3px;line-height:1.45}
+.bl-ctrl-banner.disp{background:rgba(123,44,191,.08);border-color:rgba(123,44,191,.28)}
+.bl-ctrl-banner.disp .mi,.bl-ctrl-banner.disp .bl-ctrl-ttl{color:#6D28D9}
+.bl-ctrl-banner.info{background:var(--surface-2)}
+.bl-ctrl-banner.info .mi{color:var(--ink-3)}
+/* footer de acciones del drawer (Resolver disputa / Remover) */
+.bl-drawer-foot{display:flex;gap:10px;align-items:center;padding:14px 22px;border-top:1px solid var(--line);background:var(--surface);position:sticky;bottom:0}
+.bl-drawer-foot .btn{flex:1;justify-content:center}
+
+/* ============================ MI EQUIPO · acordeón de Líderes ============================
+   Mismo lenguaje visual que el resto (hero + recl-stat + meta-pill). Cada Líder es una
+   tarjeta expandible con sus Reclutadoras anidadas como sub-tarjetas. */
+.team-list{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.team-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:var(--ease)}
+.team-card:hover{box-shadow:var(--sh-sm)}
+.team-card.open{box-shadow:var(--sh-md);border-color:rgba(255,142,0,.35)}
+.team-head{display:flex;align-items:center;gap:15px;padding:15px 18px;cursor:pointer;transition:var(--ease)}
+.team-head:hover{background:var(--surface-2)}
+.team-av{width:46px;height:46px;border-radius:13px;color:#fff;font-weight:700;font-size:14.5px;display:flex;align-items:center;justify-content:center;flex:none;box-shadow:var(--sh-sm)}
+.team-id{min-width:175px}
+.team-id .nm{font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:8px;line-height:1.2}
+.team-id .sub{font-size:12px;color:var(--ink-3);margin-top:3px}
+.team-estado{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.05em;flex:none}
+.team-estado.on{background:rgba(31,168,74,.12);color:#1F8F50}
+.team-estado.off{background:var(--surface-2);color:var(--ink-3)}
+.team-meta{display:flex;gap:6px;flex-wrap:wrap;flex:1;justify-content:flex-start}
+.team-meta .meta-pill.team-esc{background:rgba(225,25,25,.12);color:var(--red);border-color:rgba(225,25,25,.22)}
+.team-cob{min-width:148px;flex:none}
+.team-cob-top{display:flex;align-items:baseline;gap:6px;margin-bottom:6px}
+.team-cob-val{font-weight:800;font-size:15px;line-height:1}
+.team-cob-lbl{font-size:11px;color:var(--ink-3)}
+.team-chev{color:var(--ink-4);flex:none;font-size:22px;transition:var(--ease)}
+.team-card.open .team-chev{color:var(--o-600)}
+.team-body{border-top:1px solid var(--line);background:var(--surface-2);padding:14px 18px}
+.team-body-h{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3);margin-bottom:11px}
+.team-body-h .mi{font-size:16px}
+.team-body-count{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:1px 9px;font-size:11px;color:var(--ink-2)}
+.team-recls{display:flex;flex-direction:column;gap:8px}
+.team-recl{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 14px;transition:var(--ease)}
+.team-recl:hover{border-color:rgba(255,142,0,.3);box-shadow:var(--sh-sm)}
+.team-recl-av{width:36px;height:36px;border-radius:10px;background:var(--o-50);color:var(--o-700);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex:none}
+.team-recl-id{min-width:155px;flex:1}
+.team-recl-id .nm{font-weight:600;font-size:13.5px}
+.team-recl-id .sub{font-size:11.5px;color:var(--ink-3);display:flex;align-items:center;gap:4px;margin-top:2px}
+.team-recl-id .sub .mi{font-size:13px}
+.team-alert{color:var(--red);font-weight:600;display:inline-flex;align-items:center;gap:3px}
+.team-alert .mi{font-size:13px}
+.team-recl-metric{text-align:center;min-width:62px;flex:none}
+.team-recl-metric .v{font-weight:700;font-size:14px;line-height:1.1}
+.team-recl-metric .k{font-size:10px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
+.team-recl-actions{display:flex;gap:6px;margin-left:auto;flex:none}
+.team-recl-actions .btn.sm .mi{font-size:15px}
+.team-foot{display:flex;gap:8px;margin-top:13px;padding-top:13px;border-top:1px dashed var(--line)}
+.team-foot .btn.sm .mi{font-size:15px}
+
+/* ============================ INCIDENCIAS · tabla rica ============================
+   Celdas a juego con req-table-rich: caso con icono por prioridad, origen con avatar
+   (Líder / Inspector / Sistema), pills de prioridad y estado. */
+.inc-table tbody tr{cursor:pointer;transition:var(--ease)}
+.inc-table tbody tr:hover{background:var(--surface-2)}
+.inc-case{display:flex;align-items:center;gap:11px}
+.inc-case-ic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--pc) 14%,var(--surface));color:var(--pc);flex:none}
+.inc-case-ic .mi{font-size:19px}
+.inc-id{font-weight:700;font-size:13.5px;line-height:1.15}
+.inc-tipo{font-size:11.5px;color:var(--ink-3);margin-top:2px}
+.inc-origin{display:flex;align-items:center;gap:9px}
+.inc-origin-av{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:#fff;flex:none}
+.inc-origin-av.lider{background:linear-gradient(135deg,#FF7A00,#C53D1F)}
+.inc-origin-av.role{background:var(--surface-2);color:var(--ink-2)}
+.inc-origin-av.role.insp{background:rgba(59,125,221,.14);color:var(--blue)}
+.inc-origin-av.role.sys{background:rgba(123,44,191,.14);color:var(--purple)}
+.inc-origin-av .mi{font-size:16px}
+.inc-origin-txt .nm{font-weight:600;font-size:13px;line-height:1.15}
+.inc-origin-txt .rl{font-size:11px;color:var(--ink-3);margin-top:1px}
+.inc-prio{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12px;color:var(--pc)}
+.inc-prio .dot{width:7px;height:7px;border-radius:50%;background:var(--pc)}
+.inc-estado{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--ec);background:color-mix(in srgb,var(--ec) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--ec) 26%,var(--surface));padding:3px 10px;border-radius:999px;white-space:nowrap}
+.inc-estado .dot{width:6px;height:6px;border-radius:50%;background:var(--ec)}
+.inc-date{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--ink-3);white-space:nowrap}
+.inc-date .mi{font-size:14px}
+.inc-chev-td{text-align:right}
+.inc-chev{color:var(--ink-4)}
+/* Tablero por estado (kanban) */
+.inc-board{margin-top:4px}
+.inc-col-cards{display:flex;flex-direction:column;gap:8px}
+.inc-card{padding:13px}
+.inc-card-top{display:flex;align-items:center;gap:10px}
+.inc-card-id{flex:1;min-width:0}
+.inc-card-id .id{font-weight:700;font-size:13px;line-height:1.15}
+.inc-card-id .tp{font-size:11px;color:var(--ink-3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inc-card .inc-prio{flex:none;font-size:11px}
+.inc-card-org{padding:2px 0}
+.inc-card-org .inc-origin-av{width:26px;height:26px;border-radius:8px;font-size:10px}
+.inc-card-org .inc-origin-av .mi{font-size:14px}
+.inc-card-org .inc-origin-txt .nm{font-size:12px}
+.inc-card-org .inc-origin-txt .rl{font-size:10.5px}
+.inc-card-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:10px;border-top:1px solid var(--line)}
+/* Drawer: descripción + involucrados */
+.inc-desc{font-size:13px;color:var(--ink-2);line-height:1.55;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:14px}
+.inc-inv{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid var(--line)}
+.inc-inv:last-child{border-bottom:0}
+.inc-inv-av{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:#fff;flex:none}
+.inc-inv-av.lider{background:linear-gradient(135deg,#FF7A00,#C53D1F)}
+.inc-inv-av.recl{background:rgba(255,142,0,.14);color:var(--o-700)}
+.inc-inv-av.insp{background:rgba(59,125,221,.14);color:var(--blue)}
+.inc-inv-av.hotel{background:var(--surface-2);color:var(--ink-2)}
+.inc-inv-av.sys{background:rgba(123,44,191,.14);color:var(--purple)}
+.inc-inv-av .mi{font-size:17px}
+.inc-inv-txt{flex:1;min-width:0}
+.inc-inv-txt .nm{font-weight:600;font-size:13px}
+.inc-inv-txt .rl{font-size:11.5px;color:var(--ink-3);margin-top:1px}
+.inc-inv-rol{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-3);background:var(--surface-2);padding:3px 9px;border-radius:999px;flex:none}
+
+/* ============================ REPORTES ============================ */
+/* Reportes recibidos de los Líderes */
+.rp-rec{display:flex;align-items:center;gap:12px;padding:11px 10px;border-radius:10px;cursor:pointer;transition:var(--ease)}
+.rp-rec+.rp-rec{border-top:1px solid var(--line)}
+.rp-rec:hover{background:var(--surface-2)}
+.rp-rec.unread{background:rgba(255,142,0,.05)}
+.rp-rec-av{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#FF7A00,#C53D1F);color:#fff;font-weight:700;font-size:12.5px;display:flex;align-items:center;justify-content:center;flex:none}
+.rp-rec-txt{flex:1;min-width:0}
+.rp-rec-txt .t{font-weight:600;font-size:13.5px;display:flex;align-items:center;gap:6px}
+.rp-rec-txt .s{font-size:11.5px;color:var(--ink-3);margin-top:2px;display:flex;align-items:center;gap:3px}
+.rp-rec-txt .s .mi{font-size:13px;vertical-align:-2px}
+.rp-dot{width:7px;height:7px;border-radius:50%;background:var(--o-500);flex:none}
+.rp-rec-meta{display:flex;align-items:center;gap:8px;flex:none;color:var(--ink-4)}
+.rp-date{font-size:11.5px;color:var(--ink-3);white-space:nowrap}
+/* Formulario de generación */
+.rp-rf{font-size:10px;font-weight:700;letter-spacing:.04em;color:var(--o-700);background:var(--o-50);border:1px solid rgba(255,142,0,.25);padding:1px 7px;border-radius:5px;margin-left:6px;vertical-align:middle}
+.rp-opt{font-size:11px;font-weight:500;color:var(--ink-4)}
+.rp-chips{display:flex;flex-wrap:wrap;gap:6px}
+.rp-chip{font-size:12px;font-weight:600;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line);padding:4px 11px;border-radius:999px;cursor:pointer;transition:var(--ease)}
+.rp-chip:hover{border-color:var(--o-400)}
+.rp-chip.on{background:var(--o-500);border-color:var(--o-500);color:#fff}
+.rp-actions{display:flex;gap:10px;margin-top:10px}
+/* Envíos programados */
+.rp-prog{display:flex;align-items:center;gap:12px;padding:11px 0}
+.rp-prog+.rp-prog{border-top:1px solid var(--line)}
+.rp-prog-ic{width:36px;height:36px;border-radius:10px;background:rgba(59,125,221,.12);color:var(--blue);display:flex;align-items:center;justify-content:center;flex:none}
+.rp-prog-txt{flex:1;min-width:0}
+.rp-prog-txt .t{font-weight:600;font-size:13.5px}
+.rp-prog-txt .s{font-size:11.5px;color:var(--ink-3);margin-top:2px}
+.rp-prog-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--blue);background:rgba(59,125,221,.12);padding:3px 9px;border-radius:999px;flex:none}
+
+
+/* === MODO DARK (Manager) === */
+:root{ --ink-head:#533B17; }
+/* =============================================================
+   MODO DARK — portado del redesign (Oranje Platform)
+   Clase .dark-mode en <html>; override de variables + componentes.
+   Toggle en perfil/Preferencias; motor en script.js (setTheme).
+   ============================================================= */
+  /* DARK MODE ================================================ */
+  :root.dark-mode {
+    /* Neutrals (dark) - carefully tuned for readability and visual hierarchy */
+    --bg:#100E0B;           /* very dark warm background */
+    --surface:#1B1813;      /* dark card/surface base */
+    --surface-2:#232019;    /* slightly lighter surface for hover/depth */
+    --surface-3:#2E2A21;    /* tertiary surface for contrast */
+    --surface-raised:#332E25; /* elevated chip/active over a tinted track */
+    
+    /* Lines/borders - subtle but visible on dark */
+    --line:rgba(255,255,255,0.07);
+    --line-2:rgba(255,255,255,0.12);
+    
+    /* Text colors - optimized for dark mode contrast */
+    --ink:#F6F2EC;          /* primary text - warm white */
+    --ink-head:#F2EBE1;     /* warm heading/value text token */
+    --ink-2:#CDC3B6;        /* secondary text */
+    --ink-3:#9B8E7F;        /* tertiary text/placeholders */
+    --ink-4:#6E6356;        /* quaternary text/disabled */
+
+    /* Orange tints become translucent so active/hover states read on dark */
+    --o-50:rgba(255,142,0,0.13);
+    --o-100:rgba(255,142,0,0.18);
+    --o-200:rgba(255,142,0,0.30);
+    
+    /* Semantic colors remain same (red, green, blue, etc are unchanged) */
+    
+    /* Gradients for dark mode */
+    --grad-brand:linear-gradient(135deg,#FF8E00 0%,#F07A00 50%,#E06600 100%);
+    --grad-warm:linear-gradient(135deg,#FF8E00 0%,#F07A00 50%,#E06600 100%);
+    --grad-hero:linear-gradient(135deg,#1F1A14 0%,#2A2318 40%,#352A1F 100%);
+    --grad-soft:linear-gradient(135deg,#1F1A14 0%,#2A2318 100%);
+    --grad-purple:linear-gradient(135deg,#FF8E00 0%,#E06600 100%);
+    --grad-teal:linear-gradient(135deg,#FFB840 0%,#FF8E00 100%);
+    
+    /* Shadows - more subtle in dark mode */
+    --sh-sm:0 1px 2px rgba(0,0,0,0.3);
+    --sh-md:0 4px 16px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+    --sh-lg:0 16px 40px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.4);
+    --sh-orange:0 8px 24px rgba(255,142,0,0.25);
+  }
+
+  /* Smooth transitions between themes */
+  body, .sidebar, .header, .main, .content, .card, .kpi, .recl-card, .btn, 
+  input, select, textarea, .recl-search, .search-dd, .dd, .notif-item,
+  .recl-col, .recl-board, .tray-table, .qa, .mi-field, .recl-filter-grp,
+  .recl-fdd, .lang-seg, .theme-seg {
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  
+  /* Prevent flickering on svg and images */
+  svg, img {
+    transition: filter 0.25s ease;
+  }
+  /* Switch de tema — menú de usuario */
+  .theme-item{display:flex;align-items:center;gap:10px;cursor:default}
+  .theme-item .theme-item-lbl{flex:1}
+  .theme-seg{display:inline-flex;align-items:center;gap:2px;background:var(--surface-3);border:1px solid var(--line-2);border-radius:9px;padding:2px}
+  .theme-seg .theme-opt{
+    appearance:none;border:none;background:transparent;cursor:pointer;
+    font:600 11px/1 inherit;letter-spacing:.02em;color:var(--ink-3);
+    display:inline-flex;align-items:center;justify-content:center;gap:4px;
+    padding:5px 9px;border-radius:7px;transition:all 0.2s ease;
+    min-width:36px;user-select:none;
+  }
+  .theme-seg .theme-opt:hover{color:var(--ink-2);background:rgba(255,255,255,0.05)}
+  .theme-seg .theme-opt.active{
+    background:var(--o-500);
+    color:#FFFFFF;
+    box-shadow:0 2px 6px rgba(255,142,0,0.3);
+    font-weight:700;
+  }
+  :root.dark-mode .theme-seg .theme-opt.active{
+    background:var(--o-500);
+    color:#FFFFFF;
+    box-shadow:0 2px 6px rgba(255,142,0,0.4);
+  }
+  .theme-seg .theme-opt .mio{font-size:14px}
+  .theme-seg-lg .theme-opt{font-size:12.5px;padding:8px 16px;border-radius:8px}
+  .theme-seg-lg{border-radius:11px;padding:3px}
+
+  /* =====================================================================
+     DARK MODE — overrides puntuales para componentes con color fijo
+     (lo demás ya responde a las variables --surface/--ink/--o-50 …)
+  ===================================================================== */
+  :root.dark-mode{color-scheme:dark}
+  :root.dark-mode body{background:var(--bg)}
+
+  /* Chips / estados "elevados" que eran blanco sólido → superficie elevada */
+  :root.dark-mode .recl-segmented button.active,
+  :root.dark-mode .mn-date.active,
+  :root.dark-mode .recl-col-count,
+  :root.dark-mode .recl-col-add,
+  :root.dark-mode .req-item .count-sm,
+  :root.dark-mode .mn-readall,
+  :root.dark-mode .kpi-alert-row .ai.red,
+  :root.dark-mode .kpi-alert-row .ai.orange{
+    background:var(--surface-raised) !important;
+  }
+  :root.dark-mode .kpi-alert-row .ai.red .mi,
+  :root.dark-mode .kpi-alert-row .ai.orange .mi{color:#fff !important}
+  /* View-switcher inline: tab activo con tinte naranja claro para destacar en dark */
+  :root.dark-mode .recl-segmented-inline button.active,
+  :root.dark-mode #requi-views button.active{
+    background:rgba(255,142,0,.16) !important;
+    color:#FFB66B !important;
+    box-shadow:none !important;
+  }
+  :root.dark-mode .recl-segmented-inline button.active .mi,
+  :root.dark-mode #requi-views button.active .mi{color:#FFB66B !important}
+
+  /* En hover de la KPI (relleno naranja), los iconos de alerta vuelven a fondo
+     blanco translúcido — la regla dark base los dejaba en surface-raised. */
+  :root.dark-mode .kpi:not(.no-hov):hover .kpi-alert-row .ai.red,
+  :root.dark-mode .kpi:not(.no-hov):hover .kpi-alert-row .ai.orange{
+    background:rgba(255,255,255,.22) !important;color:#fff !important;box-shadow:none !important;
+  }
+
+  /* KPI "Alertas críticas" — fondo crema fijo → gradiente cálido translúcido */
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="o-100"]{
+    background:linear-gradient(135deg,rgba(255,142,0,.16),rgba(255,142,0,.04)) !important;
+    border-color:rgba(255,142,0,.28) !important;
+  }
+  :root.dark-mode .kpi.dash-st:not(:hover) .trend{background:rgba(255,142,0,.18) !important;color:#FFB66B !important}
+  :root.dark-mode .kpi.dash-st:not(:hover) .ki{background:rgba(255,142,0,.18) !important;color:#FFB66B !important}
+  /* Número de alerta (a-big) de la fila naranja: legible en dark */
+  :root.dark-mode .kpi-alert-row.v2 .a-big,
+  :root.dark-mode .kpi-alert-row.v2 .ai.orange ~ .a-big{color:var(--ink) !important}
+
+  /* KPIs del dashboard — aclarar texto/íconos sólidos por familia de color (dark) */
+  /* Verde (Requisiciones completadas) */
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="31,168,74"] .val,
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="31,168,74"] .ki{color:#5FCB85 !important;background:rgba(31,168,74,.18) !important}
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="31,168,74"] .val{background:none !important}
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="31,168,74"] .trend.up{color:#5FCB85 !important}
+  /* Morado (Colaboradores asignados) */
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="124,92,196"] .val,
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="124,92,196"] .ki,
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="124,92,196"] .trend,
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="124,92,196"] .dash-asg .mi,
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="124,92,196"] .dash-asg strong{color:#B49BE8 !important}
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="124,92,196"] .ki,
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="124,92,196"] .trend{background:rgba(124,92,196,.20) !important}
+  /* Ámbar (Pendientes de validar) */
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="230,180,34"] .val,
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="230,180,34"] .ki,
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="230,180,34"] .trend{color:#E8C067 !important}
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="230,180,34"] .ki,
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="230,180,34"] .trend{background:rgba(230,180,34,.20) !important}
+  /* Naranja (En proceso) — texto ya legible vía --o-600 */
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="255,142,0"] .val,
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="255,142,0"] .ki,
+  :root.dark-mode .kpi.dash-st:not(:hover)[style*="255,142,0"] .trend{color:#FFB66B !important}
+  /* Hovers sutiles sobre tarjetas/filas */
+  :root.dark-mode .pool-item:hover,
+  :root.dark-mode .req-item:hover,
+  :root.dark-mode .recl-table .t-act:hover{
+    background:var(--surface-2) !important;
+  }
+
+  /* Encabezados forzados a blanco limpio → superficie oscura */
+  :root.dark-mode .recl-drawer-head,
+  :root.dark-mode .entrev-dr-head{
+    background:var(--surface) !important;
+    border-bottom:1px solid var(--line) !important;
+    color:var(--ink) !important;
+  }
+  :root.dark-mode .recl-drawer-head .recl-drawer-id,
+  :root.dark-mode .entrev-dr-head .doc,
+  :root.dark-mode .entrev-dr-head h2,
+  :root.dark-mode .recl-drawer-head h2{color:var(--ink) !important}
+
+  /* Botón "3 puntos" (más opciones) del head — era blanco fijo */
+  :root.dark-mode .recl-drawer-more{
+    background:var(--surface-2) !important;
+    border-color:var(--line) !important;
+    color:var(--ink-2) !important;
+  }
+  :root.dark-mode .recl-drawer-more:hover,
+  :root.dark-mode .recl-drawer-more.open{
+    background:var(--surface-3) !important;
+    border-color:rgba(255,142,0,.35) !important;
+    color:var(--ink) !important;
+  }
+
+  /* Fila de tabs del drawer — era #fff fijo */
+  :root.dark-mode .recl-drawer-tabs{
+    background:var(--surface) !important;
+    border-bottom-color:var(--line) !important;
+  }
+  :root.dark-mode .recl-drawer-tab{color:var(--ink-3) !important}
+  :root.dark-mode .recl-drawer-tab:hover{color:var(--ink) !important}
+  :root.dark-mode .recl-drawer-tab.active{color:var(--o-600) !important;border-bottom-color:var(--o-500) !important}
+  :root.dark-mode .recl-drawer-tabs-arrow{
+    color:var(--o-600) !important;
+    background:linear-gradient(90deg,rgba(27,24,19,0) 0%,var(--surface) 58%) !important;
+  }
+  :root.dark-mode .recl-drawer-tabs-arrow:hover{color:var(--o-500) !important}
+
+  /* Contenido de tabs — grid "Datos del candidato": filas crema → superficie oscura */
+  :root.dark-mode .entrev-detail-grid{background:var(--surface) !important;border-color:var(--line) !important}
+  :root.dark-mode .entrev-detail-row{
+    background:var(--surface-2) !important;
+    border-color:var(--line) !important;
+  }
+  :root.dark-mode .entrev-detail-row:hover{
+    background:var(--surface-3) !important;
+    border-color:rgba(255,142,0,.28) !important;
+  }
+  :root.dark-mode .entrev-detail-row .ic[style*="background:var(--surface-3)"],
+  :root.dark-mode .entrev-detail-row[data-c="pos"] .ic,
+  :root.dark-mode .entrev-detail-row[data-c="zone"] .ic,
+  :root.dark-mode .entrev-detail-row[data-c="phone"] .ic,
+  :root.dark-mode .entrev-detail-row[data-c="hotel"] .ic,
+  :root.dark-mode .entrev-detail-row[data-c="transp"] .ic{background:var(--surface-raised) !important;color:var(--ink) !important}
+
+  /* Cuerpos crema de drawers/modales */
+  :root.dark-mode .recl-drawer-body{background:var(--bg) !important}
+  :root.dark-mode .entrev-dr-body{background:var(--surface-2) !important}
+  /* Entrevistas: timeline interno, footer e icono de estado eran #fff / near-white */
+  :root.dark-mode .entrev-timeline{background:var(--surface) !important;border-color:var(--line) !important}
+  :root.dark-mode .entrev-progress-card .entrev-timeline{background:transparent !important;border:none !important}
+  :root.dark-mode .entrev-dr-foot{background:var(--surface) !important;border-top-color:var(--line) !important}
+  :root.dark-mode .entrev-status-ic{
+    background:color-mix(in oklab, var(--st-color, var(--o-500)) 22%, transparent) !important;
+  }
+  /* Columna vacía del tablero (Pool / Requisiciones) — era rgba(255,255,255,.4) claro */
+  :root.dark-mode .recl-col-empty{background:rgba(255,255,255,.03) !important}
+
+  /* Modal "Cobertura de vacantes" / info de semáforo — filas crema → superficie oscura */
+  :root.dark-mode .req-sem-info-row{background:var(--surface-2) !important;border-color:var(--line) !important}
+
+  /* Bloque "Colaboradores sin asignar" (drawer Requisiciones). Las cards tienen
+     un override directo a blanco (#fff !important) — lo revertimos solo en dark. */
+  :root.dark-mode #requi-drawer .req-coll-card{background:var(--surface-2) !important;border-color:var(--line) !important}
+  :root.dark-mode #requi-drawer .req-coll-card.empty{background:var(--surface-3) !important}
+  :root.dark-mode .req-vac-merged .req-merged-h .ttl,
+  :root.dark-mode .req-vac-merged .req-merged-h .ic .mi,
+  :root.dark-mode .req-vac-merged .req-merged-h .cnt{color:#F0A0A0 !important}
+  :root.dark-mode .req-vac-merged .req-coll-card .req-coll-ic .mi{color:#F0A0A0 !important}
+
+  /* Resumen del Schedule (drawer Requisiciones) — cabecera de variante #FAFAFA,
+     alerta azul con texto oscuro, y pos-tag muy apagado. */
+  :root.dark-mode .rvar-card-h{background:var(--surface-2) !important;border-bottom-color:var(--line) !important}
+  :root.dark-mode .rsd-alert{background:rgba(63,118,255,.12) !important;border-color:rgba(127,156,240,.30) !important;color:#C2D2F7 !important}
+  :root.dark-mode .rsd-alert-body strong{color:#9FB6F5 !important}
+  :root.dark-mode .rsd-alert-sub{color:#A9B6D6 !important}
+  :root.dark-mode .rsd-alert .mi{color:#7E9CF0 !important}
+  :root.dark-mode #requi-drawer .req-coll-row .pos-tag{color:var(--ink) !important}
+
+  /* Menú "Más opciones" del drawer (Reportar problema) — fondo y texto en dark.
+     La regla #requi-drawer fuerza el texto a un gris claro fijo con !important; aquí
+     ganamos con mayor especificidad. */
+  :root.dark-mode .req-drawer-more-menu,
+  :root.dark-mode .recl-drawer-more-menu{background:var(--surface-2) !important;border-color:var(--line) !important}
+  :root.dark-mode #requi-drawer .req-drawer-more-menu > .req-drawer-more-item,
+  :root.dark-mode .req-drawer-more-menu .req-drawer-more-item,
+  :root.dark-mode .recl-drawer-more-menu .req-drawer-more-item{color:var(--ink) !important}
+  :root.dark-mode .req-drawer-more-menu .req-drawer-more-item:hover,
+  :root.dark-mode .recl-drawer-more-menu .req-drawer-more-item:hover{background:var(--surface-3) !important}
+
+  /* Resumen del Schedule simplificado (.req-sch2) — celdas de día con fondo claro fijo */
+  :root.dark-mode .req-sch2{background:var(--surface-2) !important;border-color:var(--line) !important}
+  :root.dark-mode .req-sch2-cell{background:var(--surface-3) !important;border-color:var(--line) !important}
+  :root.dark-mode .req-sch2-cell.off{background:var(--surface) !important;border-color:var(--line) !important}
+  :root.dark-mode .req-sch2-cell.off .d,
+  :root.dark-mode .req-sch2-cell .chip.off{color:var(--ink-3) !important}
+  :root.dark-mode .req-sch2-legend{background:var(--surface-2) !important;border-color:var(--line) !important}
+
+  /* Modal Documentación migratoria (retención) — cabecera blanca + textos rojos oscuros */
+  :root.dark-mode .doc-ret-modal-head{background:linear-gradient(180deg,var(--surface-2),var(--surface)) !important}
+  :root.dark-mode .doc-ret-warn-box{background:rgba(225,25,25,.12) !important;border-color:rgba(225,25,25,.30) !important}
+  :root.dark-mode .doc-ret-warn-h{color:#F0A0A0 !important}
+  :root.dark-mode .doc-ret-warn-p{color:#E89A9A !important}
+  :root.dark-mode .doc-ret-warn-p strong{color:#F4B4B4 !important}
+
+  /* Modal "Etiquetas de los tipos de requisiciones" — filas crema + texto oscuro */
+  :root.dark-mode .req-ctx-info-row{background:var(--surface-2) !important;border-color:var(--line) !important}
+  :root.dark-mode .req-ctx-info-row .txt,
+  :root.dark-mode .req-ctx-info-row .txt strong{color:var(--ink) !important}
+  :root.dark-mode .req-sem-info-row .txt,
+  :root.dark-mode .req-sem-info-row .txt strong{color:var(--ink) !important}
+
+  /* Tags de rechazo (card Entrevistas) — texto/icono oscuros → legibles en dark */
+  :root.dark-mode .entrev-tag.rej-aband{
+    background:rgba(255,255,255,.08) !important;
+    border-color:rgba(255,255,255,.18) !important;
+    color:var(--ink-2) !important;
+  }
+  :root.dark-mode .entrev-tag.rej-aband .mi{color:var(--ink-2) !important}
+  :root.dark-mode .entrev-tag.rej-normal{
+    background:rgba(217,168,119,.14) !important;
+    border-color:rgba(217,168,119,.32) !important;
+    color:#D9A877 !important;
+  }
+  :root.dark-mode .entrev-tag.rej-normal .mi{color:#D9A877 !important}
+
+  /* Card de Requisición seleccionada (drawer abierto) — fondo crema fijo */
+  :root.dark-mode .recl-card.requi.is-selected{
+    background:linear-gradient(180deg, rgba(255,142,0,.12), rgba(255,142,0,.04)) !important;
+  }
+  :root.dark-mode .recl-modal-head{background:linear-gradient(180deg,var(--surface-2),var(--surface)) !important}
+  :root.dark-mode .recl-modal-body{background:var(--surface-2) !important}
+
+  /* Modal Nuevo colaborador · sección "Origen del candidato" — gradiente crema fijo */
+  :root.dark-mode .recl-origen-section{
+    background:linear-gradient(180deg, rgba(255,142,0,.10), rgba(255,142,0,.03)) !important;
+    border-color:rgba(255,142,0,.22) !important;
+  }
+  :root.dark-mode .recl-origen-sub{color:var(--ink-2) !important}
+
+  /* Toast — base usa var(--ink) como fondo; en dark eso se vuelve casi blanco */
+  :root.dark-mode .toast{
+    background:var(--surface-raised) !important;
+    color:var(--ink) !important;
+    border:1px solid var(--line-2) !important;
+  }
+
+  /* Borde crema de las KPI */
+  :root.dark-mode .kpi{border-color:var(--line) !important}
+
+  /* Tints crema fijos → naranja translúcido */
+  :root.dark-mode .mi-side .mi-nav.active{background:rgba(255,142,0,.16)}
+  :root.dark-mode .mi-metric .mm-ic{background:rgba(255,142,0,.16)}
+  :root.dark-mode .mn-item.unread:hover{background:rgba(255,142,0,.22) !important;border-color:rgba(255,142,0,.45) !important}
+
+  /* Botones de cierre sobre encabezados ahora oscuros */
+  :root.dark-mode .recl-drawer-close,
+  :root.dark-mode .entrev-dr-close{
+    background:var(--surface-2) !important;color:var(--ink-2) !important;border-color:var(--line) !important;
+  }
+
+  /* Semáforo "blanco" sigue siendo una pastilla clara legible */
+  :root.dark-mode .status-blanco{
+    background:#E8E2D9 !important;color:#1a1108 !important;border-color:rgba(255,255,255,.22) !important;
+  }
+
+  /* Áreas/paneles con rgb() claro fijo → fondo oscuro */
+  :root.dark-mode .content{background:var(--bg) !important}
+  :root.dark-mode .mi-content{background:var(--bg) !important}
+  :root.dark-mode .recl-col,
+  :root.dark-mode .recl-col-head{background:var(--surface-2) !important}
+  :root.dark-mode .recl-table thead th,
+  :root.dark-mode .recl-table th{background:var(--surface-2) !important}
+  :root.dark-mode .recl-drawer-body{background:var(--bg) !important}
+  :root.dark-mode .req-drawer-pane{background:var(--bg) !important}
+  :root.dark-mode .req-pos-body,
+  :root.dark-mode .req-fact{background:var(--surface-2) !important}
+
+  /* Pane "Vacantes por asignar" (Asignación) — refinar dark mode de los chips
+     que aún usaban tintes/colores pensados para fondo claro. */
+  :root.dark-mode .req-pos-ic{background:rgba(255,142,0,.18) !important;color:#FFB66B !important}
+  :root.dark-mode .req-pos-h{background:linear-gradient(180deg, var(--surface-2), var(--surface)) !important}
+  :root.dark-mode .req-modal-h{background:linear-gradient(180deg, var(--surface-2), var(--surface)) !important}
+
+  /* Icono push_pin (fijo/actual) — amarillo en dark, en toda la plataforma */
+  :root.dark-mode .mi-pin{color:#F2CD5C !important}
+
+  /* Icono de nota "warn" (.dr-asg-note.warn) — ámbar oscuro #A37016 ilegible en dark → naranja */
+  :root.dark-mode .dr-asg-note.warn .mi{color:#FFB66B !important}
+
+  /* Nota sensible (modal Gestión) — texto dorado oscuro ilegible en dark */
+  :root.dark-mode .req-gest-modal-body .sensitive-note{background:rgba(255,193,40,.12) !important;border-color:rgba(255,193,40,.32) !important;color:var(--ink) !important}
+  :root.dark-mode .req-gest-modal-body .sensitive-note strong{color:#F2CD5C !important}
+  :root.dark-mode .req-gest-modal-body .sensitive-note .mi{color:#E8C067 !important}
+
+  /* Pane "Gestión de colaboradores" — fondos/degradados claros fijos */
+  :root.dark-mode .req-gest-intro{background:linear-gradient(180deg,rgba(255,142,0,.12),rgba(255,142,0,.05)) !important;border-color:rgba(255,142,0,.28) !important}
+  :root.dark-mode .req-gest-intro .mi{color:#FFB66B !important}
+  :root.dark-mode .req-gest-pos-h{background:linear-gradient(180deg, var(--surface-2), var(--surface)) !important}
+  :root.dark-mode .req-gest-pos-h:hover{background:linear-gradient(180deg, var(--surface-3), var(--surface-2)) !important}
+  :root.dark-mode .req-gest-pos-ic{background:rgba(255,142,0,.18) !important;color:#FFB66B !important}
+  :root.dark-mode .req-gest-pos-ic .mi{color:#FFB66B !important}
+
+  /* Blacklist — drawer de perfil (footer + cuerpo claros fijos) */
+  :root.dark-mode .bl-prof-drawer .recl-drawer-body{background:var(--bg) !important}
+  :root.dark-mode .bl-prof-foot{background:var(--surface) !important;border-top-color:var(--line) !important}
+  :root.dark-mode .bl-prof-foot-btn--veto{background:var(--surface-3) !important;color:var(--ink) !important;box-shadow:0 8px 22px rgba(0,0,0,.45) !important}
+  :root.dark-mode .bl-prof-foot-btn--veto:hover{box-shadow:0 12px 28px rgba(0,0,0,.55) !important}
+
+  /* Blacklist — modal "Agregar a blacklist" (shell claro/crema fijo) */
+  :root.dark-mode .bl-modal{background:var(--surface) !important}
+  :root.dark-mode .bl-modal-h{background:linear-gradient(180deg, var(--surface-2), var(--surface)) !important;border-bottom-color:var(--line) !important}
+  :root.dark-mode .bl-modal-h .ttl{color:var(--ink) !important}
+  :root.dark-mode .bl-modal-h .x{background:var(--surface-3) !important;color:var(--ink-2) !important}
+  :root.dark-mode .bl-modal-h .x:hover{background:rgba(255,255,255,.10) !important;color:var(--ink) !important}
+  :root.dark-mode .bl-modal-body{background:var(--bg) !important}
+  :root.dark-mode .bl-modal-foot{background:var(--surface) !important;border-top-color:var(--line) !important}
+  :root.dark-mode .bl-modal-btn.cancel{background:var(--surface-2) !important;border-color:var(--line) !important;color:var(--ink-2) !important}
+  :root.dark-mode .bl-modal-btn.cancel:hover{background:var(--surface-3) !important}
+  :root.dark-mode .bl-note,
+  :root.dark-mode .bl-colab-input,
+  :root.dark-mode .bl-pool-search input{background:var(--surface-2) !important;border-color:var(--line) !important;color:var(--ink) !important}
+  :root.dark-mode .bl-pool-chip{background:var(--surface-2) !important;border-color:var(--line) !important;color:var(--ink-2) !important}
+  :root.dark-mode .bl-pool-list .req-pool-row{background:var(--surface-2) !important}
+
+  /* Blacklist — menús de filtro (Zona/Motivo/Vetado por/Periodo) con fondo #fff inline */
+  :root.dark-mode .recl-filter-dd{background:var(--surface) !important;border-color:var(--line) !important}
+  :root.dark-mode .bl-zona-opt:hover{background:rgba(255,142,0,.08) !important}
+  /* Tarjeta de justificación (detalle del veto) — fondo #fff fijo */
+  :root.dark-mode .bl-just-card{background:var(--surface-2) !important;border-color:var(--line) !important}
+  :root.dark-mode .req-pos-cov.empty{background:rgba(225,90,90,.18) !important;color:#EE9292 !important}
+  :root.dark-mode .req-pos-cov.partial{background:rgba(255,193,40,.18) !important;color:#E8C067 !important}
+  :root.dark-mode .req-pos-cov.full{background:rgba(31,168,74,.18) !important;color:#5FCB85 !important}
+  :root.dark-mode .req-pos-multi{background:linear-gradient(180deg,rgba(255,142,0,.14),rgba(255,142,0,.07)) !important;border-color:rgba(255,142,0,.30) !important;color:var(--ink) !important}
+  :root.dark-mode .req-pos-multi > .mi{background:rgba(255,142,0,.22) !important;color:#FFB66B !important}
+  :root.dark-mode .req-pos-multi b,
+  :root.dark-mode .req-pos-multi strong{color:#FFB66B !important}
+  :root.dark-mode .eng-pill.eng-asg,
+  :root.dark-mode .eng-pill.eng-asg.eng-basic,
+  :root.dark-mode .eng-pill.eng-asg.eng-inter,
+  :root.dark-mode .eng-pill.eng-asg.eng-adv{background:rgba(255,255,255,.07) !important;color:var(--ink-2) !important}
+  :root.dark-mode .rvar-pill{background:rgba(255,255,255,.06) !important;color:var(--ink-2) !important}
+  :root.dark-mode .rvar-pill.rvar-exp,
+  :root.dark-mode .rvar-pill.rvar-exp .mi{background:rgba(63,184,230,.16) !important;color:#7CCBEC !important}
+  :root.dark-mode .rvar-pill.rvar-days{background:rgba(31,168,74,.18) !important;color:#5FCB85 !important}
+  :root.dark-mode .rvar-pill.rvar-total{background:rgba(255,193,40,.18) !important;color:#E8C067 !important}
+
+  /* Datos de emergencia — nota informativa y filas crema → superficie oscura */
+  :root.dark-mode .entrev-emerg-card{background:var(--surface) !important;border-color:var(--line) !important}
+  :root.dark-mode .entrev-emerg-note{
+    background:var(--surface-2) !important;
+    border-color:var(--line) !important;
+    color:var(--ink-2) !important;
+  }
+  :root.dark-mode .entrev-emerg-row{
+    background:var(--surface-2) !important;
+    border-color:var(--line) !important;
+  }
+
+  /* Iconos de historial (h-ic) — gradiente peach claro → naranja translúcido */
+  :root.dark-mode .dr-history-row .h-ic,
+  :root.dark-mode .dr-hist-acc .h-ic{
+    background:linear-gradient(135deg,rgba(255,142,0,.22),rgba(255,142,0,.12)) !important;
+    color:#FFB66B !important;
+  }
+  :root.dark-mode .dr-history-row.asg-temp .h-ic,
+  :root.dark-mode .dr-hist-acc.asg-temp .h-ic{
+    background:linear-gradient(135deg,rgba(217,119,87,.28),rgba(217,119,87,.16)) !important;
+    color:#E69273 !important;
+  }
+
+  /* Tabla de schedule (rsd) — encabezado/filas/nota con valores claros fijos */
+  :root.dark-mode .rsd-tbl-head{background:rgba(255,142,0,.10) !important;color:var(--ink-3) !important}
+  :root.dark-mode .rsd-tbl-row{background:var(--surface) !important;border-top-color:var(--line) !important}
+  :root.dark-mode .rsd-tbl-row.off{background:var(--surface-2) !important}
+  :root.dark-mode .rsd-tbl-row.off .rsd-day{color:var(--ink-4) !important}
+  :root.dark-mode .entrev-sched-note{
+    background:rgba(46,134,193,.14) !important;
+    border-color:rgba(46,134,193,.30) !important;
+    color:#9CC7E8 !important;
+  }
+  :root.dark-mode .entrev-sched-legend{background:var(--surface-2) !important;border-color:var(--line) !important}
+
+  /* Notas de schedule flexible (info azul / noflex / opensched roja / vol-self ámbar) */
+  :root.dark-mode .entrev-sched-flex-note{
+    background:rgba(46,134,193,.14) !important;
+    border-color:rgba(46,134,193,.30) !important;
+    color:#9CC7E8 !important;
+  }
+  :root.dark-mode .entrev-sched-flex-note .mi{color:#6FB0DE !important}
+  :root.dark-mode .entrev-sched-flex-note.noflex,
+  :root.dark-mode .entrev-sched-flex-note.opensched{
+    background:rgba(225,25,25,.12) !important;
+    border-color:rgba(225,25,25,.30) !important;
+    color:#E89A9A !important;
+  }
+  :root.dark-mode .entrev-sched-flex-note.noflex .mi,
+  :root.dark-mode .entrev-sched-flex-note.opensched .mi{color:#E87070 !important}
+  :root.dark-mode .entrev-sched-flex-note.vol-self-note{
+    background:linear-gradient(135deg,rgba(255,213,0,.10),rgba(255,213,0,.18)) !important;
+    border-color:rgba(255,213,0,.35) !important;
+    color:#E8C067 !important;
+  }
+  :root.dark-mode .entrev-sched-flex-note.vol-self-note strong{color:#F0D080 !important}
+  :root.dark-mode .entrev-sched-flex-note.vol-self-note > .mi{color:#5FCB85 !important}
+
+  /* Banner morado (Historial) — negrita e icono morado oscuro → legibles en dark */
+  :root.dark-mode .dr-mor-ghost strong{color:var(--ink) !important}
+  :root.dark-mode .dr-mor-ghost > .mi{color:#B49BE8 !important}
+
+  /* Adjuntar archivos (entrev-rej-attach) — título café oscuro → blanco */
+  :root.dark-mode .entrev-rej-attach .t{color:var(--ink) !important}
+
+  /* Hover de filas de documentos — fondo crema → naranja translúcido */
+  :root.dark-mode .entrev-doc-row:hover{
+    background:rgba(255,142,0,.08) !important;
+    border-color:rgba(255,142,0,.22) !important;
+  }
+  :root.dark-mode .entrev-sched-note .mi{color:#6FB0DE !important}
+
+  /* Nota informativa de reporte/Soporte — texto y negritas oscuras → blancas */
+  :root.dark-mode .entrev-rej-intro-note{
+    background:rgba(255,142,0,.08) !important;
+    border-color:rgba(255,142,0,.22) !important;
+    color:var(--ink) !important;
+  }
+  :root.dark-mode .entrev-rej-intro-note strong{color:var(--ink) !important}
+  :root.dark-mode .entrev-rej-intro-note .mi{color:#FFB66B !important}
+
+  /* Cards de opción (recl-mig-opt) y botones de prioridad — estado activo era #fff fijo */
+  :root.dark-mode .recl-mig-opt.checked{
+    background:linear-gradient(180deg, rgba(255,142,0,.16), rgba(255,142,0,.05)) !important;
+    box-shadow:0 0 0 3px rgba(255,142,0,.14) !important;
+  }
+  :root.dark-mode .sop-prio-btn.selected{
+    background:linear-gradient(180deg, rgba(255,142,0,.16), rgba(255,142,0,.05)) !important;
+    color:var(--ink) !important;
+  }
+
+  /* Tints crema de hover/seleccción → naranja translúcido */
+  :root.dark-mode .entrev-detail-row:hover,
+  :root.dark-mode .entrev-emerg-row:hover,
+  :root.dark-mode .recl-origen-opt:hover,
+  :root.dark-mode .recl-mig-opt:hover,
+  :root.dark-mode .req-table-rich tbody tr:hover,
+  :root.dark-mode .req-gest-row:hover{background:rgba(255,142,0,.08) !important}
+  :root.dark-mode .req-pool-row.selected{background:rgba(255,142,0,.16) !important}
+  :root.dark-mode .req-sem-pill,
+  :root.dark-mode .req-fact-bar-wrap{background:var(--surface-2)}
+
+  /* Iconos crema del sidebar / cerrar */
+  :root.dark-mode .sb-logout-ic{background:rgba(255,142,0,.16) !important}
+  :root.dark-mode .sb-logout-block:hover .sb-logout-ic,
+  :root.dark-mode .mi-close:hover{background:rgba(255,142,0,.24) !important}
+
+  /* Banda informativa crema en Requisiciones */
+  :root.dark-mode .req-sem-strip{background:rgba(255,142,0,.10) !important}
+
+  /* Scrollbars en dark */
+  :root.dark-mode ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14)}
+  :root.dark-mode ::-webkit-scrollbar-track{background:transparent}
+
+  /* Mi información — banner y zona con gradiente crema fijo */
+  :root.dark-mode .mi-avatar-row{
+    background:linear-gradient(135deg,#2A2018 0%,#34271A 55%,#3E2C16 100%) !important;
+    border:1px solid var(--line);
+  }
+  :root.dark-mode .mi-zone-card{
+    background:linear-gradient(135deg,rgba(255,142,0,.16),rgba(255,142,0,.06)) !important;
+    border-color:var(--o-200) !important;
+  }
+  :root.dark-mode .mi-hero .sub{color:var(--ink-3)}
+
+  /* Tabla: copys neutros (zona, modalidad) al mismo tono que Inglés */
+  :root.dark-mode .recl-table tbody td{color:var(--ink-2)}
+  :root.dark-mode .recl-table .t-name{color:var(--ink) !important}
+
+  /* Tag de ROL/posición legible en tablero, tarjeta y tabla */
+  :root.dark-mode .meta-pill.pos,
+  :root.dark-mode .t-pill.t-pos,
+  :root.dark-mode .req-tbl-pills .meta-pill.pos{
+    color:var(--ink-2) !important;
+    background:rgba(255,255,255,.07) !important;
+  }
+
+  /* Tags de color (zona, modalidad, contrato, inglés) — texto más claro y legible en dark */
+  :root.dark-mode .meta-pill.zone{background:rgba(63,184,230,.16) !important;color:#7CCBEC !important}
+  :root.dark-mode .meta-pill.mod{background:rgba(255,255,255,.07) !important;color:var(--ink-2) !important}
+  :root.dark-mode .meta-pill.modw[data-m="tc"],
+  :root.dark-mode .meta-pill.eng{background:rgba(31,168,74,.18) !important;color:#5FCB85 !important}
+  :root.dark-mode .meta-pill.modw[data-m="mt"]{background:rgba(255,142,0,.18) !important;color:#FFB66B !important}
+  :root.dark-mode .meta-pill.modw[data-m="ph"]{background:rgba(255,193,40,.18) !important;color:#E8C067 !important}
+  :root.dark-mode .meta-pill.modw[data-m="mix"]{background:rgba(232,62,140,.18) !important;color:#EE8FBC !important}
+  :root.dark-mode .meta-pill.modw[data-m="ss"]{background:rgba(225,90,90,.18) !important;color:#EE9292 !important}
+  :root.dark-mode .meta-pill.ctr[data-c="fijo"]{background:rgba(20,160,155,.18) !important;color:#5FCFC9 !important}
+  :root.dark-mode .meta-pill.ctr[data-c="temp"]{background:rgba(217,119,87,.20) !important;color:#E0A085 !important}
+  :root.dark-mode .meta-pill.ctr[data-c="mix"]{background:rgba(190,140,90,.18) !important;color:#D6AF82 !important}
+  :root.dark-mode .meta-pill.mig-pill{background:rgba(245,158,11,.18) !important;color:#E8B45F !important}
+  /* y la columna Zona en la tabla (texto plano) */
+  :root.dark-mode .t-pill.t-pill-prot{background:rgba(255,255,255,.08) !important;color:var(--ink-2) !important}
+
+  /* Pills de NIVEL de idioma (Inglés/Francés: Básico/Avanzado…) más claros */
+  :root.dark-mode .recl-eng .eng-lvl[data-lvl="1"]{background:rgba(230,170,40,.18) !important;color:#E8C067 !important}
+  :root.dark-mode .recl-eng .eng-lvl[data-lvl="2"]{background:rgba(255,142,0,.18) !important;color:#FFB66B !important}
+  :root.dark-mode .recl-eng .eng-lvl[data-lvl="3"]{background:rgba(31,168,74,.20) !important;color:#5FCB85 !important}
+  :root.dark-mode .recl-eng .eng-lvl[data-lvl="4"]{background:rgba(13,168,150,.20) !important;color:#4FCFB8 !important}
+  :root.dark-mode .recl-eng .eng-lead{color:var(--ink-2) !important}
+
+  /* Pills de la fila de zona (mapa lateral): rol, modalidad e idioma — legibles en dark */
+  :root.dark-mode .recl-zone-row .zm-pill{background:rgba(255,255,255,.07) !important;color:var(--ink-2) !important}
+  :root.dark-mode .recl-zone-row .zm-pill.zm-mod[data-m="tc"]{background:rgba(31,168,74,.18) !important;color:#5FCB85 !important}
+  :root.dark-mode .recl-zone-row .zm-pill.zm-mod[data-m="mt"]{background:rgba(255,142,0,.18) !important;color:#FFB66B !important}
+  :root.dark-mode .recl-zone-row .zm-pill.zm-mod[data-m="ph"]{background:rgba(255,193,40,.18) !important;color:#E8C067 !important}
+  :root.dark-mode .recl-zone-row .zm-pill.zm-mod[data-m="ss"]{background:rgba(225,90,90,.18) !important;color:#EE9292 !important}
+  :root.dark-mode .recl-zone-row .zm-pill.zm-mod[data-m="mix"]{background:rgba(232,62,140,.18) !important;color:#EE8FBC !important}
+  :root.dark-mode .recl-zone-row .zm-pill.zm-eng{background:rgba(63,184,230,.16) !important;color:#7CCBEC !important}
+
+
+/* =========================================================================
+   MODO DARK — parches propios del Líder (superficies/textos hardcodeados
+   no cubiertos por los overrides del redesign)
+   ========================================================================= */
+/* Pantalla "Mi información" */
+:root.dark-mode .mi-page-inner{background:var(--surface) !important;border-color:var(--line) !important}
+:root.dark-mode .mi-side{background:var(--surface) !important;border-right-color:var(--line) !important}
+:root.dark-mode .mi-field .fi-ic{background:var(--surface-3) !important;border-color:var(--line) !important}
+:root.dark-mode .mi-field .fi-val{color:var(--ink) !important}
+:root.dark-mode .mi-hero h2{color:#FFB66B !important}
+:root.dark-mode .mi-side .mi-nav{color:var(--ink-2) !important}
+:root.dark-mode .mi-side .mi-nav.active{color:#FFB66B !important}
+:root.dark-mode .mi-side .mi-nav.active .mi{color:#FFB66B !important}
+
+/* Mi información — textos del banner/secciones (eran café/naranja oscuro) */
+:root.dark-mode .mi-name-block h3{color:var(--ink) !important}
+:root.dark-mode .mi-name-block .role{color:#FFB66B !important}
+:root.dark-mode .mi-section h4{color:#FFB66B !important}
+
+/* KPI con gradiente/ícono crema hardcodeado inline (p.ej. Mi Grupo "Cubiertas · pendientes") */
+:root.dark-mode .kpi[style*="255,237,213"]{background:linear-gradient(135deg,rgba(255,142,0,.16),rgba(255,142,0,.05)) !important;border-color:var(--o-200) !important}
+:root.dark-mode .kpi[style*="255,237,213"] .ki[style*="FFE4C7"]{background:rgba(255,142,0,.22) !important;color:#FFB66B !important}
+
+/* Toggle de idioma: pastilla activa en naranja en dark (coherente con Tema; en claro queda blanca) */
+:root.dark-mode .lang-opt.active{background:var(--o-500) !important;color:#fff !important;box-shadow:0 2px 6px rgba(255,142,0,.4) !important}
+
+/* ===== Gradientes calidos propios del Lider que no cubria el redesign ===== */
+:root.dark-mode .qa-hero{background:linear-gradient(90deg, var(--surface-2) 0%, rgba(255,142,0,.16) 100%) !important;border-color:rgba(255,168,60,.28) !important}
+:root.dark-mode .qa-hero::after{background:radial-gradient(circle,rgba(255,142,0,.22),transparent 70%) !important}
+:root.dark-mode .qa-hero .lbl{color:#FFB66B !important}
+:root.dark-mode .qa-hero .v{color:#FFB66B !important}
+:root.dark-mode .recl-zone-ic,
+:root.dark-mode .dr-history-row .h-ic{background:rgba(255,142,0,.18) !important;color:#FFB66B !important}
+:root.dark-mode .req-pos-sum-status{background:linear-gradient(90deg, rgba(255,142,0,.12), var(--surface)) !important}
+:root.dark-mode .recl-stat:hover{background:linear-gradient(180deg, var(--surface-2), var(--surface-3)) !important}
+:root.dark-mode .recl-drawer-head{color:var(--ink) !important}
+
+/* ===== Pills/chips claros propios del Manager (no cubiertos por el redesign) ===== */
+:root.dark-mode .pill.crit,
+:root.dark-mode .team-meta .meta-pill.team-esc{background:rgba(225,25,25,.16) !important;color:#EE9292 !important}
+:root.dark-mode .pill.media{background:rgba(230,180,34,.18) !important;color:#E8C067 !important}
+:root.dark-mode .pill.blue{background:rgba(63,125,221,.16) !important;color:#8FB4F0 !important}
+:root.dark-mode .pill.purple{background:rgba(123,44,191,.22) !important;color:#C9A6F0 !important}
+:root.dark-mode .pill.alta{color:#FFB66B !important}
+/* bl-sum-chip activo (blacklist) en dark */
+:root.dark-mode .bl-sum-chip.active{background:var(--surface-3) !important;border-color:var(--o-400) !important;color:var(--ink) !important}
+
+/* ===== inputs nativos + pipeline en dark (Manager) ===== */
+:root.dark-mode .inp, :root.dark-mode .sel,
+:root.dark-mode input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]),
+:root.dark-mode select, :root.dark-mode textarea{background:var(--surface-2) !important;color:var(--ink) !important;border-color:var(--line) !important}
+:root.dark-mode .inp::placeholder, :root.dark-mode textarea::placeholder{color:var(--ink-3) !important}
+:root.dark-mode .pipe .stage{background:linear-gradient(150deg, var(--surface-3), var(--surface-2)) !important}
+:root.dark-mode .pipe .stage .pi{background:var(--surface-raised) !important}
+/* chip semaforo blanco (inline) en dark */
+:root.dark-mode .st-chip[style*="background:#fff"]{background:#E8E2D9 !important;color:#1a1108 !important}
+/* toggle de formato rp-fmt en dark */
+:root.dark-mode .rp-fmt .tab{background:var(--surface-2) !important;color:var(--ink-2) !important;border-color:var(--line) !important}
+:root.dark-mode .rp-fmt .tab.active{background:var(--surface-raised) !important;color:var(--o-400) !important;border-color:var(--o-400) !important}
+
+/* =====================================================================
+   MODO DARK — superficies de la SEMILLA (modales/banners/kpi genéricos)
+   e inline del JS (bandeja, pipeline, kanban) — auditadas, no cubiertas antes
+   ===================================================================== */
+/* Modales genéricos (.modal de oranje-seed.css; openModal los envuelve) */
+:root.dark-mode .modal{background:var(--surface) !important;border:1px solid var(--line) !important;color:var(--ink) !important}
+:root.dark-mode .modal-h{background:var(--surface) !important;border-bottom-color:var(--line) !important;color:var(--ink) !important}
+:root.dark-mode .modal-h h3{color:var(--ink) !important}
+:root.dark-mode .modal-h .x{color:var(--ink-2) !important}
+:root.dark-mode .modal-h .x:hover{background:var(--surface-2) !important;color:var(--ink) !important}
+:root.dark-mode .modal-b{background:var(--surface) !important;color:var(--ink) !important}
+:root.dark-mode .modal-f{background:var(--surface) !important;border-top-color:var(--line) !important}
+/* Banners de info/aviso/ok (semilla) */
+:root.dark-mode .banner{color:var(--ink-2) !important}
+:root.dark-mode .banner.info{background:rgba(63,125,221,.12) !important;border-color:rgba(127,156,240,.30) !important;color:#C2D2F7 !important}
+:root.dark-mode .banner.info .mi{color:#7E9CF0 !important}
+:root.dark-mode .banner.info b,:root.dark-mode .banner.info strong{color:#9FB6F5 !important}
+:root.dark-mode .banner.warn{background:rgba(230,180,34,.14) !important;border-color:rgba(230,180,34,.34) !important;color:#E8C067 !important}
+:root.dark-mode .banner.warn .mi{color:#E8C067 !important}
+:root.dark-mode .banner.warn b,:root.dark-mode .banner.warn strong{color:#F0D080 !important}
+:root.dark-mode .banner.ok{background:rgba(31,168,74,.14) !important;border-color:rgba(31,168,74,.34) !important;color:#5FCB85 !important}
+:root.dark-mode .banner.ok .mi{color:#5FCB85 !important}
+/* KPI y tabla dentro de modales (vista previa de reporte) */
+:root.dark-mode .modal-b .kpi{background:var(--surface-2) !important;border-color:var(--line) !important;color:var(--ink) !important}
+:root.dark-mode .modal-b .tbl td,:root.dark-mode .modal-b .tbl th{color:var(--ink) !important}
+/* Bandeja de acción — cuadros de icono con hex claro inline */
+:root.dark-mode .tray-item .ic[style*="#FDECEC"]{background:rgba(225,25,25,.16) !important}
+:root.dark-mode .tray-item .ic[style*="#F3EAFB"]{background:rgba(123,44,191,.20) !important}
+:root.dark-mode .tray-item .ic[style*="#EEF5FF"]{background:rgba(63,125,221,.16) !important}
+/* Pipeline de Entrevistas — números/iconos con color oscuro inline (contraste) */
+:root.dark-mode .pipe .stage .pv,:root.dark-mode .pipe .stage .pi,:root.dark-mode .pipe .stage .pi .mi{color:var(--ink) !important}
+:root.dark-mode .pipe .stage[onclick*="pendApp"] .pv,:root.dark-mode .pipe .stage[onclick*="pendApp"] .pi{color:#FFB66B !important}
+:root.dark-mode .pipe .stage[onclick*="pendVal"] .pv,:root.dark-mode .pipe .stage[onclick*="pendVal"] .pi{color:#E8C067 !important}
+:root.dark-mode .pipe .stage[onclick*="validado"] .pv,:root.dark-mode .pipe .stage[onclick*="validado"] .pi{color:#5FCB85 !important}
+:root.dark-mode .pipe .stage .pl{color:var(--ink-3) !important}
+:root.dark-mode .pipe .stage{border-color:var(--line-2) !important}
+/* Requisiciones kanban — columnas con fondo casi-blanco inline (tinte por urgencia) */
+:root.dark-mode .recl-col[style*="246,237,235"],:root.dark-mode .recl-col[style*="246,237,235"] .recl-col-head{background:rgba(225,25,25,.10) !important}
+:root.dark-mode .recl-col[style*="246,239,219"],:root.dark-mode .recl-col[style*="246,239,219"] .recl-col-head{background:rgba(255,204,51,.10) !important}
+:root.dark-mode .recl-col[style*="243,246,235"],:root.dark-mode .recl-col[style*="243,246,235"] .recl-col-head{background:rgba(31,168,74,.10) !important}
+/* Pip blanco del semáforo "blanco" (atenuar para que no deslumbre) */
+:root.dark-mode .st-chip .pip[style*="#FFFFFF"],:root.dark-mode .st-chip .pip[style*="#fff"]{background:#cfc7ba !important}
+
+/* PDF del reporte: la hoja .rp-pdf-page se mantiene como PAPEL BLANCO en dark
+   (re-declara tokens claros con scope; toolbar y backdrop siguen oscuros). */
+:root.dark-mode .rp-pdf-page{
+  --bg:#F6F4F1; --surface:#FFFFFF; --surface-2:#FAF7F3; --surface-3:#F1ECE6;
+  --line:rgba(26,17,8,0.08); --line-2:rgba(26,17,8,0.14);
+  --ink:#1A1108; --ink-head:#533B17; --ink-2:#5A4A3A; --ink-3:#9A8C7E; --ink-4:#C3B8AC;
+  --o-50:#FFF6E8; --o-100:#FFE8C7; --o-200:#FFD280;
+  background:#FFFFFF !important; color:#2b2118 !important;
+}
